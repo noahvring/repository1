@@ -16,5 +16,3 @@ CSA548,Washington,"Washington-Baltimore-Arlington, DC-MD-VA-WV-PA",,1.0193514751
 CSA420,Omaha,"Omaha-Fremont, NE-IA",4.0,0.447153011572949,-0.3387659599158527,1.1330078216822344,0.5472171729524656,0.8550489251163631,Prime targets,296.59963604003457,1019415.0,84444.28376568915,0.0413812430869771,8.828592869439825,0.0,Y,CHI Health Center Omaha,0,False,6.0,1.1330078216822344,97705509.60835597,138013083.1927702,194921449.64010438,135.3845913516774,Omaha,Y
 INTL-Mexico City,Mexico City,,,,,,,,,,21436911.0,,,,,,capacity 22300 (see international_markets.csv),1,,,,,,,,Mexico City,N (outside U.S. data)
 INTL-Vancouver,Vancouver,,,,,,,,,,2642825.0,,,,,,capacity 19700 (see international_markets.csv),0,,,,,,,,Vancouver,N (outside U.S. data)
-INTL-Toronto,Toronto,,,,,,,,,,,,,,,,capacity None (see international_markets.csv),0,,,,,,,,Toronto,N (outside U.S. data)
-INTL-San Juan,San Juan,,,,,,,,,,,,,,,,capacity 19500 (see international_markets.csv),0,,,,,,,,San Juan,N (outside U.S. data)

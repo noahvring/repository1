@@ -21,7 +21,7 @@
 | G League team | N | N | Y: Mexico City Capitanes | data/manual/teams.csv; international_markets.csv |
 | Transplant share (divided-loyalty risk) | 56% (+11% vs NBA median) | 74% (+30% vs NBA median) | not available (partial data) | outputs/fan_behavior.csv |
 | Est. local revenue min / base / max | $290.2M / $307.7M / $326.7M | $169.6M / $198.9M / $233.5M | not available (partial data) | outputs/kpi_dashboard.csv |
-| Price used (basis) | $6.00B: ESPN-reported ~$6B valuation estimate | $10.00B: ESPN-reported ~$10B | not reported | outputs/bidder_multiples.csv |
+| Price used (type; not strictly comparable) | $6.00B: reported valuation estimate (not a bid) | $10.00B: reported expected sale price (bid) | not reported | outputs/bidder_multiples.csv |
 | Price / est. revenue (league avg value/revenue) | 12.4x (14.6x) | 26.7x (14.6x) | not available (partial data) | outputs/bidder_multiples.csv |
 | Reported bidders | Samantha Holloway (Kraken owner) group, incl. Melinda French Gates and Andy Jassy; BlackSun Private Equity with the Tulalip Tribes; At least one unidentified group (per industry sources) | Nancy Walton Laurie and Bill Laurie (Laurie lives in Henderson, NV); Steve Apostolopoulos and Marc Lasry (group based in Toronto; Lasry former Bucks owner); Bill Foley and Jerry Colangelo (Foley owns the NHL Golden Knights) | A Mexico City-based group (reported) that approached PJT Partners | research/bidder_landscape.csv |
 | Owner NPV: fee share − 20y dilution (league-wide, per existing team) | $410.0M (both markets together; 3% growth, 8% discount) | $410.0M (both markets together; 3% growth, 8% discount) | not available (partial data) | outputs/owner_npv.csv |

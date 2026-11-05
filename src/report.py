@@ -104,7 +104,7 @@ def key_numbers(D):
     items.append(("Top-10 overlap without college attendance", f"{int(cvp.top10_overlap_equal_vs_no_college)} of 10",
                   f"Dropped: {cvp.dropped_from_top10_without_college}; added: {cvp.added_to_top10_without_college}", "no_college weighting", "outputs/college_vs_pro.csv"))
     lg = bid["league_avg_value_to_revenue"].iloc[0]
-    items.append(("Bidder-view prices", "Las Vegas ~$10B and Seattle ~$6B (ESPN-reported); other markets use the $8.5B base fee", "Price inputs for the multiples", "reported / base", "outputs/bidder_multiples.csv (price_basis)"))
+    items.append(("Bidder-view prices", "Las Vegas ~$10B (reported expected sale price from active bidding); Seattle ~$6B (sources' valuation estimate, not a bid); others: $8.5B assumed fee", "Price inputs for the multiples; the three price types are not strictly comparable", "reported / estimate / assumption", "outputs/bidder_multiples.csv (price_type, price_basis)"))
     items.append(("League-average franchise value / revenue", f"{lg:.1f}x", "Average franchise value $6.64B / $456M average team revenue (Sportico)", "reported", "outputs/bidder_multiples.csv (league_avg_value_to_revenue)"))
     for _, row in bid.iterrows():
         items.append((f"Price / est. revenue: {row.short_name}", f"{row.price_to_revenue_base:.1f}x ({row.price_to_revenue_range})", f"{row.price_basis}; revenue = local estimate + 1/32 of central revenue",
@@ -121,7 +121,7 @@ def key_numbers(D):
     hm = pd.read_csv(MANUAL / "expansion_attendance_wiki.csv")
     for team, g in hm.groupby("team"):
         items.append((f"Honeymoon: {team}", f"min index {g.index_vs_season1.min():.0f}, last season index {g.sort_values('season_number').index_vs_season1.iloc[-1]:.0f} (season 1 = 100; {len(g)} seasons)",
-                      "Average home attendance relative to the first season", "Wikipedia game logs", f"data/manual/expansion_attendance_wiki.csv (team={team})"))
+                      "Average home attendance relative to the first season; capped by arena capacity, so sellouts show as flat lines", "Wikipedia game logs", f"data/manual/expansion_attendance_wiki.csv (team={team})"))
     bl = pd.read_csv(RESEARCH / "bidder_landscape.csv")
     items.append(("Reported bidding groups", "; ".join(f"{mk}: {n}" for mk, n in bl.groupby("market").size().items()), "Groups named or reported per market (incl. unidentified)", "reported", "research/bidder_landscape.csv"))
     top = D["t"].iloc[0]
@@ -186,7 +186,7 @@ def readme(D):
     fbt = D["fb"].head(12)[["short_name", "transplant_share", "transplant_share_vs_nba_median", "ncaa_att_per_1k", "rank_equal", "rank_no_college"]].copy()
     fbt["transplant_share"] = fbt["transplant_share"].map(lambda x: f"{x:.0%}"); fbt["transplant_share_vs_nba_median"] = fbt["transplant_share_vs_nba_median"].map(lambda x: f"{x:+.0%}")
     cvp = D["cvp"].iloc[0]
-    bid = D["bid"][["short_name", "price_basis", "price_to_revenue_base", "price_to_revenue_range", "league_avg_value_to_revenue", "premium_vs_league_avg_multiple"]].copy()
+    bid = D["bid"][["short_name", "price_type", "price_to_revenue_base", "price_to_revenue_range", "league_avg_value_to_revenue", "premium_vs_league_avg_multiple"]].copy()
     bid["premium_vs_league_avg_multiple"] = bid["premium_vs_league_avg_multiple"].map(lambda x: f"{x:+.0%}")
     pmt = D["pm"][["short_name", "market_type", "total_score", "A_size_wealth", "B_basketball_demand", "C_corporate", "ease_of_entry", "quadrant", "rank_if_included", "miles_to_nearest_nba", "factors_used"]].copy()
     pmt["C_corporate"] = pmt["C_corporate"].map(lambda x: "no data" if pd.isna(x) else f"{x:.2f}")
@@ -297,7 +297,7 @@ These are behavioral indicators. They are reported, not scored (`outputs/fan_beh
 
 - **Transplant share** is the share of residents born outside their current state. Transplants often keep loyalty to the teams they grew up with, so this is a divided-loyalty risk; its sign is ambiguous.
 - **College vs pro:** across the 27 NBA markets, the correlation between college attendance per capita and the attractiveness score without college is r = {cvp.pearson_r_college_att_vs_score_without_college:.2f} (p = {cvp.p_value:.2f}). With college attendance removed, {int(cvp.top10_overlap_equal_vs_no_college)} of the top 10 stay. Dropped: {cvp.dropped_from_top10_without_college}. Added: {cvp.added_to_top10_without_college}.
-- **Honeymoon curve:** average home attendance indexed to the first season, from Wikipedia season game logs (`data/manual/expansion_attendance_wiki.csv`). Three teams: Golden Knights, Kraken and Raptors. The Raptors changed arenas mid-1998-99 (SkyDome to Air Canada Centre), so their curve mixes novelty and venue effects. Flat lines can mean capacity-bound sellouts.
+- **Honeymoon curve:** average home attendance indexed to the first season, from Wikipedia season game logs (`data/manual/expansion_attendance_wiki.csv`). Three teams: Golden Knights, Kraken and Raptors. The Raptors changed arenas mid-1998-99 (SkyDome to Air Canada Centre), so their curve mixes novelty and venue effects. **Sellout cap:** attendance can't exceed capacity. The flat Golden Knights and Kraken lines (index ≈ 100) show sold-out arenas, not evidence that demand stayed flat; any demand above capacity is invisible here.
 
 ![Honeymoon](figures/12_honeymoon_curve.png)
 
@@ -346,6 +346,8 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 
 **Bidder view: price / estimated revenue vs league average** (`outputs/bidder_multiples.csv`). Revenue = estimated local revenue + 1/32 of central revenue:
 
+Price types differ: Las Vegas is a reported expected sale price, Seattle a valuation estimate, the rest an assumed fee. They are not strictly comparable (see `price_type`).
+
 {md(bid, 1)}
 
 ## Market & competitive research
@@ -367,7 +369,7 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 - **Distance is a rough proxy for cannibalization.** Ease of entry uses straight-line miles from one point per market, not drive times or TV overlap. Existing teams' fans in a market (e.g. Suns or Lakers fans in Las Vegas) are not measured.
 - **Transplant share is inflated where a market crosses state lines** (people born in the neighboring state count as transplants), and it is not scored.
 - **Monte Carlo varies only the pillar weights**, not the factor choice or the data.
-- **Bidder multiples** use ESPN-reported prices for Las Vegas (~$10B) and Seattle (~$6B valuation estimate) and the $8.5B base fee elsewhere. They ignore arena costs (except the Las Vegas column) and timing.
+- **Bidder multiples mix price types that are not strictly comparable.** Las Vegas uses ESPN's reported expected sale price (~$10B, from three competing bids). Seattle uses a sources' valuation estimate (~$6B, with no competing bid yet). Other markets use the $8.5B assumed base fee. Arena costs (except the Las Vegas column) and timing are ignored.
 - **Missing data:** Google Trends (folder empty) and NTTO overseas visitors (dashboard only) are not in the scorecard. Mexico City and Vancouver are not scored. Virginia Beach GDP is missing.
 - **NCAA mapping:** schools are assigned to markets by main-campus county. Only D-I schools in the study markets are mapped.
 - **Business case:** each stream is scaled with an elasticity calibrated on one pair of teams. Dilution assumes expansion teams add no new shared revenue (the media deal is fixed through 2035-36), and years beyond the deal assume renewal.
@@ -382,7 +384,9 @@ python run_all.py
 
 ## Tools
 
-Python ({', '.join(l.split('==')[0] for l in (ROOT / 'requirements.txt').read_text().split())}). Every number in this README is generated by `src/report.py`.
+Built in Python with the help of Claude Code (AI coding assistant). Research design, assumptions review, interpretation and recommendations are my own.
+
+Libraries: {', '.join(l.split('==')[0] for l in (ROOT / 'requirements.txt').read_text().split())}. Every number in this README is generated by `src/report.py`; my working rules are in [`PROJECT_RULES.md`](PROJECT_RULES.md).
 """
     (ROOT / "README.md").write_text(txt)
 
@@ -415,7 +419,7 @@ def exec_summary(D):
 1. **Seattle / Las Vegas:** rank #{int(rr[rr.short_name == 'Seattle'].rank_candidates.iloc[0])} / #{int(rr[rr.short_name == 'Las Vegas'].rank_candidates.iloc[0])} among {int((~r.nba_metro).sum())} non-NBA markets. Chance of a top-10 rank across 10,000 random weightings: {mc[mc.short_name == 'Seattle'].p_top10.iloc[0]:.0%} / {mc[mc.short_name == 'Las Vegas'].p_top10.iloc[0]:.0%}.
 2. **Prime targets** (above the NBA median on both attractiveness and ease of entry): {len(prime)}, namely {', '.join(prime)}.
 3. **Owner economics:** fee share {money(cell.fee_share_per_existing_team)} per existing team vs a 20-year NPV of dilution of {money(cell.npv_dilution_20y)} (3% growth, 8% discount). Shared revenue would need to grow {be.breakeven_growth:.0%} a year before dilution outweighs the fee.
-4. **Bidder view:** Las Vegas at the reported ~$10B is {D['bid'].set_index('short_name').at['Las Vegas', 'price_to_revenue_base']:.1f}x estimated revenue, and Seattle at the reported ~$6B valuation is {D['bid'].set_index('short_name').at['Seattle', 'price_to_revenue_base']:.1f}x, vs a league-average value/revenue of {D['bid'].league_avg_value_to_revenue.iloc[0]:.1f}x.
+4. **Bidder view** (price types differ): Las Vegas at its reported expected sale price (~$10B) is {D['bid'].set_index('short_name').at['Las Vegas', 'price_to_revenue_base']:.1f}x estimated revenue, and Seattle at a reported valuation estimate (~$6B, not a bid) is {D['bid'].set_index('short_name').at['Seattle', 'price_to_revenue_base']:.1f}x, vs a league-average value/revenue of {D['bid'].league_avg_value_to_revenue.iloc[0]:.1f}x.
 
 ![Matrix](../figures/00_matrix_attractiveness_vs_ease.png)
 
@@ -480,7 +484,7 @@ def head_to_head(D):
     add("G League team", lambda n: "Y" if m.at[n, "has_g_league"] == 1 else "N", "data/manual/teams.csv; international_markets.csv", "Y: Mexico City Capitanes")
     add("Transplant share (divided-loyalty risk)", lambda n: f"{fb.at[n, 'transplant_share']:.0%} ({fb.at[n, 'transplant_share_vs_nba_median']:+.0%} vs NBA median)", "outputs/fan_behavior.csv")
     add("Est. local revenue min / base / max", lambda n: f"{money(k.at[n, 'est_local_revenue_low'])} / {money(k.at[n, 'est_local_revenue_base'])} / {money(k.at[n, 'est_local_revenue_high'])}", "outputs/kpi_dashboard.csv")
-    add("Price used (basis)", lambda n: f"{money(bid.at[n, 'price_usd'])}: {bid.at[n, 'price_basis']}", "outputs/bidder_multiples.csv", "not reported")
+    add("Price used (type; not strictly comparable)", lambda n: f"{money(bid.at[n, 'price_usd'])}: {bid.at[n, 'price_type']}", "outputs/bidder_multiples.csv", "not reported")
     add("Price / est. revenue (league avg value/revenue)", lambda n: f"{bid.at[n, 'price_to_revenue_base']:.1f}x ({bid.at[n, 'league_avg_value_to_revenue']:.1f}x)", "outputs/bidder_multiples.csv")
     add("Reported bidders", lambda n: "; ".join(bl[bl.market == n]["group / lead investors"]), "research/bidder_landscape.csv", "; ".join(bl[bl.market == "Mexico City"]["group / lead investors"]))
     add("Owner NPV: fee share − 20y dilution (league-wide, per existing team)", lambda n: f"{money(cell.npv_net_of_fee)} (both markets together; 3% growth, 8% discount)", "outputs/owner_npv.csv")

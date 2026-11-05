@@ -36,4 +36,4 @@ def test_every_figure_used_in_readme():
 def test_no_nan_in_generated_docs():
     for d in DOCS:
         text = (ROOT / d).read_text()
-        assert not re.search(r"\bnan\b", text), f"{d} contains 'nan'"
+        assert not re.search(r"\bnan", text), f"{d} contains 'nan'"

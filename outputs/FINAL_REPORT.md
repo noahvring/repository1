@@ -15,12 +15,12 @@
 
 ```
 .......................                                                  [100%]
-23 passed in 1.31s
+23 passed in 1.16s
 ```
 
 ## Runtime
 
-Last `run_all.py` run took 16 seconds (raw downloads cached in `data/raw/`).
+Last `run_all.py` run took 15 seconds (raw downloads cached in `data/raw/`).
 
 ## Deviations & skipped sources
 
@@ -80,6 +80,16 @@ All access attempts on 2026-11-05.
 | Mexico City factors | Population 21.4M (2020, Wikipedia/INEGI census). GDP **US$401.3B nominal, 2024** (Wikipedia infobox: MXN 8.13 trillion, implied ~20.26 MXN/USD). **PPP not used**: the World Bank and OECD APIs are blocked by the proxy and no sourced PPP metro figure was found. Nominal USD is also the basis of BEA's U.S. GDP. WNBA presence 0; NFL/MLB/NHL teams 0 (Liga MX soccer not counted); Arena CDMX 22,300 seats (arena available); distance to the nearest NBA market from Wikipedia coordinates. Not comparable or not sourced: income, age share, growth, NCAA, corporate base, transplant share. | Partial: A uses 2 of 5 factors, B 1 of 2, C none. Its high score comes from size alone. |
 | NBA games in Mexico City | From the Arena CDMX Wikipedia article: Jan 2017 (2), Dec 2018 (1), 2019-20 (2 scheduled). Not verified against NBA records; the "NBA Mexico City Game(s)" articles do not exist. | Descriptive only. |
 | World Bank, OECD | `api.worldbank.org` and `sdmx.oecd.org` blocked (connection refused). | Allowlist them to add PPP figures. |
+
+## v5 cleanup (2026-11-05)
+
+| Item | What changed |
+|---|---|
+| Refactor | Code simplified and comments trimmed. Outputs were verified identical to a pre-refactor snapshot (all CSV, MD and PNG files; only runtime and test-timing lines differ). |
+| Rules file | `CLAUDE.md` renamed to `PROJECT_RULES.md`, rewritten in first person. |
+| Honeymoon caveat | Attendance is capped by capacity, so flat lines (Golden Knights, Kraken) mean sellouts, not flat demand. Noted in the figure, README and KEY_NUMBERS. |
+| Price labels | `bidder_multiples.csv` gains `price_type`: Las Vegas = reported expected sale price (bid), Seattle = reported valuation estimate (not a bid), others = assumed fee. Not strictly comparable. |
+| Focus-markets bug | `focus_markets.csv` wrongly listed every market in `international_markets.csv` (Toronto, San Juan) as an unscored focus market with no population, which showed as a missing-number placeholder in the README. Now limited to Mexico City and Vancouver; San Juan appears in the partial-data table. |
 
 
 ## What Noah must write

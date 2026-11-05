@@ -124,13 +124,13 @@ def bidder_multiples(m, ref, S, ids):
         local = {s: local_revenue(m.loc[[cid]], ref, S[s])["total"].iloc[0] for s in SCEN}
         lo_l, hi_l = min(local.values()), max(local.values())
         is_lv = name == "Las Vegas"
-        price, basis = {
-            "Las Vegas": (b["las_vegas_reported_price_usd"], "ESPN-reported ~$10B"),
-            "Seattle": (b["seattle_reported_valuation_usd"], "ESPN-reported ~$6B valuation estimate"),
-        }.get(name, (b["expansion_fee_per_team_usd"], "base fee: midpoint of reported $7-10B range"))
+        price, ptype, basis = {
+            "Las Vegas": (b["las_vegas_reported_price_usd"], "reported expected sale price (bid)", "ESPN: franchise expected to go for ~$10B; three competing bids"),
+            "Seattle": (b["seattle_reported_valuation_usd"], "reported valuation estimate (not a bid)", "ESPN: sources estimate the leading group's valuation at ~$6B"),
+        }.get(name, (b["expansion_fee_per_team_usd"], "assumed fee", "base fee: midpoint of reported $7-10B range"))
         rev_base = local["base"] + central_share
         rows.append({"market_id": cid, "short_name": name,
-                     "price_usd": price, "price_basis": basis,
+                     "price_usd": price, "price_type": ptype, "price_basis": basis,
                      "est_revenue_base_usd": rev_base, "est_revenue_low_usd": lo_l + central_share, "est_revenue_high_usd": hi_l + central_share,
                      "central_revenue_share_usd": central_share,
                      "price_to_revenue_base": price / rev_base,
@@ -207,7 +207,7 @@ def main():
     f["scored"] = "Y"
     intl = pd.read_csv(MANUAL / "international_markets.csv")
     extra = []
-    for mk, g in intl.groupby("market", sort=False):
+    for mk, g in intl[intl.market.isin(["Mexico City", "Vancouver"])].groupby("market", sort=False):
         d = dict(zip(g["item"], g["value"]))
         extra.append({"short_name": mk, "focus_label": mk, "scored": "N (outside U.S. data)",
                       "population": float(d.get("metro_population", np.nan)),

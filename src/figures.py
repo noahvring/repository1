@@ -140,7 +140,7 @@ def main():
         ax.axhline(100, color=DARK, lw=0.8, ls="--")
         ax.set_xlabel("Season since entry"); ax.set_ylabel("Avg home attendance, index (season 1 = 100)")
         ax.set_title("Novelty effect: home attendance after entry"); ax.legend(frameon=False, fontsize=8)
-        source(fig, "Source: Wikipedia season articles (regular-season home-game attendance in game logs), URL per row in data/manual/expansion_attendance_wiki.csv. Gaps = season not parseable or <20 home games (e.g. 2020-21). Capacity-bound sellouts show as flat lines. " + REPO_NAME)
+        source(fig, "Source: Wikipedia season articles (regular-season home-game attendance in game logs), URL per row in data/manual/expansion_attendance_wiki.csv. Gaps = season not parseable or <20 home games (e.g. 2020-21). Sellout cap: attendance can't exceed capacity, so sold-out seasons show as flat lines. " + REPO_NAME)
         fig.tight_layout(rect=(0, 0.07, 1, 1)); fig.savefig(FIGURES / "12_honeymoon_curve.png", dpi=150); plt.close(fig)
 
     # 1 headline

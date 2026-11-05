@@ -189,7 +189,7 @@ These are behavioral indicators. They are reported, not scored (`outputs/fan_beh
 
 - **Transplant share** is the share of residents born outside their current state. Transplants often keep loyalty to the teams they grew up with, so this is a divided-loyalty risk; its sign is ambiguous.
 - **College vs pro:** across the 27 NBA markets, the correlation between college attendance per capita and the attractiveness score without college is r = -0.20 (p = 0.31). With college attendance removed, 9 of the top 10 stay. Dropped: Richmond. Added: Columbus.
-- **Honeymoon curve:** average home attendance indexed to the first season, from Wikipedia season game logs (`data/manual/expansion_attendance_wiki.csv`). Three teams: Golden Knights, Kraken and Raptors. The Raptors changed arenas mid-1998-99 (SkyDome to Air Canada Centre), so their curve mixes novelty and venue effects. Flat lines can mean capacity-bound sellouts.
+- **Honeymoon curve:** average home attendance indexed to the first season, from Wikipedia season game logs (`data/manual/expansion_attendance_wiki.csv`). Three teams: Golden Knights, Kraken and Raptors. The Raptors changed arenas mid-1998-99 (SkyDome to Air Canada Centre), so their curve mixes novelty and venue effects. **Sellout cap:** attendance can't exceed capacity. The flat Golden Knights and Kraken lines (index ≈ 100) show sold-out arenas, not evidence that demand stayed flat; any demand above capacity is invisible here.
 
 ![Honeymoon](figures/12_honeymoon_curve.png)
 
@@ -251,8 +251,6 @@ These are the reported front-runners (Seattle, Las Vegas), Mexico City, and mark
 | Omaha | Y | #4 | 0.45 | Y | 1.0M |
 | Mexico City | N (outside U.S. data) |  |  |  | 21.4M |
 | Vancouver | N (outside U.S. data) |  |  |  | 2.6M |
-| Toronto | N (outside U.S. data) |  |  |  | nanM |
-| San Juan | N (outside U.S. data) |  |  |  | nanM |
 
 ![Focus](figures/08_focus_markets.png)
 
@@ -295,16 +293,18 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 
 **Bidder view: price / estimated revenue vs league average** (`outputs/bidder_multiples.csv`). Revenue = estimated local revenue + 1/32 of central revenue:
 
-| short_name | price_basis | price_to_revenue_base | price_to_revenue_range | league_avg_value_to_revenue | premium_vs_league_avg_multiple |
+Price types differ: Las Vegas is a reported expected sale price, Seattle a valuation estimate, the rest an assumed fee. They are not strictly comparable (see `price_type`).
+
+| short_name | price_type | price_to_revenue_base | price_to_revenue_range | league_avg_value_to_revenue | premium_vs_league_avg_multiple |
 |---|---|---|---|---|---|
-| Seattle | ESPN-reported ~$6B valuation estimate | 12.4 | 11.9x-12.9x | 14.6 | -15% |
-| San Diego | base fee: midpoint of reported $7-10B range | 20.6 | 19.8x-21.4x | 14.6 | +41% |
-| Austin | base fee: midpoint of reported $7-10B range | 22.1 | 20.5x-23.7x | 14.6 | +52% |
-| Raleigh | base fee: midpoint of reported $7-10B range | 22.3 | 20.5x-24.0x | 14.6 | +53% |
-| Cincinnati | base fee: midpoint of reported $7-10B range | 22.7 | 20.8x-24.6x | 14.6 | +56% |
-| Nashville | base fee: midpoint of reported $7-10B range | 23.0 | 21.0x-25.0x | 14.6 | +58% |
-| Las Vegas | ESPN-reported ~$10B | 26.7 | 24.5x-29.0x | 14.6 | +83% |
-| Omaha | base fee: midpoint of reported $7-10B range | 27.1 | 22.9x-31.1x | 14.6 | +86% |
+| Seattle | reported valuation estimate (not a bid) | 12.4 | 11.9x-12.9x | 14.6 | -15% |
+| San Diego | assumed fee | 20.6 | 19.8x-21.4x | 14.6 | +41% |
+| Austin | assumed fee | 22.1 | 20.5x-23.7x | 14.6 | +52% |
+| Raleigh | assumed fee | 22.3 | 20.5x-24.0x | 14.6 | +53% |
+| Cincinnati | assumed fee | 22.7 | 20.8x-24.6x | 14.6 | +56% |
+| Nashville | assumed fee | 23.0 | 21.0x-25.0x | 14.6 | +58% |
+| Las Vegas | reported expected sale price (bid) | 26.7 | 24.5x-29.0x | 14.6 | +83% |
+| Omaha | assumed fee | 27.1 | 22.9x-31.1x | 14.6 | +86% |
 
 ## Market & competitive research
 
@@ -325,7 +325,7 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 - **Distance is a rough proxy for cannibalization.** Ease of entry uses straight-line miles from one point per market, not drive times or TV overlap. Existing teams' fans in a market (e.g. Suns or Lakers fans in Las Vegas) are not measured.
 - **Transplant share is inflated where a market crosses state lines** (people born in the neighboring state count as transplants), and it is not scored.
 - **Monte Carlo varies only the pillar weights**, not the factor choice or the data.
-- **Bidder multiples** use ESPN-reported prices for Las Vegas (~$10B) and Seattle (~$6B valuation estimate) and the $8.5B base fee elsewhere. They ignore arena costs (except the Las Vegas column) and timing.
+- **Bidder multiples mix price types that are not strictly comparable.** Las Vegas uses ESPN's reported expected sale price (~$10B, from three competing bids). Seattle uses a sources' valuation estimate (~$6B, with no competing bid yet). Other markets use the $8.5B assumed base fee. Arena costs (except the Las Vegas column) and timing are ignored.
 - **Missing data:** Google Trends (folder empty) and NTTO overseas visitors (dashboard only) are not in the scorecard. Mexico City and Vancouver are not scored. Virginia Beach GDP is missing.
 - **NCAA mapping:** schools are assigned to markets by main-campus county. Only D-I schools in the study markets are mapped.
 - **Business case:** each stream is scaled with an elasticity calibrated on one pair of teams. Dilution assumes expansion teams add no new shared revenue (the media deal is fixed through 2035-36), and years beyond the deal assume renewal.
@@ -340,4 +340,6 @@ python run_all.py
 
 ## Tools
 
-Python (pandas, numpy, statsmodels, scipy, matplotlib, requests, pytest, openpyxl, pdfplumber, lxml). Every number in this README is generated by `src/report.py`.
+Built in Python with the help of Claude Code (AI coding assistant). Research design, assumptions review, interpretation and recommendations are my own.
+
+Libraries: pandas, numpy, statsmodels, scipy, matplotlib, requests, pytest, openpyxl, pdfplumber, lxml. Every number in this README is generated by `src/report.py`; my working rules are in [`PROJECT_RULES.md`](PROJECT_RULES.md).
