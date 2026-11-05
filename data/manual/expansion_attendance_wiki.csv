@@ -1,0 +1,21 @@
+team,league,season,season_number,home_games_parsed,avg_home_attendance,source_url,access_date,index_vs_season1
+"Vegas Golden Knights (NHL, 2017)",NHL,2017-18,1,41,18042,https://en.wikipedia.org/wiki/2017–18_Vegas_Golden_Knights_season,2026-11-05,100.0
+"Vegas Golden Knights (NHL, 2017)",NHL,2018-19,2,41,18315,https://en.wikipedia.org/wiki/2018–19_Vegas_Golden_Knights_season,2026-11-05,101.51313601596276
+"Vegas Golden Knights (NHL, 2017)",NHL,2019-20,3,37,18311,https://en.wikipedia.org/wiki/2019–20_Vegas_Golden_Knights_season,2026-11-05,101.49096552488638
+"Vegas Golden Knights (NHL, 2017)",NHL,2021-22,5,41,18101,https://en.wikipedia.org/wiki/2021–22_Vegas_Golden_Knights_season,2026-11-05,100.32701474337657
+"Vegas Golden Knights (NHL, 2017)",NHL,2022-23,6,41,18024,https://en.wikipedia.org/wiki/2022–23_Vegas_Golden_Knights_season,2026-11-05,99.9002327901563
+"Vegas Golden Knights (NHL, 2017)",NHL,2023-24,7,41,18139,https://en.wikipedia.org/wiki/2023–24_Vegas_Golden_Knights_season,2026-11-05,100.53763440860214
+"Vegas Golden Knights (NHL, 2017)",NHL,2024-25,8,29,17960,https://en.wikipedia.org/wiki/2024–25_Vegas_Golden_Knights_season,2026-11-05,99.54550493293426
+"Seattle Kraken (NHL, 2021)",NHL,2021-22,1,41,17151,https://en.wikipedia.org/wiki/2021–22_Seattle_Kraken_season,2026-11-05,100.0
+"Seattle Kraken (NHL, 2021)",NHL,2022-23,2,41,17151,https://en.wikipedia.org/wiki/2022–23_Seattle_Kraken_season,2026-11-05,100.0
+"Seattle Kraken (NHL, 2021)",NHL,2023-24,3,40,17151,https://en.wikipedia.org/wiki/2023–24_Seattle_Kraken_season,2026-11-05,100.0
+"Seattle Kraken (NHL, 2021)",NHL,2024-25,4,41,17151,https://en.wikipedia.org/wiki/2024–25_Seattle_Kraken_season,2026-11-05,100.0
+"Seattle Kraken (NHL, 2021)",NHL,2025-26,5,41,17151,https://en.wikipedia.org/wiki/2025–26_Seattle_Kraken_season,2026-11-05,100.0
+"Toronto Raptors (NBA, 1995)",NBA,1995-96,1,41,23179,https://en.wikipedia.org/wiki/1995–96_Toronto_Raptors_season,2026-11-05,100.0
+"Toronto Raptors (NBA, 1995)",NBA,1996-97,2,41,18160,https://en.wikipedia.org/wiki/1996–97_Toronto_Raptors_season,2026-11-05,78.34677941239916
+"Toronto Raptors (NBA, 1995)",NBA,1997-98,3,41,16456,https://en.wikipedia.org/wiki/1997–98_Toronto_Raptors_season,2026-11-05,70.99529746753527
+"Toronto Raptors (NBA, 1995)",NBA,1998-99,4,25,17568,https://en.wikipedia.org/wiki/1998–99_Toronto_Raptors_season,2026-11-05,75.79274343155443
+"Toronto Raptors (NBA, 1995)",NBA,1999-00,5,42,18488,https://en.wikipedia.org/wiki/1999–2000_Toronto_Raptors_season,2026-11-05,79.7618534017861
+"Toronto Raptors (NBA, 1995)",NBA,2000-01,6,52,18614,https://en.wikipedia.org/wiki/2000–01_Toronto_Raptors_season,2026-11-05,80.30544889770913
+"Toronto Raptors (NBA, 1995)",NBA,2001-02,7,43,19777,https://en.wikipedia.org/wiki/2001–02_Toronto_Raptors_season,2026-11-05,85.32292161007808
+"Toronto Raptors (NBA, 1995)",NBA,2002-03,8,41,18964,https://en.wikipedia.org/wiki/2002–03_Toronto_Raptors_season,2026-11-05,81.81543638638422

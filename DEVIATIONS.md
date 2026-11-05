@@ -37,3 +37,12 @@ All access attempts on 2026-11-05.
 | Sensitivity set | The "ignore competition" weighting no longer applies (competition left the score), so it was replaced by "no college" (Pillar B without NCAA attendance). | Competition is now on the ease axis. |
 | Transplant share | ACS 2020-24 table B05002 (place of birth): 1 − born in state of residence ÷ total. **Descriptive only, not scored** (its sign is ambiguous). In markets that cross state lines (e.g. Cincinnati, Kansas City), people born in the neighbouring part of the same market count as transplants, which inflates the share. | Requested behavioural lens. |
 | Honeymoon curve | **Skipped; no figure.** ESPN NHL attendance URLs redirect to the NHL home page (no table), so the Golden Knights and Kraken could not be sourced. ESPN shows "--" for the Raptors and Grizzlies 1995-96 to 2000-01. Only 2 teams were sourceable (Bobcats: 7 of 8 seasons; Thunder: 4 of 8), below the 3-team minimum. The partial sourced data is kept in `data/manual/expansion_attendance.csv`. ESPN labels past seasons by current franchise name (Bobcats = "Hornets"). | Rule: fewer than 3 teams → skip and log. Wikipedia season pages or Hockey-Reference could be tried next. |
+
+## v4 changes (2026-11-05)
+
+| Item | What changed | Why |
+|---|---|---|
+| Realignment travel | `src/realignment.py`: straight-line round trips to every conference opponent. Arena coordinates come from the Wikipedia NBA team table. Seattle and Las Vegas use their Census Gazetteer market points (no arena yet). **Simplified proxy**: ignores the real schedule, inter-conference games, chained road trips and back-to-backs. | Requested operations lens. |
+| Bidder landscape | `research/bidder_landscape.csv` from ESPN (2026-10-02), verified on the page; the Mexico City row comes from a search result (frontofficesports.com blocked). | Requested. |
+| Seattle bidder multiple | Uses ESPN's reported ~$6B Seattle valuation estimate instead of the $8.5B base fee. | A market-specific price is reported. |
+| Honeymoon curve | **Now included** from Wikipedia season game logs: Golden Knights (7 of 8 seasons; 2020-21 excluded with only 14 home games parsed, pandemic limits), Kraken (5), Raptors (8). Vancouver Grizzlies pages had no parseable home attendance, so they are excluded. Measured as average home attendance **indexed to season 1**, not % of capacity, because capacities changed (Raptors in the SkyDome). Data: `data/manual/expansion_attendance_wiki.csv`. | ≥3 teams sourced. |

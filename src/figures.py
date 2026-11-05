@@ -4,7 +4,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from config import OUTPUTS, FIGURES, PROCESSED, REPO_NAME
+from config import OUTPUTS, FIGURES, PROCESSED, REPO_NAME, MANUAL
 
 BLUE, ORANGE, GRAY, DARK = "#2563eb", "#ea580c", "#9ca3af", "#111827"
 PILLAR_COLORS = ["#1d4ed8", "#0d9488", "#7c3aed"]
@@ -123,6 +123,18 @@ def main():
     ax.set_title("Seattle vs Las Vegas: head-to-head")
     source(fig, "Sources: outputs/rankings.csv, monte_carlo.csv, kpi_dashboard.csv, bidder_multiples.csv, fan_behavior.csv. " + SRC)
     fig.tight_layout(rect=(0, 0.05, 1, 1)); fig.savefig(FIGURES / "11_seattle_vs_las_vegas.png", dpi=150); plt.close(fig)
+
+    # 12 honeymoon curve (only if >= 3 teams were sourced)
+    hm = pd.read_csv(MANUAL / "expansion_attendance_wiki.csv")
+    if hm["team"].nunique() >= 3:
+        fig, ax = plt.subplots(figsize=(9, 5.5))
+        for (team, g), col in zip(hm.groupby("team"), [ORANGE, BLUE, "#0d9488", "#7c3aed"]):
+            ax.plot(g["season_number"], g["index_vs_season1"], marker="o", color=col, label=team)
+        ax.axhline(100, color=DARK, lw=0.8, ls="--")
+        ax.set_xlabel("Season since entry"); ax.set_ylabel("Avg home attendance, index (season 1 = 100)")
+        ax.set_title("Novelty effect: home attendance after entry"); ax.legend(frameon=False, fontsize=8)
+        source(fig, "Source: Wikipedia season articles (regular-season home-game attendance in game logs), URL per row in data/manual/expansion_attendance_wiki.csv. Gaps = season not parseable or <20 home games (e.g. 2020-21). Capacity-bound sellouts show as flat lines. " + REPO_NAME)
+        fig.tight_layout(rect=(0, 0.07, 1, 1)); fig.savefig(FIGURES / "12_honeymoon_curve.png", dpi=150); plt.close(fig)
 
     # 1 headline
     fig, ax = plt.subplots(figsize=(9, 6.5)); headline(ax, r); source(fig); fig.tight_layout(rect=(0, 0.04, 1, 1))
