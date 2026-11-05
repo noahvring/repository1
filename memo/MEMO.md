@@ -16,9 +16,17 @@
 
 ## Business case & dilution math
 
+### Is $10B a fair price? (bidder view)
+
+### Who wins: league, existing owners, new owner, city
+
 ## Industry trends
 
 ## Lessons from comparable expansions
+
+### Novelty effect: how long does the honeymoon last?
+
+## Fan behavior & market risk
 
 ## Competitive landscape
 

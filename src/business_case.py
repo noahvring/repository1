@@ -115,6 +115,33 @@ def breakeven_growth(S):
     return pd.DataFrame(rows)
 
 
+def bidder_multiples(m, ref, S, ids):
+    """Investment lens: price paid / estimated annual revenue, vs the league-average
+    franchise value / revenue multiple (both sourced from Sportico). A new team's revenue =
+    estimated local revenue + an equal 1/32 share of central (league-shared) revenue."""
+    b = S["base"]
+    central_share = b["central_revenue_share"] * b["team_revenue_2025_26_usd"] / 32
+    league_mult = b["avg_franchise_value_usd"] / b["avg_team_revenue_usd"]
+    rows = []
+    for cid in ids:
+        name = m.at[cid, "short_name"]
+        local = {s: local_revenue(m.loc[[cid]], ref, S[s])["total"].iloc[0] for s in SCEN}
+        lo_l, hi_l = min(local.values()), max(local.values())
+        is_lv = name == "Las Vegas"
+        price = b["las_vegas_reported_price_usd"] if is_lv else b["expansion_fee_per_team_usd"]
+        rev_base = local["base"] + central_share
+        rows.append({"market_id": cid, "short_name": name,
+                     "price_usd": price, "price_basis": "ESPN-reported ~$10B (Las Vegas)" if is_lv else "base fee $8.5B (midpoint of reported $7-10B range)",
+                     "est_revenue_base_usd": rev_base, "est_revenue_low_usd": lo_l + central_share, "est_revenue_high_usd": hi_l + central_share,
+                     "central_revenue_share_usd": central_share,
+                     "price_to_revenue_base": price / rev_base,
+                     "price_to_revenue_range": f"{price / (hi_l + central_share):.1f}x-{price / (lo_l + central_share):.1f}x",
+                     "price_incl_arena_to_revenue_base": (price + b["las_vegas_arena_cost_usd"]) / rev_base if is_lv else np.nan,
+                     "league_avg_value_to_revenue": league_mult,
+                     "premium_vs_league_avg_multiple": price / rev_base / league_mult - 1})
+    pd.DataFrame(rows).sort_values("price_to_revenue_base").to_csv(OUTPUTS / "bidder_multiples.csv", index=False)
+
+
 def main():
     S, table = load_assumptions()
     metros = pd.read_csv(PROCESSED / "metros.csv").set_index("market_id")
@@ -175,6 +202,7 @@ def main():
         return k.rename(columns={"rank_candidates": "attractiveness_rank", "big4_other_leagues": "competing_teams"})
 
     kpis(ids).sort_values("attractiveness_rank").to_csv(OUTPUTS / "kpi_dashboard.csv")
+    bidder_multiples(m, ref, S, ids)
 
     # focus markets: the league's reported front-runners plus markets Noah asked to track.
     # U.S. markets are scored; Mexico City and Vancouver are outside the U.S. data, so they get
