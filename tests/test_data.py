@@ -63,3 +63,11 @@ def test_bidder_landscape_sourced():
     b = pd.read_csv(RESEARCH / "bidder_landscape.csv")
     assert b["source_url"].str.startswith("http").all()
     assert {"Las Vegas", "Seattle"} <= set(b["market"])
+
+
+def test_demand_events_sourced_and_not_scored():
+    e = pd.read_csv(MANUAL / "nba_games_nonmarket.csv")
+    assert e["source_url"].str.startswith("http").all()
+    assert set(e["sellout"]) <= {"Y", "N", "not reported"}
+    from model import PILLARS
+    assert "log_demand_games" not in [c for f in PILLARS.values() for c, _, _ in f]

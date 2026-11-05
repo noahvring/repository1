@@ -19,6 +19,7 @@
 | Big-league rivals (NFL+MLB+NHL) | 3 | 2 | 0 (Liga MX soccer not counted) | data/processed/metros.csv; international_markets.csv |
 | Arenas 17,000+ seats without NBA tenant (capacity; tenants) | Y: Tacoma Dome (20,722; no major tenant listed); Climate Pledge Arena (18,500; Seattle Kraken (NHL) Seattle Storm (WNBA) Seattle Torrent (PWHL) Seattle Redhawks (NCAA)) | Y: T-Mobile Arena (18,800; Vegas Golden Knights (NHL)); Thomas & Mack Center (18,500; UNLV Runnin' Rebels) | Y: Arena CDMX (22,300; Mexico City Capitanes, G League) | data/manual/arenas.csv; international_markets.csv |
 | G League team | N | N | Y: Mexico City Capitanes | data/manual/teams.csv; international_markets.csv |
+| Demonstrated demand since 2011-12 (not scored) | 4 events (4 NBA games; NBA preseason) | 22 events (22 NBA games; NBA Cup final; NBA Cup knockout (semifinal); NBA Summer League (Las Vegas) championship) | 16 events (15 NBA games; G League team; NBA preseason; NBA regular season (neutral site)) | outputs/demand_summary.csv |
 | Transplant share (divided-loyalty risk) | 56% (+11% vs NBA median) | 74% (+30% vs NBA median) | not available (partial data) | outputs/fan_behavior.csv |
 | Est. local revenue min / base / max | $290.2M / $307.7M / $326.7M | $169.6M / $198.9M / $233.5M | not available (partial data) | outputs/kpi_dashboard.csv |
 | Price used (type; not strictly comparable) | $6.00B: reported valuation estimate (not a bid) | $10.00B: reported expected sale price (bid) | not reported | outputs/bidder_multiples.csv |

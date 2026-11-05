@@ -1,0 +1,63 @@
+market,date_or_season,event_type,teams,venue,attendance,sellout,source_url,access_date
+Mexico City,2012-10-07,NBA preseason,Orlando Magic vs New Orleans Hornets,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+San Juan,2025-10-04,NBA preseason,Orlando Magic vs Miami Heat,Coliseo de Puerto Rico Jose Miguel Agrelot,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2014-11-12,NBA regular season (neutral site),Houston Rockets vs Minnesota Timberwolves,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2015-12-03,NBA regular season (neutral site),Boston Celtics vs Sacramento Kings,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2017-01-12,NBA regular season (neutral site),Dallas Mavericks vs Phoenix Suns,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2017-01-14,NBA regular season (neutral site),San Antonio Spurs vs Phoenix Suns,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2017-12-07,NBA regular season (neutral site),Oklahoma City Thunder vs Brooklyn Nets,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2017-12-09,NBA regular season (neutral site),Miami Heat vs Brooklyn Nets,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2018-12-13,NBA regular season (neutral site),Chicago Bulls vs Orlando Magic,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2018-12-15,NBA regular season (neutral site),Utah Jazz vs Orlando Magic,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2019-12-12,NBA regular season (neutral site),Dallas Mavericks vs Detroit Pistons,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2019-12-14,NBA regular season (neutral site),San Antonio Spurs vs Phoenix Suns,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2022-12-17,NBA regular season (neutral site),Miami Heat vs San Antonio Spurs,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2023-11-09,NBA regular season (neutral site),Orlando Magic vs Atlanta Hawks,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2024-11-02,NBA regular season (neutral site),Miami Heat vs Washington Wizards,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Mexico City,2025-11-01,NBA regular season (neutral site),Dallas Mavericks vs Detroit Pistons,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Global_Games,2026-11-05
+Las Vegas,0001-12-07,NBA Cup knockout (semifinal),Indiana Pacers vs Milwaukee Bucks,T-Mobile Arena,16837,not reported,https://en.wikipedia.org/wiki/2023_NBA_In-Season_Tournament,2026-11-05
+Las Vegas,0001-12-07,NBA Cup knockout (semifinal),New Orleans Pelicans vs Los Angeles Lakers,T-Mobile Arena,18017,not reported,https://en.wikipedia.org/wiki/2023_NBA_In-Season_Tournament,2026-11-05
+Las Vegas,0001-12-09,NBA Cup final,Indiana Pacers vs Los Angeles Lakers,T-Mobile Arena,19021,not reported,https://en.wikipedia.org/wiki/2023_NBA_In-Season_Tournament,2026-11-05
+Las Vegas,0001-12-14,NBA Cup knockout (semifinal),Atlanta Hawks vs Milwaukee Bucks,T-Mobile Arena,17113,not reported,https://en.wikipedia.org/wiki/2024_NBA_Cup,2026-11-05
+Las Vegas,0001-12-14,NBA Cup knockout (semifinal),Houston Rockets vs Oklahoma City Thunder,T-Mobile Arena,17937,not reported,https://en.wikipedia.org/wiki/2024_NBA_Cup,2026-11-05
+Las Vegas,0001-12-17,NBA Cup final,Milwaukee Bucks vs Oklahoma City Thunder,T-Mobile Arena,18519,not reported,https://en.wikipedia.org/wiki/2024_NBA_Cup,2026-11-05
+Las Vegas,0001-12-13,NBA Cup knockout (semifinal),New York Knicks vs Orlando Magic,T-Mobile Arena,16697,not reported,https://en.wikipedia.org/wiki/2025_NBA_Cup,2026-11-05
+Las Vegas,0001-12-13,NBA Cup knockout (semifinal),San Antonio Spurs vs Oklahoma City Thunder,T-Mobile Arena,18519,not reported,https://en.wikipedia.org/wiki/2025_NBA_Cup,2026-11-05
+Las Vegas,0001-12-16,NBA Cup final,New York Knicks vs San Antonio Spurs,T-Mobile Arena,18609,not reported,https://en.wikipedia.org/wiki/2025_NBA_Cup,2026-11-05
+Las Vegas,2013,NBA Summer League (Las Vegas) championship,Golden State Warriors vs Phoenix Suns,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2014,NBA Summer League (Las Vegas) championship,Sacramento Kings vs Houston Rockets,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2015,NBA Summer League (Las Vegas) championship,San Antonio Spurs vs Phoenix Suns,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2016,NBA Summer League (Las Vegas) championship,Chicago Bulls vs Minnesota Timberwolves,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2017,NBA Summer League (Las Vegas) championship,Los Angeles Lakers vs Portland Trail Blazers,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2018,NBA Summer League (Las Vegas) championship,Portland Trail Blazers vs Los Angeles Lakers,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2019,NBA Summer League (Las Vegas) championship,Memphis Grizzlies vs Minnesota Timberwolves,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2021,NBA Summer League (Las Vegas) championship,Sacramento Kings vs Boston Celtics,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2022,NBA Summer League (Las Vegas) championship,Portland Trail Blazers vs New York Knicks,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2023,NBA Summer League (Las Vegas) championship,Cleveland Cavaliers vs Houston Rockets,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2024,NBA Summer League (Las Vegas) championship,Miami Heat vs Memphis Grizzlies,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2025,NBA Summer League (Las Vegas) championship,Charlotte Hornets vs Sacramento Kings,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Las Vegas,2026,NBA Summer League (Las Vegas) championship,Golden State Warriors vs Memphis Grizzlies,UNLV campus,not reported,not reported,https://en.wikipedia.org/wiki/NBA_Summer_League,2026-11-05
+Louisville,2014-10-04,NBA preseason,Miami Heat vs New Orleans Pelicans,KFC Yum! Center,20074,not reported,https://en.wikipedia.org/wiki/KFC_Yum!_Center,2026-11-05
+Louisville,2015-10-07,NBA preseason,Miami Heat vs Orlando Magic,KFC Yum! Center,6123,not reported,https://en.wikipedia.org/wiki/KFC_Yum!_Center,2026-11-05
+Louisville,2016-10-15,NBA preseason,Miami Heat vs Minnesota Timberwolves,KFC Yum! Center,9672,not reported,https://en.wikipedia.org/wiki/KFC_Yum!_Center,2026-11-05
+Seattle,2022-09-30,NBA preseason,Los Angeles Clippers vs Maccabi Ra'anana,Climate Pledge Arena,9333,not reported,https://en.wikipedia.org/wiki/2022–23_Los_Angeles_Clippers_season,2026-11-05
+Seattle,2022-10-03,NBA preseason,Los Angeles Clippers vs Portland,Climate Pledge Arena,18440,not reported,https://en.wikipedia.org/wiki/2022–23_Los_Angeles_Clippers_season,2026-11-05
+Seattle,2023-10-10,NBA preseason,Los Angeles Clippers vs Utah,Climate Pledge Arena,18100,not reported,https://en.wikipedia.org/wiki/2023–24_Los_Angeles_Clippers_season,2026-11-05
+Seattle,2024-10-11,NBA preseason,Los Angeles Clippers vs Portland,Climate Pledge Arena,18300,not reported,https://en.wikipedia.org/wiki/2024–25_Los_Angeles_Clippers_season,2026-11-05
+Austin,2023-04-06,NBA regular season (team home game away from home market),San Antonio Spurs vs Portland Trail Blazers,Moody Center,not reported,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Austin,2023-04-08,NBA regular season (team home game away from home market),San Antonio Spurs vs Minnesota Timberwolves,Moody Center,not reported,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Austin,2024-03-15,NBA regular season (team home game away from home market),San Antonio Spurs vs Denver Nuggets,Moody Center,16223,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Austin,2024-03-17,NBA regular season (team home game away from home market),San Antonio Spurs vs Brooklyn Nets,Moody Center,not reported,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Austin,2025-02-20,NBA regular season (team home game away from home market),San Antonio Spurs vs Phoenix Suns,Moody Center,not reported,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Austin,2025-02-21,NBA regular season (team home game away from home market),San Antonio Spurs vs Detroit Pistons,Moody Center,not reported,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Austin,2026-02-19,NBA regular season (team home game away from home market),San Antonio Spurs vs Phoenix Suns,Moody Center,not reported,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Austin,2026-02-21,NBA regular season (team home game away from home market),San Antonio Spurs vs Sacramento Kings,Moody Center,not reported,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Austin,2026-10-23,NBA regular season (team home game away from home market),San Antonio Spurs vs Houston Rockets,Moody Center,not reported,not reported,https://en.wikipedia.org/wiki/Moody_Center,2026-11-05
+Tampa,2020-21,"NBA regular season (temporary home, pandemic)",Toronto Raptors home games,Amalie Arena,not reported,not reported,https://en.wikipedia.org/wiki/Benchmark_International_Arena,2026-11-05
+St. Louis,2014-10-24,NBA preseason,Chicago Bulls vs Minnesota Timberwolves,Scottrade Center (now Enterprise Center),not reported,not reported,https://en.wikipedia.org/wiki/Enterprise_Center,2026-11-05
+Cincinnati,2013-14,NBA preseason,Cleveland Cavaliers (preseason games),U.S. Bank Arena (now Heritage Bank Center),not reported,not reported,https://en.wikipedia.org/wiki/Heritage_Bank_Center,2026-11-05
+Grand Rapids,2025-26,G League team,Grand Rapids Gold,not reported,not reported,not reported,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+Greensboro,2025-26,G League team,Greensboro Swarm,not reported,not reported,not reported,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+Austin,2025-26,G League team,Austin Spurs,not reported,not reported,not reported,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+San Diego,2025-26,G League team,San Diego Clippers,not reported,not reported,not reported,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+Mexico City,2025-26,G League team,Mexico City Capitanes,Mexico City Arena,not reported,not reported,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05

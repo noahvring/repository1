@@ -26,6 +26,8 @@
 
 ### Novelty effect: how long does the honeymoon last?
 
+## Demonstrated demand: what neutral-site games tell us (and don't)
+
 ## Fan behavior & market risk
 
 ## Realignment: who moves East?

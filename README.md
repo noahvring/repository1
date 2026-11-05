@@ -178,10 +178,10 @@ Markets are placed on two separate axes, **attractiveness** and **ease of entry*
 
 These markets are scored **only on the factors that have a comparable source**, standardized against the U.S. markets. Each pillar averages the factors it has, and the total averages the pillars it has. They sit outside the U.S. rankings and the Monte Carlo; "would rank" shows where the score would fall (`outputs/partial_markets.csv`). Sources and conversions are in `data/manual/international_markets.csv` and DEVIATIONS.md.
 
-| short_name | market_type | total_score | A_size_wealth | B_basketball_demand | C_corporate | ease_of_entry | quadrant | rank_if_included | miles_to_nearest_nba | factors_used |
-|---|---|---|---|---|---|---|---|---|---|---|
-| San Juan (partial data) | CSA | -1.19 | -1.57 | -0.80 | no data | 1.54 | Easy but small | 39 | 1,068.62 | population, median_hh_income, share_18_44, pop_growth_2020_2025, ncaa_att_per_1k, has_wnba, arena_available, miles_to_nearest_nba, big4_other_leagues |
-| Mexico City (partial data) | International | 0.61 | 1.74 | -0.52 | no data | 1.30 | Prime targets | 3 | 691.73 | population, gdp_2024_usd, has_wnba, arena_available, miles_to_nearest_nba, big4_other_leagues |
+| short_name | market_type | total_score | A_size_wealth | B_basketball_demand | C_corporate | ease_of_entry | quadrant | rank_if_included | miles_to_nearest_nba | factors_used | demand_events |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| San Juan (partial data) | CSA | -1.19 | -1.57 | -0.80 | no data | 1.54 | Easy but small | 39 | 1,068.62 | population, median_hh_income, share_18_44, pop_growth_2020_2025, ncaa_att_per_1k, has_wnba, arena_available, miles_to_nearest_nba, big4_other_leagues | 1 |
+| Mexico City (partial data) | International | 0.61 | 1.74 | -0.52 | no data | 1.30 | Prime targets | 3 | 691.73 | population, gdp_2024_usd, has_wnba, arena_available, miles_to_nearest_nba, big4_other_leagues | 16 |
 
 ## Fan behavior & market risk
 
@@ -207,6 +207,46 @@ These are behavioral indicators. They are reported, not scored (`outputs/fan_beh
 | Richmond | 41% | -3% | 159.9 | 10.0 | 14.0 |
 | Louisville | 37% | -8% | 188.1 | 11.0 | 18.0 |
 | Columbus | 29% | -16% | 72.4 | 12.0 | 9.0 |
+
+## Demonstrated demand: neutral-site and NBA-adjacent events
+
+This counts NBA and NBA-adjacent events held in non-NBA markets since 2011-12: neutral-site regular-season and preseason games, NBA Cup knockout games, Las Vegas Summer League championships, temporary or relocated home games, and current G League teams (`data/manual/nba_games_nonmarket.csv`, one source URL per row).
+
+**It is not part of the score.** The league chooses where to play, often in markets it is already courting, so more events can reflect league intent as much as local demand (selection bias). The list is compiled from Wikipedia articles and is not exhaustive. Preseason games are only covered where an arena or team-season article lists them.
+
+| market | events | event_types | latest_year | nba_games | games_with_attendance | avg_attendance | avg_pct_capacity |
+|---|---|---|---|---|---|---|---|
+| Las Vegas | 22 | NBA Cup final; NBA Cup knockout (semifinal); NBA Summer League (Las Vegas) championship | 2026 | 22 | 9 | 17,919 | 95% |
+| Mexico City (partial data) | 16 | G League team; NBA preseason; NBA regular season (neutral site) | 2025 | 15 | 0 | not reported | not reported |
+| Austin | 10 | G League team; NBA regular season (team home game away from home market) | 2026 | 9 | 1 | 16,223 | not reported |
+| Seattle | 4 | NBA preseason | 2024 | 4 | 4 | 16,043 | 87% |
+| Louisville | 3 | NBA preseason | 2016 | 3 | 3 | 11,956 | 54% |
+| Greensboro | 1 | G League team | 2025 | 0 | 0 | not reported | not reported |
+| Cincinnati | 1 | NBA preseason | 2013 | 1 | 0 | not reported | not reported |
+| Grand Rapids | 1 | G League team | 2025 | 0 | 0 | not reported | not reported |
+| San Diego | 1 | G League team | 2025 | 0 | 0 | not reported | not reported |
+| San Juan (partial data) | 1 | NBA preseason | 2025 | 1 | 0 | not reported | not reported |
+| St. Louis | 1 | NBA preseason | 2014 | 1 | 0 | not reported | not reported |
+| Tampa | 1 | NBA regular season (temporary home, pandemic) | 2020 | 1 | 0 | not reported | not reported |
+
+![Demonstrated demand](figures/13_demonstrated_demand.png)
+
+**Exploratory only:** adding log(1 + NBA games) as a third Pillar-B factor changes the candidate ranks as shown below. A third factor also dilutes the other two, so markets with zero games move too (`outputs/demand_sensitivity.csv`).
+
+| short_name | nba_games | rank_base | rank_with_demand_bonus | rank_change |
+|---|---|---|---|---|
+| Seattle | 4 | 1 | 2 | 1 |
+| Austin | 9 | 2 | 1 | -1 |
+| Raleigh | 0 | 3 | 5 | 2 |
+| Omaha | 0 | 4 | 6 | 2 |
+| Las Vegas | 22 | 5 | 3 | -2 |
+| Cincinnati | 1 | 6 | 4 | -2 |
+| Nashville | 0 | 7 | 7 | 0 |
+| San Diego | 0 | 8 | 9 | 1 |
+| Kansas City | 0 | 9 | 11 | 2 |
+| Richmond | 0 | 10 | 14 | 4 |
+| Louisville | 3 | 11 | 8 | -3 |
+| Columbus | 0 | 12 | 13 | 1 |
 
 ## Operations: realignment
 

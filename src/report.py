@@ -28,7 +28,8 @@ def load():
                 npv=pd.read_csv(OUTPUTS / "owner_npv.csv"), beg=pd.read_csv(OUTPUTS / "owner_breakeven_growth.csv"),
                 focus=pd.read_csv(OUTPUTS / "focus_markets.csv"), chg=pd.read_csv(OUTPUTS / "top10_change.csv"),
                 cal=pd.read_csv(OUTPUTS / "business_case_calibration.csv"), cov=pd.read_csv(OUTPUTS / "coverage.csv"),
-                pm=pd.read_csv(OUTPUTS / "partial_markets.csv"),
+                pm=pd.read_csv(OUTPUTS / "partial_markets.csv"), dem=pd.read_csv(OUTPUTS / "demand_summary.csv"),
+                dsens=pd.read_csv(OUTPUTS / "demand_sensitivity.csv"),
                 mc=pd.read_csv(OUTPUTS / "monte_carlo.csv"), fb=pd.read_csv(OUTPUTS / "fan_behavior.csv"),
                 cvp=pd.read_csv(OUTPUTS / "college_vs_pro.csv"), bid=pd.read_csv(OUTPUTS / "bidder_multiples.csv"),
                 t=pd.read_csv(OUTPUTS / "tornado.csv"))
@@ -109,6 +110,10 @@ def key_numbers(D):
     for _, row in bid.iterrows():
         items.append((f"Price / est. revenue: {row.short_name}", f"{row.price_to_revenue_base:.1f}x ({row.price_to_revenue_range})", f"{row.price_basis}; revenue = local estimate + 1/32 of central revenue",
                       f"{row.premium_vs_league_avg_multiple:+.0%} vs league-average multiple", f"outputs/bidder_multiples.csv (short_name={row.short_name})"))
+    for _, row in D["dem"].iterrows():
+        att = "attendance not reported" if pd.isna(row.avg_attendance) else f"avg attendance {row.avg_attendance:,.0f} over {int(row.games_with_attendance)} games" + ("" if pd.isna(row.avg_pct_capacity) else f" ({row.avg_pct_capacity:.0%} of capacity)")
+        items.append((f"Demonstrated demand: {row.market}", f"{int(row.events)} events ({int(row.nba_games)} NBA games), latest {int(row.latest_year)}; {att}",
+                      "Events held in a non-NBA market since 2011-12; NOT scored (selection bias)", row.event_types, f"outputs/demand_summary.csv (market={row.market})"))
     for _, row in D["pm"].iterrows():
         items.append((f"Partial-data market: {row.short_name}", f"score {row.total_score:.2f} (would rank #{int(row.rank_if_included)} if included); ease {row.ease_of_entry:.2f}; quadrant {row.quadrant}; {row.miles_to_nearest_nba:,.0f} miles to nearest NBA market",
                       "Scored only on factors with a comparable source; not in rankings or Monte Carlo", f"factors used: {row.factors_used}", f"outputs/partial_markets.csv (short_name={row.short_name})"))
@@ -190,7 +195,15 @@ def readme(D):
     bid["premium_vs_league_avg_multiple"] = bid["premium_vs_league_avg_multiple"].map(lambda x: f"{x:+.0%}")
     pmt = D["pm"][["short_name", "market_type", "total_score", "A_size_wealth", "B_basketball_demand", "C_corporate", "ease_of_entry", "quadrant", "rank_if_included", "miles_to_nearest_nba", "factors_used"]].copy()
     pmt["C_corporate"] = pmt["C_corporate"].map(lambda x: "no data" if pd.isna(x) else f"{x:.2f}")
+    dem = D["dem"].set_index("market")
+    pmt["demand_events"] = pmt["short_name"].map(dem["events"]).fillna(0).astype(int)
     pmt["short_name"] = pmt["short_name"] + " (partial data)"
+    demt = D["dem"].copy()
+    demt["avg_attendance"] = demt["avg_attendance"].map(lambda x: "not reported" if pd.isna(x) else f"{x:,.0f}")
+    demt["avg_pct_capacity"] = demt["avg_pct_capacity"].map(lambda x: "not reported" if pd.isna(x) else f"{x:.0%}")
+    demt["market"] = demt["market"].map(lambda x: f"{x} (partial data)" if x in ("Mexico City", "San Juan") else x)
+    demt = demt.drop(columns=["sellouts_reported"])
+    dst = D["dsens"][D["dsens"]["rank_base"] <= 12][["short_name", "nba_games", "rank_base", "rank_with_demand_bonus", "rank_change"]]
     rt = pd.read_csv(OUTPUTS / "realignment_travel.csv")
     rtt = rt[["option", "teams_east", "teams_west", "avg_miles_per_team", "east_avg_per_team", "west_avg_per_team", "moved_team", "moved_team_miles", "moved_team_miles_if_stayed_west"]].copy()
     for c in ["avg_miles_per_team", "east_avg_per_team", "west_avg_per_team", "moved_team_miles", "moved_team_miles_if_stayed_west"]:
@@ -302,6 +315,20 @@ These are behavioral indicators. They are reported, not scored (`outputs/fan_beh
 ![Honeymoon](figures/12_honeymoon_curve.png)
 
 {md(fbt, 1)}
+
+## Demonstrated demand: neutral-site and NBA-adjacent events
+
+This counts NBA and NBA-adjacent events held in non-NBA markets since 2011-12: neutral-site regular-season and preseason games, NBA Cup knockout games, Las Vegas Summer League championships, temporary or relocated home games, and current G League teams (`data/manual/nba_games_nonmarket.csv`, one source URL per row).
+
+**It is not part of the score.** The league chooses where to play, often in markets it is already courting, so more events can reflect league intent as much as local demand (selection bias). The list is compiled from Wikipedia articles and is not exhaustive. Preseason games are only covered where an arena or team-season article lists them.
+
+{md(demt, 0)}
+
+![Demonstrated demand](figures/13_demonstrated_demand.png)
+
+**Exploratory only:** adding log(1 + NBA games) as a third Pillar-B factor changes the candidate ranks as shown below. A third factor also dilutes the other two, so markets with zero games move too (`outputs/demand_sensitivity.csv`).
+
+{md(dst, 0)}
 
 ## Operations: realignment
 
@@ -482,6 +509,11 @@ def head_to_head(D):
     add("Big-league rivals (NFL+MLB+NHL)", lambda n: f"{int(r.at[n, 'big4_other_leagues'])}", "data/processed/metros.csv; international_markets.csv", "0 (Liga MX soccer not counted)")
     add("Arenas 17,000+ seats without NBA tenant (capacity; tenants)", arenas, "data/manual/arenas.csv; international_markets.csv", f"Y: Arena CDMX ({int(float(mx['largest_arena_capacity'])):,}; Mexico City Capitanes, G League)")
     add("G League team", lambda n: "Y" if m.at[n, "has_g_league"] == 1 else "N", "data/manual/teams.csv; international_markets.csv", "Y: Mexico City Capitanes")
+    dem = D["dem"].set_index("market")
+
+    def dcount(n):
+        return f"{int(dem.at[n, 'events'])} events ({int(dem.at[n, 'nba_games'])} NBA games; {dem.at[n, 'event_types']})" if n in dem.index else "0 found"
+    add("Demonstrated demand since 2011-12 (not scored)", dcount, "outputs/demand_summary.csv", dcount("Mexico City"))
     add("Transplant share (divided-loyalty risk)", lambda n: f"{fb.at[n, 'transplant_share']:.0%} ({fb.at[n, 'transplant_share_vs_nba_median']:+.0%} vs NBA median)", "outputs/fan_behavior.csv")
     add("Est. local revenue min / base / max", lambda n: f"{money(k.at[n, 'est_local_revenue_low'])} / {money(k.at[n, 'est_local_revenue_base'])} / {money(k.at[n, 'est_local_revenue_high'])}", "outputs/kpi_dashboard.csv")
     add("Price used (type; not strictly comparable)", lambda n: f"{money(bid.at[n, 'price_usd'])}: {bid.at[n, 'price_type']}", "outputs/bidder_multiples.csv", "not reported")

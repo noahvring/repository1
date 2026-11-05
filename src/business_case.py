@@ -195,6 +195,9 @@ def main():
         k["est_local_revenue_base"] = scen["base"]
         k["est_local_revenue_high"] = scen.max(axis=1)
         k["local_revenue_per_capita_base"] = k["est_local_revenue_base"] / k["population"]
+        dem = pd.read_csv(OUTPUTS / "demand_summary.csv").set_index("market")
+        k["demand_events"] = k["short_name"].map(dem["events"]).fillna(0).astype(int)
+        k["demand_nba_games"] = k["short_name"].map(dem["nba_games"]).fillna(0).astype(int)
         return k.rename(columns={"rank_candidates": "attractiveness_rank", "big4_other_leagues": "competing_teams"})
 
     kpis(ids).sort_values("attractiveness_rank").to_csv(OUTPUTS / "kpi_dashboard.csv")

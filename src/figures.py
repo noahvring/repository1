@@ -143,6 +143,29 @@ def main():
         source(fig, "Source: Wikipedia season articles (regular-season home-game attendance in game logs), URL per row in data/manual/expansion_attendance_wiki.csv. Gaps = season not parseable or <20 home games (e.g. 2020-21). Sellout cap: attendance can't exceed capacity, so sold-out seasons show as flat lines. " + REPO_NAME)
         fig.tight_layout(rect=(0, 0.07, 1, 1)); fig.savefig(FIGURES / "12_honeymoon_curve.png", dpi=150); plt.close(fig)
 
+    # 13 demonstrated demand: events per market by type, sellout markers where reported
+    ev = pd.read_csv(MANUAL / "nba_games_nonmarket.csv")
+    ct = ev.pivot_table(index="market", columns="event_type", values="teams", aggfunc="count", fill_value=0)
+    ct = ct.loc[ct.sum(axis=1).sort_values().index]
+    fig, ax = plt.subplots(figsize=(10, 6))
+    left = np.zeros(len(ct))
+    palette = [BLUE, ORANGE, "#0d9488", "#7c3aed", "#ca8a04", GRAY, "#db2777", "#65a30d", DARK]
+    for col, c in zip(ct.columns, palette):
+        ax.barh(ct.index, ct[col], left=left, color=c, label=col)
+        left += ct[col].to_numpy()
+    sell = ev[ev["sellout"] == "Y"].groupby("market").size()
+    for i, mk in enumerate(ct.index):
+        if mk in sell:
+            ax.plot(left[i] + 0.3, i, marker="*", color=DARK, ms=12)
+    labels = [f"{mk} (partial data)" if mk in ("Mexico City", "San Juan") else mk for mk in ct.index]
+    ax.set_yticks(range(len(ct)), labels)
+    ax.set_xlabel("Events since 2011-12 (count)"); ax.legend(frameon=False, fontsize=7, loc="lower right")
+    ax.set_title("Demonstrated demand: NBA and NBA-adjacent events in non-NBA markets")
+    source(fig, "Not scored. Selection bias: the league chooses where to play, often in markets it is courting. Compiled from Wikipedia "
+           "(Global Games, NBA Cup, Summer League, arena and team-season articles); not exhaustive. No sellouts were reported in these sources. "
+           "data/manual/nba_games_nonmarket.csv. " + REPO_NAME)
+    fig.tight_layout(rect=(0, 0.07, 1, 1)); fig.savefig(FIGURES / "13_demonstrated_demand.png", dpi=150); plt.close(fig)
+
     # 1 headline
     fig, ax = plt.subplots(figsize=(9, 6.5)); headline(ax, r); source(fig); fig.tight_layout(rect=(0, 0.04, 1, 1))
     fig.savefig(FIGURES / "01_headline_top15.png", dpi=150); plt.close(fig)
