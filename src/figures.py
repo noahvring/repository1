@@ -87,13 +87,13 @@ def main():
     rt = pd.read_csv(OUTPUTS / "realignment_travel.csv")
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(12, 5.5))
     lab = rt["option"].str.replace("32 teams: ", "32: ")
-    a1.barh(lab[::-1], rt["avg_miles_per_team"][::-1] / 1000, color=[GRAY] + [BLUE] * (len(rt) - 1))
+    a1.barh(lab[::-1], rt["avg_miles_per_team"][::-1] / 1000, color=([GRAY] + [BLUE] * (len(rt) - 1))[::-1])
     a1.set_xlabel("Avg conference round-trip miles per team (000)"); a1.set_title("League average")
-    mv = rt[rt["moved_team"] != ""]
+    mv = rt[rt["moved_team"].notna() & (rt["moved_team"] != "")]
     y = np.arange(len(mv))
     a2.barh(y - 0.2, mv["moved_team_miles_if_stayed_west"] / 1000, 0.4, color=GRAY, label="if it stayed West")
     a2.barh(y + 0.2, mv["moved_team_miles"] / 1000, 0.4, color=ORANGE, label="after moving East")
-    a2.set_yticks(y, mv["moved_team"]); a2.set_xlabel("Moving team's conference miles (000)"); a2.set_title("The team that moves"); a2.legend(frameon=False, fontsize=8)
+    a2.set_yticks(y, mv["moved_team"]); a2.set_xlabel("Moving team's conference miles (000)"); a2.set_title("The team that moves"); a2.legend(frameon=False, fontsize=8, loc="lower right")
     fig.suptitle("Realignment travel proxy: who moves East when Seattle and Las Vegas join the West?", weight="bold", fontsize=13)
     source(fig, "SIMPLIFIED PROXY: one round trip per conference opponent, straight-line miles; ignores real schedules and back-to-backs. Arenas: Wikipedia NBA team table; SEA/LV: Census Gazetteer. outputs/realignment_travel.csv. " + REPO_NAME)
     fig.tight_layout(rect=(0, 0.05, 1, 0.95)); fig.savefig(FIGURES / "10_realignment_travel.png", dpi=150); plt.close(fig)

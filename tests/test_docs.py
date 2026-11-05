@@ -31,3 +31,9 @@ def test_every_figure_used_in_readme():
     for f in (ROOT / "figures").glob("*.png"):
         if f.name != "linkedin_summary.png":
             assert f"figures/{f.name}" in readme, f"README does not show {f.name}"
+
+
+def test_no_nan_in_generated_docs():
+    for d in DOCS:
+        text = (ROOT / d).read_text()
+        assert not re.search(r"\bnan\b", text), f"{d} contains 'nan'"

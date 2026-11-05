@@ -105,7 +105,7 @@ def key_numbers(D):
     rt = pd.read_csv(OUTPUTS / "realignment_travel.csv")
     cur = rt[rt.option == "Current 30 teams"].iloc[0]
     items.append(("Avg conference travel per team, current 30 teams", f"{cur.avg_miles_per_team:,.0f} miles", "Proxy: one round trip to each conference opponent, straight-line", "simplified proxy", "outputs/realignment_travel.csv (Current 30 teams)"))
-    for _, row in rt[rt.moved_team != ""].iterrows():
+    for _, row in rt[rt.moved_team.notna() & (rt.moved_team != "")].iterrows():
         items.append((f"Realignment: {row.moved_team} move East", f"league avg {row.avg_miles_per_team:,.0f} mi/team; mover {row.moved_team_miles:,.0f} mi (vs {row.moved_team_miles_if_stayed_west:,.0f} if it stayed West)",
                       "32 teams, Seattle and Las Vegas in the West", "simplified proxy", f"outputs/realignment_travel.csv ({row.option})"))
     hm = pd.read_csv(MANUAL / "expansion_attendance_wiki.csv")
