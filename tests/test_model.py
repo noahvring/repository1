@@ -27,3 +27,18 @@ def test_validity_rows():
     v = pd.read_csv(OUTPUTS / "validity.csv")
     assert set(v["measure"]) >= {"total_score", "A_size_wealth"}
     assert (v["ci95_low"] <= v["ci95_high"]).all()
+
+
+def test_monte_carlo_probabilities_and_seed():
+    import model
+    mc = pd.read_csv(OUTPUTS / "monte_carlo.csv")
+    for c in ["p_top5", "p_top10"]:
+        assert mc[c].between(0, 1).all()
+    assert (mc["p_top5"] <= mc["p_top10"]).all()
+    assert (mc["rank_p05"] <= mc["median_rank"]).all() and (mc["median_rank"] <= mc["rank_p95"]).all()
+    # reproducible: recomputing with the same seed gives identical probabilities
+    df = pd.read_csv(model.PROCESSED / "metros.csv").set_index("market_id")
+    p, _ = model.pillar_scores(df)
+    again = model.monte_carlo(df, p).sort_index()
+    saved = mc.set_index("market_id").sort_index()
+    assert (again["p_top10"].values == saved["p_top10"].values).all()

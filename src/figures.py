@@ -68,6 +68,21 @@ def main():
     fig.text(0.01, 0.035, "Bubble size = population. Dashed lines = median current NBA market. Orange = Seattle, Las Vegas. Grey = current NBA markets.", fontsize=8)
     source(fig); fig.tight_layout(rect=(0, 0.06, 1, 1)); fig.savefig(FIGURES / "00_matrix_attractiveness_vs_ease.png", dpi=150); plt.close(fig)
 
+    # 0b Monte Carlo robustness: P(top 10) with median rank and 90% interval
+    mc = pd.read_csv(OUTPUTS / "monte_carlo.csv").head(15).iloc[::-1]
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(11, 6.5), sharey=True, gridspec_kw={"width_ratios": [1.2, 1]})
+    cols = [ORANGE if n in ("Seattle", "Las Vegas") else BLUE for n in mc["short_name"]]
+    a1.barh(mc["short_name"], mc["p_top10"], color=cols); a1.set_xlim(0, 1)
+    for y, v in enumerate(mc["p_top10"]):
+        a1.text(v + 0.01, y, f"{v:.0%}", va="center", fontsize=8)
+    a1.set_xlabel("Probability of ranking in the top 10"); a1.set_title("P(top 10)")
+    a2.hlines(range(len(mc)), mc["rank_p05"], mc["rank_p95"], color=GRAY, lw=3)
+    a2.scatter(mc["median_rank"], range(len(mc)), color=cols, zorder=3)
+    a2.invert_xaxis(); a2.set_xlabel("Rank (median, 90% interval)"); a2.set_title("Rank range")
+    fig.suptitle("How robust is the ranking? 10,000 random pillar weightings", weight="bold", fontsize=13)
+    source(fig, "Weights ~ Dirichlet(1,1,1), seed 42, over pillars A-C; ranks among non-NBA markets. outputs/monte_carlo.csv. " + SRC)
+    fig.tight_layout(rect=(0, 0.05, 1, 1)); fig.savefig(FIGURES / "09_monte_carlo_robustness.png", dpi=150); plt.close(fig)
+
     # 1 headline
     fig, ax = plt.subplots(figsize=(9, 6.5)); headline(ax, r); source(fig); fig.tight_layout(rect=(0, 0.04, 1, 1))
     fig.savefig(FIGURES / "01_headline_top15.png", dpi=150); plt.close(fig)
