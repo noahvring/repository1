@@ -56,3 +56,10 @@ def test_coverage_report_written():
     print("\n" + cov.to_string(index=False))
     assert {"factor", "share_with_data"}.issubset(cov.columns)
     assert cov.loc[cov.factor == "population", "share_with_data"].iloc[0] == 1.0
+
+
+def test_bidder_landscape_sourced():
+    from config import RESEARCH
+    b = pd.read_csv(RESEARCH / "bidder_landscape.csv")
+    assert b["source_url"].str.startswith("http").all()
+    assert {"Las Vegas", "Seattle"} <= set(b["market"])
