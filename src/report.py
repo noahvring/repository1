@@ -28,6 +28,8 @@ def load():
                 npv=pd.read_csv(OUTPUTS / "owner_npv.csv"), beg=pd.read_csv(OUTPUTS / "owner_breakeven_growth.csv"),
                 focus=pd.read_csv(OUTPUTS / "focus_markets.csv"), chg=pd.read_csv(OUTPUTS / "top10_change.csv"),
                 cal=pd.read_csv(OUTPUTS / "business_case_calibration.csv"), cov=pd.read_csv(OUTPUTS / "coverage.csv"),
+                mc=pd.read_csv(OUTPUTS / "monte_carlo.csv"), fb=pd.read_csv(OUTPUTS / "fan_behavior.csv"),
+                cvp=pd.read_csv(OUTPUTS / "college_vs_pro.csv"), bid=pd.read_csv(OUTPUTS / "bidder_multiples.csv"),
                 t=pd.read_csv(OUTPUTS / "tornado.csv"))
 
 
@@ -74,6 +76,31 @@ def key_numbers(D):
             items.append((f"Focus market rank: {row.focus_label}", f"#{int(row.attractiveness_rank)}", "Rank among non-NBA markets", "equal weights", f"outputs/focus_markets.csv (focus_label={row.focus_label})"))
         elif row.scored != "Y":
             items.append((f"Focus market: {row.focus_label}", f"population {row.population/1e6:.1f}M; not scored", "Outside U.S. data; descriptive facts only", "-", f"data/manual/international_markets.csv (market={row.focus_label})"))
+    mc, fb, cvp, bid = D["mc"], D["fb"].set_index("short_name"), D["cvp"].iloc[0], D["bid"]
+    for _, row in mc.head(5).iterrows():
+        q = r.loc[r.short_name == row.short_name, "quadrant"].iloc[0]
+        items.append((f"Monte Carlo: {row.short_name}", f"P(top 10) {row.p_top10:.0%}; P(top 5) {row.p_top5:.0%}; median rank #{row.median_rank:.0f} (90%: #{row.rank_p05:.0f}-#{row.rank_p95:.0f}); quadrant: {q}",
+                      "Share of 10,000 random pillar weightings in which the market ranks top 10 / top 5", "Dirichlet(1,1,1), seed 42", f"outputs/monte_carlo.csv (short_name={row.short_name})"))
+    for nm in ["Seattle", "Las Vegas"]:
+        row = mc[mc.short_name == nm].iloc[0]
+        items.append((f"Monte Carlo: {nm}", f"P(top 10) {row.p_top10:.0%}; median rank #{row.median_rank:.0f}", "As above", "Dirichlet(1,1,1), seed 42", f"outputs/monte_carlo.csv (short_name={nm})"))
+    prime = r[(~r["nba_metro"]) & (r["quadrant"] == "Prime targets")]["short_name"].tolist()
+    items.append(("Prime-target markets", f"{len(prime)} ({', '.join(prime)})", "Non-NBA markets above the NBA median on both attractiveness and ease of entry", "medians of current NBA markets", "outputs/rankings.csv (quadrant)"))
+    for nm in ["Raleigh", "Seattle", "Las Vegas"]:
+        mi = r.loc[r.short_name == nm, "miles_to_nearest_nba"].iloc[0]
+        items.append((f"Miles to nearest NBA market: {nm}", f"{mi:.0f}", "Straight-line distance between market internal points (cannibalization proxy)", "-", f"outputs/rankings.csv (short_name={nm})"))
+    for nm in ["Las Vegas", "Seattle"]:
+        items.append((f"Transplant share: {nm}", f"{fb.at[nm, 'transplant_share']:.0%}", "Residents born outside their current state (divided-loyalty risk; not scored)",
+                      f"{fb.at[nm, 'transplant_share_vs_nba_median']:+.0%} vs median NBA market", f"outputs/fan_behavior.csv (short_name={nm})"))
+    items.append(("College attendance vs pro attractiveness (NBA markets)", f"r = {cvp.pearson_r_college_att_vs_score_without_college:.2f} (p = {cvp.p_value:.2f})",
+                  "Correlation between college attendance per capita and the score without college, across 27 NBA markets (association only)", "-", "outputs/college_vs_pro.csv"))
+    items.append(("Top-10 overlap without college attendance", f"{int(cvp.top10_overlap_equal_vs_no_college)} of 10",
+                  f"Dropped: {cvp.dropped_from_top10_without_college}; added: {cvp.added_to_top10_without_college}", "no_college weighting", "outputs/college_vs_pro.csv"))
+    lg = bid["league_avg_value_to_revenue"].iloc[0]
+    items.append(("League-average franchise value / revenue", f"{lg:.1f}x", "Average franchise value $6.64B / $456M average team revenue (Sportico)", "reported", "outputs/bidder_multiples.csv (league_avg_value_to_revenue)"))
+    for _, row in bid.iterrows():
+        items.append((f"Price / est. revenue: {row.short_name}", f"{row.price_to_revenue_base:.1f}x ({row.price_to_revenue_range})", f"{row.price_basis}; revenue = local estimate + 1/32 of central revenue",
+                      f"{row.premium_vs_league_avg_multiple:+.0%} vs league-average multiple", f"outputs/bidder_multiples.csv (short_name={row.short_name})"))
     top = D["t"].iloc[0]
     items.append(("Most influential revenue assumption", f"{top.assumption} (swing {money(top.swing)})", "Moves combined top-8 base local revenue the most", "tornado", "outputs/tornado.csv (row 1)"))
     t = pd.DataFrame(items, columns=["Number", "Value", "Plain-English meaning", "Scenario / CI", "Source file and row"])
@@ -126,6 +153,17 @@ def readme(D):
     fo["attractiveness_rank"] = fo["attractiveness_rank"].map(lambda x: "" if pd.isna(x) else f"#{int(x)}")
     fo["population"] = fo["population"].map(lambda x: f"{x/1e6:.1f}M")
     fo.loc[focus["nba_metro"] == True, "attractiveness_rank"] = "(existing NBA market)"
+    mc = D["mc"]; mc_s = mc[mc.short_name == "Seattle"].p_top10.iloc[0]; mc_v = mc[mc.short_name == "Las Vegas"].p_top10.iloc[0]
+    prime = r[(~r["nba_metro"]) & (r["quadrant"] == "Prime targets")]["short_name"].tolist()
+    mct = mc.head(15)[["short_name", "p_top5", "p_top10", "median_rank", "rank_p05", "rank_p95"]].copy()
+    for c in ["p_top5", "p_top10"]:
+        mct[c] = mct[c].map(lambda x: f"{x:.0%}")
+    quad = r[~r["nba_metro"]].groupby("quadrant")["short_name"].apply(lambda x: ", ".join(x)).reset_index()
+    fbt = D["fb"].head(12)[["short_name", "transplant_share", "transplant_share_vs_nba_median", "ncaa_att_per_1k", "rank_equal", "rank_no_college"]].copy()
+    fbt["transplant_share"] = fbt["transplant_share"].map(lambda x: f"{x:.0%}"); fbt["transplant_share_vs_nba_median"] = fbt["transplant_share_vs_nba_median"].map(lambda x: f"{x:+.0%}")
+    cvp = D["cvp"].iloc[0]
+    bid = D["bid"][["short_name", "price_basis", "price_to_revenue_base", "price_to_revenue_range", "league_avg_value_to_revenue", "premium_vs_league_avg_multiple"]].copy()
+    bid["premium_vs_league_avg_multiple"] = bid["premium_vs_league_avg_multiple"].map(lambda x: f"{x:+.0%}")
     srcs = pd.DataFrame([
         ("Population, households, income, age 18-44", "Census ACS 5-year summary file (www2.census.gov)", "2020-2024"),
         ("Population growth", "Census Population Estimates, Vintage 2025", "2020-2025"),
@@ -136,7 +174,11 @@ def readme(D):
         ("Arenas 17,000+ seats", "Wikipedia: List of indoor arenas in the United States", f"accessed {ACCESS_DATE}"),
         ("Market definitions", "Census CBSA/CSA delineation files", "July 2023"),
         ("Team revenue by stream, central revenue share, national TV per team", "Sportico team-finance reporting", "2025-26"),
-        ("Mexico City, Vancouver facts", "Wikipedia (population, arena, history)", f"accessed {ACCESS_DATE}"),
+        ("Mexico City, Vancouver, Toronto facts", "Wikipedia (population, arena, history, coordinates)", f"accessed {ACCESS_DATE}"),
+        ("Market locations", "Census Gazetteer 2024 (CBSA internal points)", "2024"),
+        ("Place of birth (transplant share)", "Census ACS 5-year table B05002", "2020-2024"),
+        ("Expansion-team attendance (partial)", "ESPN NBA attendance pages", "2005-2016"),
+        ("Franchise value, team revenue; Las Vegas price", "Sportico; ESPN (2026-10-02)", "2025-26"),
         ("Google Trends; NTTO overseas visitors", "Skipped (see DEVIATIONS.md)", "-"),
     ], columns=["Factor", "Source", "Year"])
     txt = f"""# Beyond Seattle and Vegas: NBA Expansion Market Strategy
@@ -150,17 +192,23 @@ def readme(D):
   - **{int(r['overlooked'].sum())}** non-NBA markets score at or above the median current NBA market ({med:.2f}): {', '.join(r[r['overlooked']]['short_name'])}.
   - Each existing owner's fee share (base) is **{money(cell.fee_share_per_existing_team)}**, compared with a 20-year NPV of shared-revenue dilution of **{money(cell.npv_dilution_20y)}** (3% growth, 8% discount).
   - Shared revenue would need to grow **{be.breakeven_growth:.0%} a year** before dilution outweighs the fee. Reported payout growth is about 7% a year.
+  - Across 10,000 random pillar weightings, Seattle and Las Vegas land in the top 10 **{mc_s:.0%}** and **{mc_v:.0%}** of the time. Prime targets: **{', '.join(prime)}**.
 
-![Headline](figures/01_headline_top15.png)
+![Attractiveness vs ease of entry](figures/00_matrix_attractiveness_vs_ease.png)
 
 ## Approach
 
-The scorecard has four pillars. Every factor is converted to a z-score across the {len(D['m'])} markets; population, GDP and large-establishment counts are logged first. Factors are averaged with equal weights inside each pillar, and the four pillars are averaged with equal weights into a total score. Current NBA markets are scored the same way and serve as the benchmark. CBSA data are aggregated to markets: counts and populations are summed, income is population-weighted, and the 18-44 share is recomputed from counts.
+Markets are placed on two separate axes, **attractiveness** and **ease of entry**, and the matrix splits them at the median current NBA market. Attractiveness has three pillars (A-C below). Every factor is converted to a z-score across the {len(D['m'])} markets; population, GDP and large-establishment counts are logged first. Factors are averaged with equal weights inside each pillar, and the three pillars are averaged with equal weights into the attractiveness score. Current NBA markets are scored the same way and serve as the benchmark. CBSA data are aggregated to markets: counts and populations are summed, income is population-weighted, and the 18-44 share is recomputed from counts.
 
 1. **A. Market size and wealth:** population, median household income, share of residents aged 18-44, population growth 2020-25, and GDP.
 2. **B. Basketball demand:** NCAA D-I men's home attendance per 1,000 residents, and WNBA presence. G League presence is shown but not scored, because G League teams are mostly NBA-owned affiliates.
 3. **C. Corporate money:** establishments with 500+ employees, as a total and per 100k residents.
-4. **D. Competition and infrastructure:** NFL, MLB and NHL teams (counted as a negative), and whether the market has an NBA-capable arena (17,000+ seats).
+**Ease of entry** (separate axis, so nothing is double-counted) combines:
+- an available arena (17,000+ seats without an NBA tenant);
+- the log of straight-line miles to the nearest other NBA market, a proxy for cannibalizing existing teams' fans;
+- NFL, MLB and NHL teams, counted as a negative.
+
+**Robustness:** 10,000 random pillar weightings drawn from a Dirichlet(1,1,1) distribution (seed 42) give each market's probability of a top-5 or top-10 rank, its median rank and a 90% interval (`outputs/monte_carlo.csv`).
 
 ## Data & sources
 
@@ -172,11 +220,21 @@ The scorecard has four pillars. Every factor is converted to a z-score across th
 
 ## Results
 
+**Matrix quadrants, non-NBA markets** (`outputs/rankings.csv`):
+
+{md(quad)}
+
+**Monte Carlo robustness**, top 15 by P(top 10):
+
+{md(mct, 0)}
+
+![Monte Carlo](figures/09_monte_carlo_robustness.png)
+
 **Top 15 non-NBA markets** (equal weights; `outputs/rankings.csv`):
 
 {md(top15)}
 
-**How the top 10 changed from v1.** v1 ranked CBSAs and scored G League presence. The middle column shows the switch to CSAs with G League still scored; the last column is final (`outputs/top10_change.csv`). Omaha was below 1M people as a CBSA, so it was not in the v1 study set.
+**How the top 10 changed from v1.** v1 ranked CBSAs and scored G League presence. The middle column shows the switch to CSAs with G League still scored. The final-rank column is the current v3 model, which also moves competition and arena onto the ease-of-entry axis (`outputs/top10_change.csv`). Omaha was below 1M people as a CBSA, so it was not in the v1 study set.
 
 {md(ch)}
 
@@ -191,6 +249,16 @@ The scorecard has four pillars. Every factor is converted to a z-score across th
 ![Sensitivity](figures/03_sensitivity_heatmap.png)
 ![Pillars](figures/02_pillar_breakdown_top8.png)
 ![Scatter](figures/04_population_vs_income.png)
+
+## Fan behavior & market risk
+
+These are behavioral indicators. They are reported, not scored (`outputs/fan_behavior.csv`, `outputs/college_vs_pro.csv`).
+
+- **Transplant share** is the share of residents born outside their current state. Transplants often keep loyalty to the teams they grew up with, so this is a divided-loyalty risk; its sign is ambiguous.
+- **College vs pro:** across the 27 NBA markets, the correlation between college attendance per capita and the attractiveness score without college is r = {cvp.pearson_r_college_att_vs_score_without_college:.2f} (p = {cvp.p_value:.2f}). With college attendance removed, {int(cvp.top10_overlap_equal_vs_no_college)} of the top 10 stay. Dropped: {cvp.dropped_from_top10_without_college}. Added: {cvp.added_to_top10_without_college}.
+- **Honeymoon curve:** skipped. Only two expansion or relocated teams could be sourced (see DEVIATIONS.md). The partial data is in `data/manual/expansion_attendance.csv`.
+
+{md(fbt, 1)}
 
 ## Focus markets
 
@@ -219,6 +287,10 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 
 ![Owner NPV](figures/07_owner_npv_heatmap.png)
 
+**Bidder view: price / estimated revenue vs league average** (`outputs/bidder_multiples.csv`). Revenue = estimated local revenue + 1/32 of central revenue:
+
+{md(bid, 1)}
+
 ## Market & competitive research
 
 - `research/trends.csv`: dated, sourced facts on the expansion process (including ESPN's 2026-10-02 report that the league is more focused on Las Vegas), fees, the media deal, team revenue, and NHL, WNBA and MLS expansions.
@@ -234,8 +306,11 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 ## Limitations & data I'd buy
 
 - **Associations only.** The validity check asks whether the scorecard separates existing NBA markets from the rest. It does not show what causes team success.
-- **College basketball per capita can dominate a small market.** Omaha and Raleigh-Durham rank high mostly on Pillar B. See `top_pillar` in `outputs/rankings.csv`.
-- **CSAs still split some media markets.** Neighboring NBA markets outside the CSA (e.g. Las Vegas fans of the Suns or Lakers) and cannibalization are not modeled.
+- **College basketball per capita can dominate a small market.** Omaha and Raleigh-Durham rank high mostly on Pillar B. See `top_pillar` in `outputs/rankings.csv` and the no-college check above.
+- **Distance is a rough proxy for cannibalization.** Ease of entry uses straight-line miles from one point per market, not drive times or TV overlap. Existing teams' fans in a market (e.g. Suns or Lakers fans in Las Vegas) are not measured.
+- **Transplant share is inflated where a market crosses state lines** (people born in the neighboring state count as transplants), and it is not scored.
+- **Monte Carlo varies only the pillar weights**, not the factor choice or the data.
+- **Bidder multiples** use the base fee ($8.5B) for every market except Las Vegas (reported ~$10B), and ignore arena costs (except the Las Vegas column) and timing.
 - **Missing data:** Google Trends (folder empty) and NTTO overseas visitors (dashboard only) are not in the scorecard. Mexico City and Vancouver are not scored. Virginia Beach GDP is missing.
 - **NCAA mapping:** schools are assigned to markets by main-campus county. Only D-I schools in the study markets are mapped.
 - **Business case:** each stream is scaled with an elasticity calibrated on one pair of teams. Dilution assumes expansion teams add no new shared revenue (the media deal is fixed through 2035-36), and years beyond the deal assume renewal.
@@ -255,6 +330,51 @@ Python ({', '.join(l.split('==')[0] for l in (ROOT / 'requirements.txt').read_te
     (ROOT / "README.md").write_text(txt)
 
 
+def exec_summary(D):
+    r, mc, fb, k = D["r"], D["mc"], D["fb"].set_index("market_id"), D["k"]
+    nb = npv_base(D); cell = nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
+    be = D["beg"][(D["beg"].discount_rate == 0.08) & (D["beg"].fee_scenario == "base")].iloc[0]
+    m = D["m"].set_index("market_id")
+    prime = r[(~r["nba_metro"]) & (r["quadrant"] == "Prime targets")]["short_name"].tolist()
+    rr = r.set_index("market_id")
+    top = mc.head(5).set_index("market_id")
+    # base local revenue for the top-5 (same model as kpi_dashboard)
+    import business_case as bc
+    S, _ = bc.load_assumptions()
+    mm = m.join(rr[["A_size_wealth", "B_basketball_demand", "C_corporate"]])
+    ref = m[m["nba_metro"]][["population", "median_hh_income", "large_establishments_500plus"]].median()
+    rev = bc.local_revenue(mm.loc[top.index], ref, S["base"])["total"]
+    t = pd.DataFrame({"Market": top["short_name"], "Rank (equal weights)": rr.loc[top.index, "rank_candidates"].astype(int),
+                      "P(top 10)": top["p_top10"].map(lambda x: f"{x:.0%}"), "Ease of entry": rr.loc[top.index, "ease_of_entry"].round(2),
+                      "Quadrant": rr.loc[top.index, "quadrant"], "Est. local revenue (base)": rev.map(money),
+                      "Transplant share": fb.loc[top.index, "transplant_share"].map(lambda x: f"{x:.0%}")})
+    txt = f"""# Executive summary
+
+*Template. Headline and recommendation written by Noah. Numbers generated by `src/report.py`.*
+
+## Headline
+
+## Key numbers
+
+1. **Seattle / Las Vegas:** rank #{int(rr[rr.short_name == 'Seattle'].rank_candidates.iloc[0])} / #{int(rr[rr.short_name == 'Las Vegas'].rank_candidates.iloc[0])} among {int((~r.nba_metro).sum())} non-NBA markets. Chance of a top-10 rank across 10,000 random weightings: {mc[mc.short_name == 'Seattle'].p_top10.iloc[0]:.0%} / {mc[mc.short_name == 'Las Vegas'].p_top10.iloc[0]:.0%}.
+2. **Prime targets** (above the NBA median on both attractiveness and ease of entry): {len(prime)}, namely {', '.join(prime)}.
+3. **Owner economics:** fee share {money(cell.fee_share_per_existing_team)} per existing team vs a 20-year NPV of dilution of {money(cell.npv_dilution_20y)} (3% growth, 8% discount). Shared revenue would need to grow {be.breakeven_growth:.0%} a year before dilution outweighs the fee.
+4. **Bidder view:** Las Vegas at the reported ~$10B is {D['bid'].set_index('short_name').at['Las Vegas', 'price_to_revenue_base']:.1f}x estimated revenue, vs a league-average value/revenue of {D['bid'].league_avg_value_to_revenue.iloc[0]:.1f}x.
+
+![Matrix](../figures/00_matrix_attractiveness_vs_ease.png)
+
+## Top 5 by probability of a top-10 rank
+
+{md(t.reset_index(drop=True))}
+
+## Recommendation
+"""
+    (ROOT / "memo" / "EXEC_SUMMARY.md").write_text(txt)
+    rows = ["League office", "Existing owners", "Players' union (NBPA)", "Host cities & taxpayers", "Bidding groups", "Broadcasters", "Fans"]
+    st = pd.DataFrame({"Stakeholder": rows, "What they want": "", "Influence (H/M/L)": "", "Interest (H/M/L)": "", "Implication": ""})
+    (ROOT / "memo" / "stakeholders.md").write_text("# Stakeholder grid\n\n*Template for Noah. Evidence: `research/trends.csv`, `outputs/owner_npv.csv`, `outputs/bidder_multiples.csv`.*\n\n" + md(st) + "\n")
+
+
 def final_report(D, runtime_s, test_output):
     dev = (ROOT / "DEVIATIONS.md").read_text()
     tail = "\n".join([l for l in (test_output or "").strip().splitlines() if l.strip()][-3:]) or "not run"
@@ -266,7 +386,8 @@ def final_report(D, runtime_s, test_output):
 - Phase 2: scorecard outputs (`rankings`, `pillar_scores`, `nba_benchmark`, `validity` and `sensitivity` CSVs).
 - Phase 3: assumptions table (sourced from Sportico where possible), local revenue scenarios, owner NPV grid (`owner_npv.csv`, `owner_breakeven_growth.csv`), tornado, `kpi_dashboard.csv`, `focus_markets.csv`.
 - Phase 4: `research/` (trends, comparables, focus markets, competitive landscape, insights).
-- Phase 5: 9 figures in `figures/`, including the owner NPV heatmap, focus markets, and `linkedin_summary.png`.
+- Phase 5: 11 figures in `figures/`, including the attractiveness vs ease-of-entry matrix (headline), Monte Carlo robustness, owner NPV heatmap, focus markets, and `linkedin_summary.png`.
+- v3: ease of entry (distance to nearest NBA market), Monte Carlo weights, fan-behavior lens, bidder multiples, `memo/EXEC_SUMMARY.md`, `memo/stakeholders.md`.
 - Phase 6: README, `memo/MEMO.md` (headings only), `outputs/KEY_NUMBERS.md`, this report, and `run_all.py`.
 
 ## Tests
@@ -285,7 +406,7 @@ Last `run_all.py` run took {runtime_s:.0f} seconds (raw downloads cached in `dat
 
 ## What Noah must write
 
-- The memo sections in `memo/MEMO.md`, and the Recommendation section of the README.
+- The memo sections in `memo/MEMO.md`, the headline and recommendation in `memo/EXEC_SUMMARY.md`, the stakeholder grid in `memo/stakeholders.md`, and the Recommendation section of the README.
 - The "What this suggests" sections in `research/comparables.md` and `research/focus_markets.md`.
 - The `implication` and `confidence` columns in `research/insights.csv`.
 - A review of every row labeled "ASSUMPTION – Noah to review" in `data/manual/assumptions.csv`.
@@ -298,6 +419,7 @@ def main(runtime_s=0.0, test_output=""):
     D = load()
     key_numbers(D)
     focus_md(D)
+    exec_summary(D)
     readme(D)
     final_report(D, runtime_s, test_output)
     print("README.md, KEY_NUMBERS.md, FINAL_REPORT.md written")

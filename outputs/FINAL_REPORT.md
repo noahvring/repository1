@@ -6,18 +6,20 @@
 - Phase 2: scorecard outputs (`rankings`, `pillar_scores`, `nba_benchmark`, `validity` and `sensitivity` CSVs).
 - Phase 3: assumptions table (sourced from Sportico where possible), local revenue scenarios, owner NPV grid (`owner_npv.csv`, `owner_breakeven_growth.csv`), tornado, `kpi_dashboard.csv`, `focus_markets.csv`.
 - Phase 4: `research/` (trends, comparables, focus markets, competitive landscape, insights).
-- Phase 5: 9 figures in `figures/`, including the owner NPV heatmap, focus markets, and `linkedin_summary.png`.
+- Phase 5: 11 figures in `figures/`, including the attractiveness vs ease-of-entry matrix (headline), Monte Carlo robustness, owner NPV heatmap, focus markets, and `linkedin_summary.png`.
+- v3: ease of entry (distance to nearest NBA market), Monte Carlo weights, fan-behavior lens, bidder multiples, `memo/EXEC_SUMMARY.md`, `memo/stakeholders.md`.
 - Phase 6: README, `memo/MEMO.md` (headings only), `outputs/KEY_NUMBERS.md`, this report, and `run_all.py`.
 
 ## Tests
 
 ```
-not run
+................                                                         [100%]
+16 passed in 0.97s
 ```
 
 ## Runtime
 
-Last `run_all.py` run took 0 seconds (raw downloads cached in `data/raw/`).
+Last `run_all.py` run took 9 seconds (raw downloads cached in `data/raw/`).
 
 ## Deviations & skipped sources
 
@@ -56,11 +58,13 @@ All access attempts on 2026-11-05.
 | Ease of entry | New axis, separate from attractiveness: arena available (17,000+ seats without an NBA tenant; for current NBA markets, their own arena), log miles to the nearest *other* NBA market (cannibalization proxy), and NFL+MLB+NHL teams (negative). **Competition and arena moved out of the attractiveness score**, which is now pillars A-C with equal weights, so the axes don't double-count. | Requested; fixes markets near existing teams (e.g. Raleigh, 138 miles from Charlotte) being scored on attractiveness alone. |
 | Market location | Census Gazetteer 2024 publishes CBSA internal points but no CSA file, so each market is placed at the internal point of its largest CBSA. Toronto (Raptors) coordinates come from Wikipedia. Distances are straight-line (haversine), not drive time. | No CSA Gazetteer file found at the expected URL. |
 | Sensitivity set | The "ignore competition" weighting no longer applies (competition left the score), so it was replaced by "no college" (Pillar B without NCAA attendance). | Competition is now on the ease axis. |
+| Transplant share | ACS 2020-24 table B05002 (place of birth): 1 − born in state of residence ÷ total. **Descriptive only, not scored** (its sign is ambiguous). In markets that cross state lines (e.g. Cincinnati, Kansas City), people born in the neighbouring part of the same market count as transplants, which inflates the share. | Requested behavioural lens. |
+| Honeymoon curve | **Skipped; no figure.** ESPN NHL attendance URLs redirect to the NHL home page (no table), so the Golden Knights and Kraken could not be sourced. ESPN shows "--" for the Raptors and Grizzlies 1995-96 to 2000-01. Only 2 teams were sourceable (Bobcats: 7 of 8 seasons; Thunder: 4 of 8), below the 3-team minimum. The partial sourced data is kept in `data/manual/expansion_attendance.csv`. ESPN labels past seasons by current franchise name (Bobcats = "Hornets"). | Rule: fewer than 3 teams → skip and log. Wikipedia season pages or Hockey-Reference could be tried next. |
 
 
 ## What Noah must write
 
-- The memo sections in `memo/MEMO.md`, and the Recommendation section of the README.
+- The memo sections in `memo/MEMO.md`, the headline and recommendation in `memo/EXEC_SUMMARY.md`, the stakeholder grid in `memo/stakeholders.md`, and the Recommendation section of the README.
 - The "What this suggests" sections in `research/comparables.md` and `research/focus_markets.md`.
 - The `implication` and `confidence` columns in `research/insights.csv`.
 - A review of every row labeled "ASSUMPTION – Noah to review" in `data/manual/assumptions.csv`.

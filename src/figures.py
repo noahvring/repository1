@@ -181,23 +181,24 @@ def main():
     ax.set_xlabel("Attractiveness score"); fig.text(0.01, 0.045, note + " - see data/manual/international_markets.csv", fontsize=8)
     source(fig); fig.tight_layout(rect=(0, 0.08, 1, 1)); fig.savefig(FIGURES / "08_focus_markets.png", dpi=150); plt.close(fig)
 
-    # 8 LinkedIn summary 1200x1500
+    # 8 LinkedIn summary 1200x1500, matrix as centrepiece
+    mc = pd.read_csv(OUTPUTS / "monte_carlo.csv").set_index("short_name")
     fig = plt.figure(figsize=(8, 10), dpi=150)
     fig.text(0.05, 0.955, "Beyond Seattle and Vegas:", fontsize=20, weight="bold")
-    fig.text(0.05, 0.92, "which NBA markets are overlooked?", fontsize=20, weight="bold", color=BLUE)
-    ax = fig.add_axes([0.25, 0.32, 0.7, 0.55]); headline(ax, r); ax.set_title("")
-    over = int(r["overlooked"].sum())
-    sea = int(r.loc[r.short_name == "Seattle", "rank_candidates"].iloc[0]); lv = int(r.loc[r.short_name == "Las Vegas", "rank_candidates"].iloc[0])
+    fig.text(0.05, 0.918, "where should the NBA expand next?", fontsize=20, weight="bold", color=BLUE)
+    ax = fig.add_axes([0.11, 0.33, 0.85, 0.55]); matrix(ax, r, small=True)
+    ax.set_xlabel("Ease of entry", fontsize=9); ax.set_ylabel("Attractiveness", fontsize=9)
+    prime = r[(~r["nba_metro"]) & (r["quadrant"] == "Prime targets")]["short_name"].tolist()
     be = beg.loc[(beg.discount_rate == 0.08) & (beg.fee_scenario == "base"), "breakeven_growth"].iloc[0]
-    nums = [(f"{over}", "non-NBA markets score at or above\nthe median current NBA market"),
-            (f"#{sea} / #{lv}", "Seattle / Las Vegas rank\namong non-NBA markets"),
+    nums = [(f"{mc.at['Seattle', 'p_top10']:.0%} / {mc.at['Las Vegas', 'p_top10']:.0%}", "Seattle / Las Vegas chance of a\ntop-10 rank (10,000 weightings)"),
+            (f"{len(prime)}", "'prime target' markets:\n" + ", ".join(prime)),
             (f"{be:.0%}", "shared-revenue growth per year\nneeded for dilution to outweigh\nthe fee (8% discount rate)")]
     for i, (n, lab) in enumerate(nums):
         x0 = 0.05 + i * 0.31
-        fig.text(x0, 0.2, n, fontsize=24, weight="bold", color=ORANGE if i == 1 else BLUE)
-        fig.text(x0, 0.13, lab, fontsize=9)
-    fig.text(0.05, 0.03, f"Scorecard of {len(m)} U.S. markets (Census combined statistical areas; 4 equal-weight pillars). Scenarios, not forecasts.\n" + SRC, fontsize=6.5, color="#4b5563", wrap=True)
-    fig.set_size_inches(8, 10); fig.savefig(FIGURES / "linkedin_summary.png", dpi=150); plt.close(fig)
+        fig.text(x0, 0.215, n, fontsize=22, weight="bold", color=ORANGE if i == 0 else BLUE)
+        fig.text(x0, 0.13, lab, fontsize=8.5)
+    fig.text(0.05, 0.03, f"{len(m)} U.S. markets (Census combined statistical areas). Bubble = population; dashed = median NBA market. Scenarios, not forecasts.\n" + SRC, fontsize=6.5, color="#4b5563", wrap=True)
+    fig.savefig(FIGURES / "linkedin_summary.png", dpi=150); plt.close(fig)
     print("figures written")
 
 

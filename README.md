@@ -9,17 +9,23 @@
   - **6** non-NBA markets score at or above the median current NBA market (0.32): Seattle, Austin, Raleigh, Omaha, Las Vegas, Cincinnati.
   - Each existing owner's fee share (base) is **$566.7M**, compared with a 20-year NPV of shared-revenue dilution of **$156.6M** (3% growth, 8% discount).
   - Shared revenue would need to grow **14% a year** before dilution outweighs the fee. Reported payout growth is about 7% a year.
+  - Across 10,000 random pillar weightings, Seattle and Las Vegas land in the top 10 **100%** and **100%** of the time. Prime targets: **Raleigh, Omaha, Las Vegas**.
 
-![Headline](figures/01_headline_top15.png)
+![Attractiveness vs ease of entry](figures/00_matrix_attractiveness_vs_ease.png)
 
 ## Approach
 
-The scorecard has four pillars. Every factor is converted to a z-score across the 66 markets; population, GDP and large-establishment counts are logged first. Factors are averaged with equal weights inside each pillar, and the four pillars are averaged with equal weights into a total score. Current NBA markets are scored the same way and serve as the benchmark. CBSA data are aggregated to markets: counts and populations are summed, income is population-weighted, and the 18-44 share is recomputed from counts.
+Markets are placed on two separate axes, **attractiveness** and **ease of entry**, and the matrix splits them at the median current NBA market. Attractiveness has three pillars (A-C below). Every factor is converted to a z-score across the 66 markets; population, GDP and large-establishment counts are logged first. Factors are averaged with equal weights inside each pillar, and the three pillars are averaged with equal weights into the attractiveness score. Current NBA markets are scored the same way and serve as the benchmark. CBSA data are aggregated to markets: counts and populations are summed, income is population-weighted, and the 18-44 share is recomputed from counts.
 
 1. **A. Market size and wealth:** population, median household income, share of residents aged 18-44, population growth 2020-25, and GDP.
 2. **B. Basketball demand:** NCAA D-I men's home attendance per 1,000 residents, and WNBA presence. G League presence is shown but not scored, because G League teams are mostly NBA-owned affiliates.
 3. **C. Corporate money:** establishments with 500+ employees, as a total and per 100k residents.
-4. **D. Competition and infrastructure:** NFL, MLB and NHL teams (counted as a negative), and whether the market has an NBA-capable arena (17,000+ seats).
+**Ease of entry** (separate axis, so nothing is double-counted) combines:
+- an available arena (17,000+ seats without an NBA tenant);
+- the log of straight-line miles to the nearest other NBA market, a proxy for cannibalizing existing teams' fans;
+- NFL, MLB and NHL teams, counted as a negative.
+
+**Robustness:** 10,000 random pillar weightings drawn from a Dirichlet(1,1,1) distribution (seed 42) give each market's probability of a top-5 or top-10 rank, its median rank and a 90% interval (`outputs/monte_carlo.csv`).
 
 ## Data & sources
 
@@ -34,7 +40,11 @@ The scorecard has four pillars. Every factor is converted to a z-score across th
 | Arenas 17,000+ seats | Wikipedia: List of indoor arenas in the United States | accessed 2026-11-05 |
 | Market definitions | Census CBSA/CSA delineation files | July 2023 |
 | Team revenue by stream, central revenue share, national TV per team | Sportico team-finance reporting | 2025-26 |
-| Mexico City, Vancouver facts | Wikipedia (population, arena, history) | accessed 2026-11-05 |
+| Mexico City, Vancouver, Toronto facts | Wikipedia (population, arena, history, coordinates) | accessed 2026-11-05 |
+| Market locations | Census Gazetteer 2024 (CBSA internal points) | 2024 |
+| Place of birth (transplant share) | Census ACS 5-year table B05002 | 2020-2024 |
+| Expansion-team attendance (partial) | ESPN NBA attendance pages | 2005-2016 |
+| Franchise value, team revenue; Las Vegas price | Sportico; ESPN (2026-10-02) | 2025-26 |
 | Google Trends; NTTO overseas visitors | Skipped (see DEVIATIONS.md) | - |
 
 **Coverage** (`outputs/coverage.csv`):
@@ -58,6 +68,37 @@ The scorecard has four pillars. Every factor is converted to a z-score across th
 
 ## Results
 
+**Matrix quadrants, non-NBA markets** (`outputs/rankings.csv`):
+
+| quadrant | short_name |
+|---|---|
+| Attractive but hard to enter | Seattle, Austin, Cincinnati |
+| Deprioritize | San Diego, Richmond, Greenville, Tampa, Hartford, Jacksonville, Greensboro, Dayton, Pittsburgh, Harrisburg, Baton Rouge, Buffalo, Columbia, Virginia Beach, Tucson, Grand Rapids, Allentown, Albany, Fresno, Albuquerque, Rochester, Cape Coral, North Port |
+| Easy but small | Nashville, Kansas City, Louisville, Columbus, St. Louis, Knoxville, Urban Honolulu, Birmingham, Tulsa, El Paso |
+| Prime targets | Raleigh, Omaha, Las Vegas |
+
+**Monte Carlo robustness**, top 15 by P(top 10):
+
+| short_name | p_top5 | p_top10 | median_rank | rank_p05 | rank_p95 |
+|---|---|---|---|---|---|
+| Seattle | 98% | 100% | 2 | 1 | 5 |
+| Las Vegas | 63% | 100% | 5 | 4 | 6 |
+| Cincinnati | 48% | 97% | 6 | 2 | 8 |
+| Raleigh | 75% | 94% | 3 | 1 | 12 |
+| Austin | 76% | 92% | 2 | 1 | 14 |
+| Omaha | 64% | 91% | 4 | 1 | 13 |
+| Nashville | 38% | 87% | 6 | 3 | 15 |
+| San Diego | 24% | 71% | 8 | 4 | 20 |
+| Kansas City | 0% | 64% | 9 | 7 | 18 |
+| Louisville | 0% | 40% | 12 | 8 | 19 |
+| Richmond | 0% | 37% | 11 | 9 | 16 |
+| Columbus | 0% | 35% | 12 | 7 | 22 |
+| Knoxville | 10% | 30% | 18 | 4 | 30 |
+| Dayton | 4% | 20% | 25 | 6 | 35 |
+| Tampa | 0% | 12% | 15 | 10 | 32 |
+
+![Monte Carlo](figures/09_monte_carlo_robustness.png)
+
 **Top 15 non-NBA markets** (equal weights; `outputs/rankings.csv`):
 
 | rank_candidates | short_name | market_title | total_score | A_size_wealth | B_basketball_demand | C_corporate | ease_of_entry | quadrant | overlooked | top_pillar |
@@ -78,7 +119,7 @@ The scorecard has four pillars. Every factor is converted to a z-score across th
 | 14 | Tampa | Tampa-St. Petersburg-Clearwater, FL | -0.15 | -0.00 | -0.67 | 0.21 | -0.51 | Deprioritize | False | C_corporate |
 | 15 | St. Louis | St. Louis-St. Charles-Farmington, MO-IL | -0.16 | -0.29 | -0.42 | 0.24 | 0.32 | Easy but small | False | C_corporate |
 
-**How the top 10 changed from v1.** v1 ranked CBSAs and scored G League presence. The middle column shows the switch to CSAs with G League still scored; the last column is final (`outputs/top10_change.csv`). Omaha was below 1M people as a CBSA, so it was not in the v1 study set.
+**How the top 10 changed from v1.** v1 ranked CBSAs and scored G League presence. The middle column shows the switch to CSAs with G League still scored. The final-rank column is the current v3 model, which also moves competition and arena onto the ease-of-entry axis (`outputs/top10_change.csv`). Omaha was below 1M people as a CBSA, so it was not in the v1 study set.
 
 | short_name | market_title | rank_final_csa_no_gleague | top_pillar | rank_v1_cbsa_with_gleague | rank_csa_with_gleague |
 |---|---|---|---|---|---|
@@ -128,6 +169,29 @@ The scorecard has four pillars. Every factor is converted to a z-score across th
 ![Sensitivity](figures/03_sensitivity_heatmap.png)
 ![Pillars](figures/02_pillar_breakdown_top8.png)
 ![Scatter](figures/04_population_vs_income.png)
+
+## Fan behavior & market risk
+
+These are behavioral indicators. They are reported, not scored (`outputs/fan_behavior.csv`, `outputs/college_vs_pro.csv`).
+
+- **Transplant share** is the share of residents born outside their current state. Transplants often keep loyalty to the teams they grew up with, so this is a divided-loyalty risk; its sign is ambiguous.
+- **College vs pro:** across the 27 NBA markets, the correlation between college attendance per capita and the attractiveness score without college is r = -0.20 (p = 0.31). With college attendance removed, 9 of the top 10 stay. Dropped: Richmond. Added: Columbus.
+- **Honeymoon curve:** skipped. Only two expansion or relocated teams could be sourced (see DEVIATIONS.md). The partial data is in `data/manual/expansion_attendance.csv`.
+
+| short_name | transplant_share | transplant_share_vs_nba_median | ncaa_att_per_1k | rank_equal | rank_no_college |
+|---|---|---|---|---|---|
+| Seattle | 56% | +11% | 29.2 | 1.0 | 1.0 |
+| Austin | 49% | +5% | 88.3 | 2.0 | 3.0 |
+| Raleigh | 54% | +9% | 336.9 | 3.0 | 7.0 |
+| Omaha | 41% | -3% | 300.6 | 4.0 | 10.0 |
+| Las Vegas | 74% | +30% | 36.7 | 5.0 | 2.0 |
+| Cincinnati | 33% | -11% | 199.9 | 6.0 | 6.0 |
+| Nashville | 49% | +4% | 110.6 | 7.0 | 4.0 |
+| San Diego | 49% | +4% | 74.3 | 8.0 | 5.0 |
+| Kansas City | 45% | +1% | 99.7 | 9.0 | 8.0 |
+| Richmond | 41% | -3% | 159.9 | 10.0 | 14.0 |
+| Louisville | 37% | -8% | 188.1 | 11.0 | 18.0 |
+| Columbus | 29% | -16% | 72.4 | 12.0 | 9.0 |
 
 ## Focus markets
 
@@ -193,6 +257,19 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 
 ![Owner NPV](figures/07_owner_npv_heatmap.png)
 
+**Bidder view: price / estimated revenue vs league average** (`outputs/bidder_multiples.csv`). Revenue = estimated local revenue + 1/32 of central revenue:
+
+| short_name | price_basis | price_to_revenue_base | price_to_revenue_range | league_avg_value_to_revenue | premium_vs_league_avg_multiple |
+|---|---|---|---|---|---|
+| Seattle | base fee $8.5B (midpoint of reported $7-10B range) | 17.6 | 16.9x-18.2x | 14.6 | +21% |
+| San Diego | base fee $8.5B (midpoint of reported $7-10B range) | 20.6 | 19.8x-21.4x | 14.6 | +41% |
+| Austin | base fee $8.5B (midpoint of reported $7-10B range) | 22.1 | 20.5x-23.7x | 14.6 | +52% |
+| Raleigh | base fee $8.5B (midpoint of reported $7-10B range) | 22.3 | 20.5x-24.0x | 14.6 | +53% |
+| Cincinnati | base fee $8.5B (midpoint of reported $7-10B range) | 22.7 | 20.8x-24.6x | 14.6 | +56% |
+| Nashville | base fee $8.5B (midpoint of reported $7-10B range) | 23.0 | 21.0x-25.0x | 14.6 | +58% |
+| Las Vegas | ESPN-reported ~$10B (Las Vegas) | 26.7 | 24.5x-29.0x | 14.6 | +83% |
+| Omaha | base fee $8.5B (midpoint of reported $7-10B range) | 27.1 | 22.9x-31.1x | 14.6 | +86% |
+
 ## Market & competitive research
 
 - `research/trends.csv`: dated, sourced facts on the expansion process (including ESPN's 2026-10-02 report that the league is more focused on Las Vegas), fees, the media deal, team revenue, and NHL, WNBA and MLS expansions.
@@ -208,8 +285,11 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 ## Limitations & data I'd buy
 
 - **Associations only.** The validity check asks whether the scorecard separates existing NBA markets from the rest. It does not show what causes team success.
-- **College basketball per capita can dominate a small market.** Omaha and Raleigh-Durham rank high mostly on Pillar B. See `top_pillar` in `outputs/rankings.csv`.
-- **CSAs still split some media markets.** Neighboring NBA markets outside the CSA (e.g. Las Vegas fans of the Suns or Lakers) and cannibalization are not modeled.
+- **College basketball per capita can dominate a small market.** Omaha and Raleigh-Durham rank high mostly on Pillar B. See `top_pillar` in `outputs/rankings.csv` and the no-college check above.
+- **Distance is a rough proxy for cannibalization.** Ease of entry uses straight-line miles from one point per market, not drive times or TV overlap. Existing teams' fans in a market (e.g. Suns or Lakers fans in Las Vegas) are not measured.
+- **Transplant share is inflated where a market crosses state lines** (people born in the neighboring state count as transplants), and it is not scored.
+- **Monte Carlo varies only the pillar weights**, not the factor choice or the data.
+- **Bidder multiples** use the base fee ($8.5B) for every market except Las Vegas (reported ~$10B), and ignore arena costs (except the Las Vegas column) and timing.
 - **Missing data:** Google Trends (folder empty) and NTTO overseas visitors (dashboard only) are not in the scorecard. Mexico City and Vancouver are not scored. Virginia Beach GDP is missing.
 - **NCAA mapping:** schools are assigned to markets by main-campus county. Only D-I schools in the study markets are mapped.
 - **Business case:** each stream is scaled with an elasticity calibrated on one pair of teams. Dilution assumes expansion teams add no new shared revenue (the media deal is fixed through 2035-36), and years beyond the deal assume renewal.
