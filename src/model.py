@@ -16,7 +16,9 @@ from config import PROCESSED, OUTPUTS
 PILLARS = {
     "A_size_wealth": [("population", "log", 1), ("median_hh_income", None, 1), ("share_18_44", None, 1),
                       ("pop_growth_2020_2025", None, 1), ("gdp_2024_usd", "log", 1)],
-    "B_basketball_demand": [("ncaa_att_per_1k", None, 1), ("has_wnba", None, 1), ("has_g_league", None, 1)],
+    # G League presence is NOT scored: most G League teams are NBA-owned affiliates near their parent
+    # club, so it would flatter existing NBA markets. It stays in metros.csv as a descriptive column.
+    "B_basketball_demand": [("ncaa_att_per_1k", None, 1), ("has_wnba", None, 1)],
     "C_corporate": [("large_establishments_500plus", "log", 1), ("large_est_per_100k", None, 1)],
     "D_competition_infra": [("big4_other_leagues", None, -1), ("arena_capable", None, 1)],
 }
@@ -36,9 +38,9 @@ def zscore(s):
     return (s - s.mean()) / s.std(ddof=0)
 
 
-def factor_z(df, ignore_competition=False):
+def factor_z(df, ignore_competition=False, pillars=None):
     z = pd.DataFrame(index=df.index)
-    for pillar, factors in PILLARS.items():
+    for pillar, factors in (pillars or PILLARS).items():
         for col, tr, sign in factors:
             if ignore_competition and col == "big4_other_leagues":
                 continue
@@ -47,10 +49,11 @@ def factor_z(df, ignore_competition=False):
     return z
 
 
-def pillar_scores(df, ignore_competition=False):
-    z = factor_z(df, ignore_competition)
+def pillar_scores(df, ignore_competition=False, pillars=None):
+    pillars = pillars or PILLARS
+    z = factor_z(df, ignore_competition, pillars)
     out = pd.DataFrame(index=df.index)
-    for pillar, factors in PILLARS.items():
+    for pillar, factors in pillars.items():
         cols = [f"z_{c}" for c, _, _ in factors if f"z_{c}" in z.columns]
         out[pillar] = z[cols].mean(axis=1, skipna=True)
     return out, z
@@ -77,10 +80,10 @@ def welch_ci(a, b):
 
 
 def main():
-    df = pd.read_csv(PROCESSED / "metros.csv", dtype={"cbsa_code": str}).set_index("cbsa_code")
+    df = pd.read_csv(PROCESSED / "metros.csv").set_index("market_id")
     p, z = pillar_scores(df)
     p["total_score"] = total(p, WEIGHTINGS["equal"])
-    meta = df[["short_name", "cbsa_title", "nba_metro", "arena_ready", "population"]]
+    meta = df[["short_name", "market_title", "market_type", "nba_metro", "arena_ready", "population"]]
 
     # pillar_scores.csv: factor z-scores and pillar scores for every metro
     pillar_out = meta.join(z).join(p)
@@ -133,6 +136,23 @@ def main():
     sens["worst_rank"] = sens[rank_cols].max(axis=1)
     sens = sens.sort_values("rank_equal")
     sens.to_csv(OUTPUTS / "sensitivity.csv")
+
+    # rank decomposition: how did the top 10 move from v1 (CBSA, G League scored) to now?
+    # step 1 = v1 archived output; step 2 = CSA markets but G League still scored; step 3 = final.
+    with_gl = dict(PILLARS); with_gl["B_basketball_demand"] = PILLARS["B_basketball_demand"] + [("has_g_league", None, 1)]
+    p_gl, _ = pillar_scores(df, pillars=with_gl)
+    rank_gl = rank_candidates(df, total(p_gl, WEIGHTINGS["equal"]))
+    v1 = pd.read_csv(OUTPUTS / "archive" / "rankings_v1_cbsa.csv")
+    v1 = v1[~v1["nba_metro"]].set_index("short_name")["rank_candidates"]
+    dec = r[~r["nba_metro"]][["short_name", "market_title", "rank_candidates", "top_pillar"]].copy()
+    dec["rank_v1_cbsa_with_gleague"] = dec["short_name"].map(v1)
+    dec["rank_csa_with_gleague"] = rank_gl
+    dec = dec.rename(columns={"rank_candidates": "rank_final_csa_no_gleague"})
+    keep = dec[(dec["rank_final_csa_no_gleague"] <= 10) | (dec["rank_v1_cbsa_with_gleague"] <= 10)]
+    v1_lost = v1[(v1 <= 10) & ~v1.index.isin(dec["short_name"])]  # v1 top-10 metros absorbed into a bigger market
+    lost = pd.DataFrame({"short_name": v1_lost.index, "rank_v1_cbsa_with_gleague": v1_lost.values,
+                         "market_title": "merged into a larger CSA (see metros.csv member_metros)"})
+    pd.concat([keep, lost]).sort_values(["rank_final_csa_no_gleague", "rank_v1_cbsa_with_gleague"]).to_csv(OUTPUTS / "top10_change.csv", index=False)
 
     print(r[["short_name", "nba_metro", "total_score", "rank_candidates", "overlooked", "top_pillar"]].head(25).to_string())
     print("median NBA score", round(median_nba, 3))

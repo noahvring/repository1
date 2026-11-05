@@ -4,12 +4,22 @@ from config import PROCESSED, MANUAL, OUTPUTS
 
 
 def metros():
-    return pd.read_csv(PROCESSED / "metros.csv", dtype={"cbsa_code": str})
+    return pd.read_csv(PROCESSED / "metros.csv")
 
 
-def test_no_duplicate_cbsas():
-    m = metros()
-    assert m["cbsa_code"].is_unique
+def cbsa_to_market():
+    return pd.read_csv(PROCESSED / "cbsa_factors.csv", dtype={"cbsa_code": str}).set_index("cbsa_code")["market_id"]
+
+
+def test_no_duplicate_markets():
+    assert metros()["market_id"].is_unique
+
+
+def test_csa_merges_bay_area_and_dc_baltimore():
+    m = metros().set_index("short_name")
+    assert "San Jose" in m.loc["San Francisco", "member_metros"]
+    assert "Baltimore" in m.loc["Washington", "member_metros"]
+    assert "San Jose" not in m.index and "Baltimore" not in m.index
 
 
 def test_all_30_nba_teams_mapped():
@@ -18,7 +28,10 @@ def test_all_30_nba_teams_mapped():
     assert len(nba) == 30
     assert nba["cbsa_code"].notna().all()            # Toronto maps to 'CAN-Toronto'
     us = nba[~nba["cbsa_code"].str.startswith("CAN")]
-    assert set(us["cbsa_code"]).issubset(set(metros()["cbsa_code"]))
+    markets = us["cbsa_code"].map(cbsa_to_market())
+    assert markets.notna().all()
+    assert set(markets).issubset(set(metros()["market_id"]))
+    assert metros()["nba_metro"].sum() == 27          # 29 U.S. teams, LA and NY have two
 
 
 def test_every_manual_row_has_source_url():
@@ -32,10 +45,10 @@ def test_every_manual_row_has_source_url():
 
 
 def test_named_metros_present():
-    names = set(metros()["short_name"])
+    members = " ".join(metros()["member_metros"].fillna(""))
     for n in ["Las Vegas", "Seattle", "Kansas City", "Louisville", "Nashville", "Austin", "San Diego",
-              "Pittsburgh", "Tampa", "St. Louis", "Columbus", "Cincinnati", "Raleigh", "Baltimore"]:
-        assert n in names
+              "Pittsburgh", "Tampa", "St. Louis", "Columbus, OH", "Cincinnati", "Raleigh", "Baltimore"]:
+        assert n in members, n
 
 
 def test_coverage_report_written():

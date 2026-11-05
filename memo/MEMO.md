@@ -8,6 +8,12 @@
 
 ## Why these markets
 
+### Seattle vs Las Vegas: the scorecard vs the league's reported focus
+
+### Mexico City and international options
+
+### Markets the league may be overlooking
+
 ## Business case & dilution math
 
 ## Industry trends

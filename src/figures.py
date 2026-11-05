@@ -27,17 +27,19 @@ def headline(ax, r):
     ax.axvline(med, color=DARK, ls="--", lw=1)
     ax.text(med, len(c) - 0.4, f" median current NBA market ({med:.2f})", fontsize=8, va="bottom")
     ax.set_xlabel("Attractiveness score (mean of pillar z-scores)")
-    ax.set_title("Top 15 non-NBA metros by attractiveness score")
+    ax.set_title("Top 15 non-NBA markets by attractiveness score")
 
 
 def main():
     FIGURES.mkdir(exist_ok=True)
-    r = pd.read_csv(OUTPUTS / "rankings.csv", dtype={"cbsa_code": str})
-    k = pd.read_csv(OUTPUTS / "kpi_dashboard.csv", dtype={"cbsa_code": str}).sort_values("attractiveness_rank")
-    sens = pd.read_csv(OUTPUTS / "sensitivity.csv", dtype={"cbsa_code": str})
+    r = pd.read_csv(OUTPUTS / "rankings.csv", dtype={"market_id": str})
+    k = pd.read_csv(OUTPUTS / "kpi_dashboard.csv", dtype={"market_id": str}).sort_values("attractiveness_rank")
+    sens = pd.read_csv(OUTPUTS / "sensitivity.csv", dtype={"market_id": str})
     tor = pd.read_csv(OUTPUTS / "tornado.csv")
-    dil = pd.read_csv(OUTPUTS / "dilution_payback.csv")
-    m = pd.read_csv(PROCESSED / "metros.csv", dtype={"cbsa_code": str})
+    npv = pd.read_csv(OUTPUTS / "owner_npv.csv")
+    beg = pd.read_csv(OUTPUTS / "owner_breakeven_growth.csv")
+    focus = pd.read_csv(OUTPUTS / "focus_markets.csv")
+    m = pd.read_csv(PROCESSED / "metros.csv", dtype={"market_id": str})
 
     # 1 headline
     fig, ax = plt.subplots(figsize=(9, 6.5)); headline(ax, r); source(fig); fig.tight_layout(rect=(0, 0.04, 1, 1))
@@ -65,16 +67,16 @@ def main():
             v = data[i, j]
             ax.text(j, i, "–" if np.isnan(v) else int(v), ha="center", va="center", fontsize=8, color="white" if (not np.isnan(v) and v < 10) else DARK)
     ax.set_title("Candidate rank under six weightings (– = not arena-ready)")
-    fig.colorbar(im, ax=ax, label="rank among non-NBA metros", shrink=0.7)
+    fig.colorbar(im, ax=ax, label="rank among non-NBA markets", shrink=0.7)
     source(fig); fig.tight_layout(rect=(0, 0.04, 1, 1)); fig.savefig(FIGURES / "03_sensitivity_heatmap.png", dpi=150); plt.close(fig)
 
     # 4 population vs income scatter
-    top_ids = set(k["cbsa_code"])
+    top_ids = set(k["market_id"])
     fig, ax = plt.subplots(figsize=(9, 6.5))
-    for mask, col, lab in [(m["nba_metro"], GRAY, "Current NBA metro"), (m["cbsa_code"].isin(top_ids), BLUE, "Top-8 candidate"),
-                           (~m["nba_metro"] & ~m["cbsa_code"].isin(top_ids), "#d1d5db", "Other metro")]:
+    for mask, col, lab in [(m["nba_metro"], GRAY, "Current NBA market"), (m["market_id"].isin(top_ids), BLUE, "Top-8 candidate"),
+                           (~m["nba_metro"] & ~m["market_id"].isin(top_ids), "#d1d5db", "Other market")]:
         d = m[mask]; ax.scatter(d["population"] / 1e6, d["median_hh_income"] / 1e3, c=col, label=lab, s=40, edgecolor="white")
-    for _, d in m[m["cbsa_code"].isin(top_ids) | (m["population"] > 6e6)].iterrows():
+    for _, d in m[m["market_id"].isin(top_ids) | (m["population"] > 6e6)].iterrows():
         ax.annotate(d["short_name"], (d["population"] / 1e6, d["median_hh_income"] / 1e3), fontsize=7, xytext=(3, 3), textcoords="offset points")
     ax.set_xscale("log"); ax.set_xlabel("Population, millions (log scale)"); ax.set_ylabel("Median household income ($000)")
     ax.set_title("Market size vs income"); ax.legend(frameon=False, fontsize=8)
@@ -87,7 +89,7 @@ def main():
         "Income ($k)": (k["median_hh_income"] / 1e3).round(0).astype(int), "Growth 20-25": (k["pop_growth_2020_2025"] * 100).round(1).astype(str) + "%",
         "500+ est/100k": k["large_est_per_100k"].round(1), "Fan index": k["fan_interest_index"].round(2),
         "Competing teams": k["competing_teams"].astype(int), "Arena ready": k["arena_ready"],
-        "Local rev $M (L/B/H)": [f"{a/1e6:.0f}/{b/1e6:.0f}/{c/1e6:.0f}" for a, b, c in zip(k.est_local_revenue_low, k.est_local_revenue_base, k.est_local_revenue_high)],
+        "Local rev $M (min/base/max)": [f"{a/1e6:.0f}/{b/1e6:.0f}/{c/1e6:.0f}" for a, b, c in zip(k.est_local_revenue_low, k.est_local_revenue_base, k.est_local_revenue_high)],
     })
     fig, ax = plt.subplots(figsize=(14, 3.8)); ax.axis("off")
     tb = ax.table(cellText=t.values, colLabels=t.columns, loc="center", cellLoc="center"); tb.auto_set_font_size(False); tb.set_fontsize(8); tb.scale(1, 1.5)
@@ -105,19 +107,37 @@ def main():
         ax.barh(i, hi - base, left=base, color=BLUE); ax.barh(i, lo - base, left=base, color=ORANGE)
     ax.set_yticks(range(len(tt)), tt["assumption"].str.replace("_", " ")); ax.axvline(base, color=DARK, lw=1)
     ax.set_xlabel("Base-case local revenue, top 8 combined ($M/yr)"); ax.set_title("Which assumptions move local revenue most")
-    source(fig, "Source: data/manual/assumptions.csv (labeled ASSUMPTION – Noah to review) applied to metro data. Orange = low value, blue = high value. " + REPO_NAME)
+    source(fig, "Source: Sportico revenue splits + labeled elasticity assumptions (data/manual/assumptions.csv). Orange = low value, blue = high value. " + REPO_NAME)
     fig.tight_layout(rect=(0, 0.05, 1, 1)); fig.savefig(FIGURES / "06_tornado.png", dpi=150); plt.close(fig)
 
-    # 7 dilution vs fee payback
-    fig, ax = plt.subplots(figsize=(9, 5.5))
-    years = np.arange(0, 51)
-    for (_, row), col in zip(dil.iterrows(), [BLUE, DARK, ORANGE]):
-        ax.plot(years, row.annual_dilution_per_existing_team * years / 1e6, color=col, label=f"{row.scenario.replace('_', ' ')}: cumulative dilution (breakeven {row.breakeven_years:.0f} yrs)")
-        ax.axhline(row.fee_received_per_existing_team / 1e6, color=col, ls=":", lw=1)
-    ax.set_xlabel("Years after expansion (no growth, no discounting)"); ax.set_ylabel("$M per existing team")
-    ax.set_title("Expansion fee received vs cumulative national-revenue dilution"); ax.legend(frameon=False, fontsize=8)
-    source(fig, "Source: reported $76B/11-yr media deal and $7-10B fee range (data/manual/assumptions.csv); dotted lines = one-time fee share (fee x 2 / 30). " + REPO_NAME)
-    fig.tight_layout(rect=(0, 0.05, 1, 1)); fig.savefig(FIGURES / "07_dilution_payback.png", dpi=150); plt.close(fig)
+    # 7 owner NPV heatmap: growth x discount -> fee share minus NPV of 20-year dilution
+    b = npv[(npv.pool_definition == "all_central_revenue") & (npv.owner_share == "gross") & (npv.fee_scenario == "base")]
+    grid = b.pivot(index="media_growth", columns="discount_rate", values="npv_net_of_fee") / 1e6
+    fig, ax = plt.subplots(figsize=(8, 5.5))
+    im = ax.imshow(grid.values, cmap="Blues", aspect="auto", origin="lower")
+    ax.set_xticks(range(grid.shape[1]), [f"{c:.0%}" for c in grid.columns]); ax.set_yticks(range(grid.shape[0]), [f"{g:.0%}" for g in grid.index])
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            ax.text(j, i, f"+${grid.values[i, j]:,.0f}M" if grid.values[i, j] >= 0 else f"-${-grid.values[i, j]:,.0f}M", ha="center", va="center", fontsize=10, color=DARK)
+    ax.set_xlabel("Discount rate"); ax.set_ylabel("Annual growth in shared league revenue")
+    ax.set_title("Owner view: fee share minus 20-year NPV of dilution\n(base fee, all central revenue, per existing team)")
+    fig.colorbar(im, ax=ax, label="$M per existing team", shrink=0.8)
+    source(fig, "Source: Sportico (central revenue 41% of USD 13.7B team revenue, 2025-26); reported USD 7-10B fee range; growth/discount grid = scenarios. outputs/owner_npv.csv. " + REPO_NAME)
+    fig.tight_layout(rect=(0, 0.05, 1, 1)); fig.savefig(FIGURES / "07_owner_npv_heatmap.png", dpi=150); plt.close(fig)
+
+    # 8b focus markets: league front-runners and markets to watch
+    fs = focus[focus["scored"] == "Y"].copy()
+    fs = fs[fs["nba_metro"] != True].sort_values("total_score")
+    med = r["median_nba_score"].iloc[0]
+    fig, ax = plt.subplots(figsize=(9, 6.5))
+    cols = [ORANGE if n in ("Seattle", "Las Vegas") else BLUE for n in fs["short_name"]]
+    ax.barh([f"{n} (#{int(k)})" for n, k in zip(fs["short_name"], fs["attractiveness_rank"])], fs["total_score"], color=cols)
+    ax.axvline(med, color=DARK, ls="--", lw=1); ax.text(med, len(fs) - 0.4, f" median NBA market ({med:.2f})", fontsize=8)
+    intl = focus[focus["scored"] != "Y"]
+    note = "Not scored (outside U.S. data): " + "; ".join(f"{n}, pop. {p/1e6:.1f}M" for n, p in zip(intl["short_name"], intl["population"]))
+    ax.set_title("Focus markets: attractiveness score (rank among non-NBA markets)")
+    ax.set_xlabel("Attractiveness score"); fig.text(0.01, 0.045, note + " - see data/manual/international_markets.csv", fontsize=8)
+    source(fig); fig.tight_layout(rect=(0, 0.08, 1, 1)); fig.savefig(FIGURES / "08_focus_markets.png", dpi=150); plt.close(fig)
 
     # 8 LinkedIn summary 1200x1500
     fig = plt.figure(figsize=(8, 10), dpi=150)
@@ -126,15 +146,15 @@ def main():
     ax = fig.add_axes([0.25, 0.32, 0.7, 0.55]); headline(ax, r); ax.set_title("")
     over = int(r["overlooked"].sum())
     sea = int(r.loc[r.short_name == "Seattle", "rank_candidates"].iloc[0]); lv = int(r.loc[r.short_name == "Las Vegas", "rank_candidates"].iloc[0])
-    be = dil.loc[dil.scenario == "base", "breakeven_years"].iloc[0]
-    nums = [(f"{over}", "non-NBA metros score at or above\nthe median current NBA market"),
-            (f"#{sea} / #{lv}", "Seattle / Las Vegas rank\namong non-NBA metros"),
-            (f"{be:.0f} yrs", "base-case years for national-revenue\ndilution to equal the fee share")]
+    be = beg.loc[(beg.discount_rate == 0.08) & (beg.fee_scenario == "base"), "breakeven_growth"].iloc[0]
+    nums = [(f"{over}", "non-NBA markets score at or above\nthe median current NBA market"),
+            (f"#{sea} / #{lv}", "Seattle / Las Vegas rank\namong non-NBA markets"),
+            (f"{be:.0%}", "shared-revenue growth per year\nneeded for dilution to outweigh\nthe fee (8% discount rate)")]
     for i, (n, lab) in enumerate(nums):
         x0 = 0.05 + i * 0.31
         fig.text(x0, 0.2, n, fontsize=24, weight="bold", color=ORANGE if i == 1 else BLUE)
         fig.text(x0, 0.13, lab, fontsize=9)
-    fig.text(0.05, 0.03, "Scorecard of 56 U.S. metros (4 equal-weight pillars). Scenarios, not forecasts.\n" + SRC, fontsize=6.5, color="#4b5563", wrap=True)
+    fig.text(0.05, 0.03, f"Scorecard of {len(m)} U.S. markets (Census combined statistical areas; 4 equal-weight pillars). Scenarios, not forecasts.\n" + SRC, fontsize=6.5, color="#4b5563", wrap=True)
     fig.set_size_inches(8, 10); fig.savefig(FIGURES / "linkedin_summary.png", dpi=150); plt.close(fig)
     print("figures written")
 

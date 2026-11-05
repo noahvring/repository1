@@ -35,17 +35,16 @@ def acs_block():
     age = read_acs("b01001")
     male = [f"B01001_E{n:03d}" for n in range(7, 15)]     # male 18-19 ... 40-44
     female = [f"B01001_E{n:03d}" for n in range(31, 39)]  # female 18-19 ... 40-44
-    share = (age[male + female].sum(axis=1) / age["B01001_E001"]).rename("share_18_44")
-    out = pd.concat([pop, inc, hh, share], axis=1)
+    age_18_44 = age[male + female].sum(axis=1).rename("pop_18_44")
+    out = pd.concat([pop, inc, hh, age_18_44], axis=1)
     out.loc[out["median_hh_income"] < 0, "median_hh_income"] = np.nan  # negative = Census missing code
     return out
 
 
 def popest_block():
     p = pd.read_csv(RAW / "cbsa-est2025-alldata.csv", dtype={"CBSA": str, "MDIV": str, "STCOU": str}, encoding="latin-1")
-    p = p[p["LSAD"] == "Metropolitan Statistical Area"].copy()
-    p["pop_growth_2020_2025"] = p["POPESTIMATE2025"] / p["POPESTIMATE2020"] - 1
-    return p.set_index("CBSA")[["POPESTIMATE2025", "pop_growth_2020_2025"]].rename(columns={"POPESTIMATE2025": "pop_est_2025"})
+    p = p[p["LSAD"].isin(["Metropolitan Statistical Area", "Micropolitan Statistical Area"])].copy()
+    return p.set_index("CBSA")[["POPESTIMATE2020", "POPESTIMATE2025"]].rename(columns={"POPESTIMATE2020": "pop_est_2020", "POPESTIMATE2025": "pop_est_2025"})
 
 
 def gdp_block(delin):
@@ -78,7 +77,7 @@ def gdp_block(delin):
     # a CBSA gets GDP only if all its counties matched (otherwise the sum would be too low)
     agg = m.groupby("CBSA Code").agg(gdp=("gdp_2024_thousands", "sum"), missing=("gdp_2024_thousands", lambda s: s.isna().sum()))
     agg.loc[agg["missing"] > 0, "gdp"] = np.nan
-    return (agg["gdp"] * 1000).rename("gdp_2024_usd")
+    return (agg["gdp"] * 1000).rename("gdp_2024_usd")  # per CBSA; NaN if any county unmatched
 
 
 def cbp_block():
@@ -125,51 +124,95 @@ def arena_block():
     return g.join(free, how="left").join(names, how="left")
 
 
+def market_map(delin):
+    """Market = Combined Statistical Area (CSA) when the CBSA belongs to one, else the CBSA itself.
+    CSAs group neighbouring metros that share a media market (e.g. San Jose + San Francisco,
+    Baltimore + Washington), which is how sports markets are usually defined."""
+    d = delin[["CBSA Code", "CBSA Title", "CSA Code", "CSA Title", "Metropolitan/Micropolitan Statistical Area"]].drop_duplicates("CBSA Code").copy()
+    has_csa = d["CSA Code"].notna()
+    d["market_id"] = np.where(has_csa, "CSA" + d["CSA Code"].fillna(""), "CBSA" + d["CBSA Code"])
+    d["market_title"] = np.where(has_csa, d["CSA Title"], d["CBSA Title"])
+    d["market_type"] = np.where(has_csa, "CSA", "CBSA")
+    return d.set_index("CBSA Code")
+
+
 def main():
     PROCESSED.mkdir(parents=True, exist_ok=True)
     OUTPUTS.mkdir(parents=True, exist_ok=True)
     delin = load_delineation()
-    titles = delin[delin["Metropolitan/Micropolitan Statistical Area"].str.startswith("Metropolitan")][["CBSA Code", "CBSA Title"]].drop_duplicates().set_index("CBSA Code")
-    df = titles.join(acs_block(), how="left").join(popest_block(), how="left").join(gdp_block(delin), how="left")
-    df = df.join(cbp_block(), how="left").join(ncaa_block(delin), how="left").join(teams_block(), how="left").join(arena_block(), how="left")
-    df.index.name = "cbsa_code"
-    df = df.reset_index().rename(columns={"CBSA Title": "cbsa_title"})
-    df["short_name"] = df["cbsa_title"].str.split(r"[-,/]").str[0].str.strip()
+    mm = market_map(delin)
 
-    # study set: population >= 1M, every NBA metro, every metro named in expansion coverage
-    for c in [c for c in df.columns if c.startswith("n_")] + ["ncaa_d1_home_attendance", "ncaa_d1_schools", "n_arenas_17k"]:
-        df[c] = df[c].fillna(0).astype(int)
-    df = df[~df["cbsa_title"].str.endswith("PR")]  # Puerto Rico: not in BEA/CBP metro files; out of scope
-    named = df["cbsa_title"].apply(lambda t: any(t.startswith(n.split(",")[0]) and t.split(", ")[-1].startswith(n.split(", ")[1]) for n in NAMED_METROS))
+    # 1) build every factor at CBSA level (metro + micro areas)
+    cb = mm[["CBSA Title", "Metropolitan/Micropolitan Statistical Area", "market_id", "market_title", "market_type"]]
+    cb = cb.join(acs_block(), how="left").join(popest_block(), how="left").join(gdp_block(delin), how="left")
+    cb = cb.join(cbp_block(), how="left").join(ncaa_block(delin), how="left").join(teams_block(), how="left")
+    count_cols = [c for c in cb.columns if c.startswith("n_")] + ["ncaa_d1_home_attendance", "ncaa_d1_schools"]
+    cb[count_cols] = cb[count_cols].fillna(0)
+    cb["income_x_pop"] = cb["median_hh_income"].where(cb["median_hh_income"] > 0) * cb["population"]
+    cb.index.name = "cbsa_code"
+    cb.to_csv(PROCESSED / "cbsa_factors.csv")
+
+    # 2) aggregate to market: sum counts and populations; population-weight income
+    g = cb.groupby("market_id")
+    df = g[["population", "households", "pop_18_44", "pop_est_2020", "pop_est_2025", "large_establishments_500plus",
+            "establishments_total", "income_x_pop"] + count_cols].sum(min_count=1)
+    df["gdp_2024_usd"] = g["gdp_2024_usd"].sum(min_count=1).where(g["gdp_2024_usd"].apply(lambda s: s.notna().all()))
+    df["median_hh_income"] = df["income_x_pop"] / g.apply(lambda x: x.loc[x["median_hh_income"] > 0, "population"].sum())
+    df["share_18_44"] = df["pop_18_44"] / df["population"]
+    df["pop_growth_2020_2025"] = df["pop_est_2025"] / df["pop_est_2020"] - 1
+    df["market_title"] = g["market_title"].first()
+    df["market_type"] = g["market_type"].first()
+    # name the market after its largest member CBSA (e.g. 'San Francisco' for the Bay Area CSA)
+    lead = cb.sort_values("population", ascending=False).groupby("market_id").head(1)
+    df["short_name"] = lead.set_index("market_id")["CBSA Title"].str.split(r"[-,/]").str[0].str.strip()
+    metro_members = cb[cb["Metropolitan/Micropolitan Statistical Area"].str.startswith("Metropolitan")]
+    df["member_metros"] = metro_members.groupby("market_id")["CBSA Title"].apply(lambda s: "; ".join(s))
+    df["lead_cbsa_code"] = lead.reset_index().set_index("market_id")["cbsa_code"]
+
+    # arenas: map arena CBSA -> market
+    a = pd.read_csv(MANUAL / "arenas.csv", dtype={"cbsa_code": str})
+    a = a[a["cbsa_code"].notna()].copy()
+    a["market_id"] = a["cbsa_code"].map(mm["market_id"])
+    df["max_arena_capacity"] = a.groupby("market_id")["capacity_basketball"].max()
+    df["n_arenas_17k"] = a.groupby("market_id")["arena"].count()
+    free = a[~a["nba_tenant"]].sort_values("capacity_basketball", ascending=False).groupby("market_id")
+    df["max_capacity_no_nba_tenant"] = free["capacity_basketball"].max()
+    df["largest_arena_no_nba_tenant"] = free["arena"].first()
+    df.index.name = "market_id"
+    df = df.reset_index()
+    df["n_arenas_17k"] = df["n_arenas_17k"].fillna(0).astype(int)
+    for c in count_cols:
+        df[c] = df[c].astype(int)
+
+    # 3) study set: market population >= 1M, every NBA market, every market containing a named metro
+    df = df[~df["market_title"].str.endswith("PR")]  # Puerto Rico: not in BEA/CBP metro files; out of scope
+    named = df["member_metros"].fillna("").apply(lambda t: any(
+        any(m.startswith(n.split(",")[0]) and m.split(", ")[-1].startswith(n.split(", ")[1]) for m in t.split("; ")) for n in NAMED_METROS))
     df = df[(df["population"] >= POP_THRESHOLD) | (df["n_nba"] > 0) | named].copy()
-    missing_named = {n for n in NAMED_METROS if not df["cbsa_title"].str.startswith(n.split(",")[0]).any()}
-    assert not missing_named, missing_named
 
     # derived factors
-    df["nba_metro"] = df["n_nba"] > 0
-    df["big4_other_leagues"] = df["n_nfl"] + df["n_mlb"] + df["n_nhl"]   # competition an entrant faces
+    df["nba_metro"] = df["n_nba"] > 0   # 'metro' kept as column name; the unit is now the market (CSA/CBSA)
+    df["big4_other_leagues"] = df["n_nfl"] + df["n_mlb"] + df["n_nhl"]
     df["big4_total"] = df["big4_other_leagues"] + df["n_nba"]
     df["large_est_per_100k"] = df["large_establishments_500plus"] / df["population"] * 1e5
     df["gdp_per_capita"] = df["gdp_2024_usd"] / df["population"]
     df["ncaa_att_per_1k"] = df["ncaa_d1_home_attendance"] / df["population"] * 1000
     df["has_wnba"] = (df["n_wnba"] > 0).astype(int)
-    df["has_g_league"] = (df["n_g_league"] > 0).astype(int)
+    df["has_g_league"] = (df["n_g_league"] > 0).astype(int)   # descriptive only (NBA-affiliate bias)
     df["arena_capable"] = (df["max_arena_capacity"].fillna(0) >= 17000).astype(int)
     df["arena_ready"] = ((df["max_capacity_no_nba_tenant"].fillna(0) >= 17000) & ~df["nba_metro"]).astype(int)
-    df = df.sort_values("population", ascending=False)
+    df = df.drop(columns=["income_x_pop"]).sort_values("population", ascending=False)
     df.to_csv(PROCESSED / "metros.csv", index=False)
 
-    # coverage report: share of study metros with a non-missing value per factor
     factors = ["population", "median_hh_income", "share_18_44", "households", "pop_growth_2020_2025", "gdp_2024_usd",
                "ncaa_d1_home_attendance", "has_wnba", "has_g_league", "large_establishments_500plus",
                "big4_other_leagues", "arena_capable"]
-    cov = pd.DataFrame({"factor": factors, "share_with_data": [df[f].notna().mean() for f in factors],
-                        "n_metros": len(df)})
+    cov = pd.DataFrame({"factor": factors, "share_with_data": [df[f].notna().mean() for f in factors], "n_markets": len(df)})
     cov = pd.concat([cov, pd.DataFrame([
-        {"factor": "google_trends_nba", "share_with_data": 0.0, "n_metros": len(df)},
-        {"factor": "overseas_visitors_ntto", "share_with_data": 0.0, "n_metros": len(df)}])])
+        {"factor": "google_trends_nba", "share_with_data": 0.0, "n_markets": len(df)},
+        {"factor": "overseas_visitors_ntto", "share_with_data": 0.0, "n_markets": len(df)}])])
     cov.to_csv(OUTPUTS / "coverage.csv", index=False)
-    print(f"metros.csv: {len(df)} metros")
+    print(f"metros.csv: {len(df)} markets ({(df.market_type == 'CSA').sum()} CSAs)")
     print(cov.to_string(index=False))
     return df
 

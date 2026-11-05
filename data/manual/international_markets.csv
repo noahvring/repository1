@@ -1,0 +1,8 @@
+market,country,item,value,unit,source_url,note,access_date
+Mexico City,Mexico,metro_population,21436911,people (2020),https://en.wikipedia.org/wiki/Greater_Mexico_City,"Greater Mexico City metro population, 2020 census per infobox; not comparable to ACS",2026-11-05
+Mexico City,Mexico,largest_arena_capacity,22300,seats,https://en.wikipedia.org/wiki/Arena_CDMX,Mexico City Arena (Arena CDMX),2026-11-05
+Mexico City,Mexico,g_league_team,Mexico City Capitanes (G League since 2021-22 season),text,https://en.wikipedia.org/wiki/Capitanes_de_Ciudad_de_M%C3%A9xico,Plays at Mexico City Arena,2026-11-05
+Mexico City,Mexico,nba_interest,Silver: league will be 'looking seriously at Mexico City over time'; a Mexico City group approached PJT Partners (reported),text,https://frontofficesports.com/silver-confirms-nbas-interest-in-mexico-team/,From search result; frontofficesports.com blocked by proxy on re-check - not verified on page,2026-11-05
+Vancouver,Canada,metro_population,2642825,people (2021),https://en.wikipedia.org/wiki/Metro_Vancouver,Metro Vancouver 2021 census per infobox,2026-11-05
+Vancouver,Canada,largest_arena_capacity,19700,seats (basketball),https://en.wikipedia.org/wiki/Rogers_Arena,Rogers Arena; NHL Canucks tenant,2026-11-05
+Vancouver,Canada,nba_history,"Vancouver Grizzlies 1995-2001, relocated to Memphis after 2000-01",text,https://en.wikipedia.org/wiki/Vancouver_Grizzlies,,2026-11-05
