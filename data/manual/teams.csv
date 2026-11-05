@@ -1,0 +1,201 @@
+league,team,location,cbsa_code,source_url,access_date
+NBA,Boston Celtics,"Boston, Massachusetts",14460,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Brooklyn Nets,"Brooklyn, New York",35620,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,New York Knicks,"New York, New York",35620,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Philadelphia 76ers,"Philadelphia, Pennsylvania",37980,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Toronto Raptors,"Toronto, Ontario",CAN-Toronto,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Chicago Bulls,"Chicago, Illinois",16980,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Cleveland Cavaliers,"Cleveland, Ohio",17410,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Detroit Pistons,"Detroit, Michigan",19820,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Indiana Pacers,"Indianapolis, Indiana",26900,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Milwaukee Bucks,"Milwaukee, Wisconsin",33340,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Atlanta Hawks,"Atlanta, Georgia",12060,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Charlotte Hornets,"Charlotte, North Carolina",16740,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Miami Heat,"Miami, Florida",33100,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Orlando Magic,"Orlando, Florida",36740,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Washington Wizards,"Washington, D.C.",47900,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Denver Nuggets,"Denver, Colorado",19740,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Minnesota Timberwolves,"Minneapolis, Minnesota",33460,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Oklahoma City Thunder,"Oklahoma City, Oklahoma",36420,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Portland Trail Blazers,"Portland, Oregon",38900,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Utah Jazz,"Salt Lake City, Utah",41620,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Golden State Warriors,"San Francisco, California",41860,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Los Angeles Clippers,"Inglewood, California",31080,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Los Angeles Lakers,"Los Angeles, California",31080,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Phoenix Suns,"Phoenix, Arizona",38060,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Sacramento Kings,"Sacramento, California",40900,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Dallas Mavericks,"Dallas, Texas",19100,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Houston Rockets,"Houston, Texas",26420,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,Memphis Grizzlies,"Memphis, Tennessee",32820,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,New Orleans Pelicans,"New Orleans, Louisiana",35380,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NBA,San Antonio Spurs,"San Antonio, Texas",41700,https://en.wikipedia.org/wiki/National_Basketball_Association,2026-11-05
+NFL,Buffalo Bills,"Orchard Park, New York",15380,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Miami Dolphins,"Miami Gardens, Florida",33100,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,New England Patriots,"Foxborough, Massachusetts",14460,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,New York Jets,"East Rutherford, New Jersey",35620,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Baltimore Ravens,"Baltimore, Maryland",12580,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Cincinnati Bengals,"Cincinnati, Ohio",17140,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Cleveland Browns,"Cleveland, Ohio",17410,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Pittsburgh Steelers,"Pittsburgh, Pennsylvania",38300,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Houston Texans,"Houston, Texas",26420,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Indianapolis Colts,"Indianapolis, Indiana",26900,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Jacksonville Jaguars,"Jacksonville, Florida",27260,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Tennessee Titans,"Nashville, Tennessee",34980,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Denver Broncos,"Denver, Colorado",19740,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Kansas City Chiefs,"Kansas City, Missouri",28140,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Las Vegas Raiders,"Paradise, Nevada",29820,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Los Angeles Chargers,"Inglewood, California",31080,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Dallas Cowboys,"Arlington, Texas",19100,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,New York Giants,"East Rutherford, New Jersey",35620,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Philadelphia Eagles,"Philadelphia, Pennsylvania",37980,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Washington Commanders,"Landover, Maryland",47900,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Chicago Bears,"Chicago, Illinois",16980,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Detroit Lions,"Detroit, Michigan",19820,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Green Bay Packers,"Green Bay, Wisconsin",24580,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Minnesota Vikings,"Minneapolis, Minnesota",33460,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Atlanta Falcons,"Atlanta, Georgia",12060,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Carolina Panthers,"Charlotte, North Carolina",16740,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,New Orleans Saints,"New Orleans, Louisiana",35380,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Tampa Bay Buccaneers,"Tampa, Florida",45300,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Arizona Cardinals,"Glendale, Arizona",38060,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Los Angeles Rams,"Inglewood, California",31080,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,San Francisco 49ers,"Santa Clara, California",41940,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+NFL,Seattle Seahawks,"Seattle, Washington",42660,https://en.wikipedia.org/wiki/National_Football_League,2026-11-05
+MLB,Baltimore Orioles,"Baltimore, Maryland",12580,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Boston Red Sox,"Boston, Massachusetts",14460,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,New York Yankees,"New York, New York",35620,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Tampa Bay Rays,"St. Petersburg, Florida",45300,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Toronto Blue Jays,"Toronto, Ontario",CAN-Toronto,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Chicago White Sox,"Chicago, Illinois",16980,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Cleveland Guardians,"Cleveland, Ohio",17410,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Detroit Tigers,"Detroit, Michigan",19820,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Kansas City Royals,"Kansas City, Missouri",28140,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Minnesota Twins,"Minneapolis, Minnesota",33460,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Athletics,"West Sacramento, California",40900,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Houston Astros,"Houston, Texas",26420,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Los Angeles Angels,"Anaheim, California",31080,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Seattle Mariners,"Seattle, Washington",42660,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Texas Rangers,"Arlington, Texas",19100,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Atlanta Braves,"Cumberland, Georgia",12060,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Miami Marlins,"Miami, Florida",33100,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,New York Mets,"New York, New York",35620,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Philadelphia Phillies,"Philadelphia, Pennsylvania",37980,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Washington Nationals,"Washington, D.C.",47900,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Chicago Cubs,"Chicago, Illinois",16980,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Cincinnati Reds,"Cincinnati, Ohio",17140,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Milwaukee Brewers,"Milwaukee, Wisconsin",33340,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Pittsburgh Pirates,"Pittsburgh, Pennsylvania",38300,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,St. Louis Cardinals,"St. Louis, Missouri",41180,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Arizona Diamondbacks,"Phoenix, Arizona",38060,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Colorado Rockies,"Denver, Colorado",19740,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,Los Angeles Dodgers,"Los Angeles, California",31080,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,San Diego Padres,"San Diego, California",41740,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+MLB,San Francisco Giants,"San Francisco, California",41860,https://en.wikipedia.org/wiki/Major_League_Baseball,2026-11-05
+NHL,Boston Bruins,"Boston, Massachusetts",14460,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Buffalo Sabres,"Buffalo, New York",15380,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Detroit Red Wings,"Detroit, Michigan",19820,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Florida Panthers,"Sunrise, Florida",33100,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Montreal Canadiens,"Montreal, Quebec",CAN-Montreal,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Ottawa Senators,"Ottawa, Ontario",CAN-Ottawa,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Tampa Bay Lightning,"Tampa, Florida",45300,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Toronto Maple Leafs,"Toronto, Ontario",CAN-Toronto,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Carolina Hurricanes,"Raleigh, North Carolina",39580,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Columbus Blue Jackets,"Columbus, Ohio",18140,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,New Jersey Devils,"Newark, New Jersey",35620,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,New York Islanders,"Elmont, New York",35620,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,New York Rangers,"New York, New York",35620,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Philadelphia Flyers,"Philadelphia, Pennsylvania",37980,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Pittsburgh Penguins,"Pittsburgh, Pennsylvania",38300,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Washington Capitals,"Washington, D.C.",47900,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Chicago Blackhawks,"Chicago, Illinois",16980,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Colorado Avalanche,"Denver, Colorado",19740,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Dallas Stars,"Dallas, Texas",19100,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Minnesota Wild,"Saint Paul, Minnesota",33460,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Nashville Predators,"Nashville, Tennessee",34980,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,St. Louis Blues,"St. Louis, Missouri",41180,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Utah Mammoth,"Salt Lake City, Utah",41620,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Winnipeg Jets,"Winnipeg, Manitoba",CAN-Winnipeg,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Anaheim Ducks,"Anaheim, California",31080,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Calgary Flames,"Calgary, Alberta",CAN-Calgary,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Edmonton Oilers,"Edmonton, Alberta",CAN-Edmonton,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Los Angeles Kings,"Los Angeles, California",31080,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,San Jose Sharks,"San Jose, California",41940,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Seattle Kraken,"Seattle, Washington",42660,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Vancouver Canucks,"Vancouver, British Columbia",CAN-Vancouver,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+NHL,Vegas Golden Knights,"Paradise, Nevada",29820,https://en.wikipedia.org/wiki/National_Hockey_League,2026-11-05
+MLS,Atlanta United FC,"Atlanta, Georgia",12060,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Charlotte FC,"Charlotte, North Carolina",16740,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Chicago Fire FC,"Chicago, Illinois",16980,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,FC Cincinnati,"Cincinnati, Ohio",17140,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Columbus Crew,"Columbus, Ohio",18140,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,D.C. United,"Washington, D.C.",47900,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Inter Miami CF,"Miami, Florida",33100,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,CF Montréal,"Montreal, Quebec",CAN-Montreal,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Nashville SC,"Nashville, Tennessee",34980,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,New England Revolution,"Foxborough, Massachusetts",14460,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,New York City FC,"Bronx, New York",35620,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,New York Red Bulls,"Harrison, New Jersey",35620,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Orlando City SC,"Orlando, Florida",36740,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Philadelphia Union,"Chester, Pennsylvania",37980,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Toronto FC,"Toronto, Ontario",CAN-Toronto,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Austin FC,"Austin, Texas",12420,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Colorado Rapids,"Commerce City, Colorado",19740,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,FC Dallas,"Frisco, Texas",19100,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Houston Dynamo FC,"Houston, Texas",26420,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Sporting Kansas City,"Kansas City, Kansas",28140,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,LA Galaxy,"Carson, California",31080,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Los Angeles FC,"Los Angeles, California",31080,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Minnesota United FC,"Saint Paul, Minnesota",33460,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Portland Timbers,"Portland, Oregon",38900,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Real Salt Lake,"Sandy, Utah",41620,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,San Diego FC,"San Diego, California",41740,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,San Jose Earthquakes,"San Jose, California",41940,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Seattle Sounders FC,"Seattle, Washington",42660,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,St. Louis City SC,"St. Louis, Missouri",41180,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+MLS,Vancouver Whitecaps FC,"Vancouver, British Columbia",CAN-Vancouver,https://en.wikipedia.org/wiki/Major_League_Soccer,2026-11-05
+WNBA,Atlanta Dream,"College Park, Georgia",12060,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Chicago Sky,"Chicago, Illinois",16980,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Indiana Fever,"Indianapolis, Indiana",26900,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,New York Liberty,"Brooklyn, New York",35620,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Toronto Tempo,"Toronto, Ontario",CAN-Toronto,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Washington Mystics,"Washington, D.C.",47900,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Dallas Wings,"Arlington, Texas",19100,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Golden State Valkyries,"San Francisco, California",41860,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Houston Comets,"Houston, Texas",26420,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Las Vegas Aces,"Paradise, Nevada",29820,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Los Angeles Sparks,"Los Angeles, California",31080,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Minnesota Lynx,"Minneapolis, Minnesota",33460,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Phoenix Mercury,"Phoenix, Arizona",38060,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Portland Fire,"Portland, Oregon",38900,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+WNBA,Seattle Storm,"Seattle, Washington",42660,https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association,2026-11-05
+G League,Capital City Go-Go,"Washington, D.C.",47900,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Cleveland Charge,"Cleveland, Ohio",17410,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,College Park Skyhawks,"College Park, Georgia",12060,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Delaware Blue Coats,"Wilmington, Delaware",37980,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Grand Rapids Gold,"Grand Rapids, Michigan",24340,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Greensboro Swarm,"Greensboro, North Carolina",24660,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Laketown Squadron,"Kenner, Louisiana",35380,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Long Island Nets,"Uniondale, New York",35620,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Maine Celtics,"Portland, Maine",38860,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Motor City Cruise,"Detroit, Michigan",19820,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Noblesville Boom,"Noblesville, Indiana",26900,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Osceola Magic,"Kissimmee, Florida",36740,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Raptors 905,"Mississauga, Ontario",CAN-Mississauga,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Westchester Knicks,"White Plains, New York",35620,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Windy City Bulls,"Hoffman Estates, Illinois",16980,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Wisconsin Herd,"Oshkosh, Wisconsin",36780,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Austin Spurs,"Cedar Park, Texas",12420,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Coachella Valley Lakers,"Thousand Palms, California",40140,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Iowa Wolves,"Des Moines, Iowa",19780,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Memphis Hustle,"Southaven, Mississippi",32820,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Mexico City Capitanes,"Mexico City, Mexico",,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Oklahoma City Blue,"Oklahoma City, Oklahoma",36420,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Rio Grande Valley Vipers,"Edinburg, Texas",32580,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Rip City Remix,"Portland, Oregon",38900,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Salt Lake City Stars,"West Valley City, Utah",41620,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,San Diego Clippers,"Oceanside, California",41740,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Santa Cruz Warriors,"Santa Cruz, California",42100,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Sioux Falls Skyforce,"Sioux Falls, South Dakota",43620,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Stockton Kings,"Stockton, California",44700,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Texas Legends,"Frisco, Texas",19100,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05
+G League,Valley Suns,"Tempe, Arizona",38060,https://en.wikipedia.org/wiki/NBA_G_League,2026-11-05

@@ -1,0 +1,80 @@
+city,state,county_fips,county_name,source_url,access_date
+Bronx,New York,36005,Bronx County,https://en.wikipedia.org/wiki/The_Bronx,2026-11-05
+Brooklyn,New York,36047,Kings County,https://en.wikipedia.org/wiki/Brooklyn,2026-11-05
+New York City,New York,36061,New York County,https://en.wikipedia.org/wiki/New_York_City,2026-11-05
+Cedar Park,Texas,48491,Williamson County,"https://en.wikipedia.org/wiki/Cedar_Park,_Texas",2026-11-05
+Chester,Pennsylvania,42045,Delaware County,"https://en.wikipedia.org/wiki/Chester,_Pennsylvania",2026-11-05
+College Park,Georgia,13121,Fulton County,"https://en.wikipedia.org/wiki/College_Park,_Georgia",2026-11-05
+College Park,Maryland,24033,Prince George's County,"https://en.wikipedia.org/wiki/College_Park,_Maryland",2026-11-05
+Cumberland,Georgia,13067,Cobb County,"https://en.wikipedia.org/wiki/Cumberland,_Georgia",2026-11-05
+East Rutherford,New Jersey,34003,Bergen County,"https://en.wikipedia.org/wiki/East_Rutherford,_New_Jersey",2026-11-05
+Elmont,New York,36059,Nassau County,"https://en.wikipedia.org/wiki/Elmont,_New_York",2026-11-05
+Foxborough,Massachusetts,25021,Norfolk County,"https://en.wikipedia.org/wiki/Foxborough,_Massachusetts",2026-11-05
+Frisco,Texas,48085,Collin County,"https://en.wikipedia.org/wiki/Frisco,_Texas",2026-11-05
+Glendale,Arizona,04013,Maricopa County,"https://en.wikipedia.org/wiki/Glendale,_Arizona",2026-11-05
+Harrison,New Jersey,34017,Hudson County,"https://en.wikipedia.org/wiki/Harrison,_New_Jersey",2026-11-05
+Hoffman Estates,Illinois,17031,Cook County,"https://en.wikipedia.org/wiki/Hoffman_Estates,_Illinois",2026-11-05
+Indianapolis,Indiana,18097,Marion County,https://en.wikipedia.org/wiki/Indianapolis,2026-11-05
+Inglewood,California,06037,Los Angeles County,"https://en.wikipedia.org/wiki/Inglewood,_California",2026-11-05
+Kenner,Louisiana,22051,Jefferson Parish,"https://en.wikipedia.org/wiki/Kenner,_Louisiana",2026-11-05
+Landover,Maryland,24033,Prince George's County,"https://en.wikipedia.org/wiki/Landover,_Maryland",2026-11-05
+Lexington,Kentucky,21067,Fayette County,"https://en.wikipedia.org/wiki/Lexington,_Kentucky",2026-11-05
+Louisville,Kentucky,21111,Jefferson County,"https://en.wikipedia.org/wiki/Louisville,_Kentucky",2026-11-05
+Miami Gardens,Florida,12086,Miami-Dade County,"https://en.wikipedia.org/wiki/Miami_Gardens,_Florida",2026-11-05
+Nashville,Tennessee,47037,Davidson County,"https://en.wikipedia.org/wiki/Nashville,_Tennessee",2026-11-05
+Noblesville,Indiana,18057,Hamilton County,"https://en.wikipedia.org/wiki/Noblesville,_Indiana",2026-11-05
+Oceanside,California,06073,San Diego County,"https://en.wikipedia.org/wiki/Oceanside,_California",2026-11-05
+Orchard Park,New York,36029,Erie County,"https://en.wikipedia.org/wiki/Orchard_Park,_New_York",2026-11-05
+Rosemont,Illinois,17031,Cook County,"https://en.wikipedia.org/wiki/Rosemont,_Illinois",2026-11-05
+Saint Paul,Minnesota,27123,Ramsey County,"https://en.wikipedia.org/wiki/Saint_Paul,_Minnesota",2026-11-05
+Sandy,Utah,49035,Salt Lake County,"https://en.wikipedia.org/wiki/Sandy,_Utah",2026-11-05
+Southaven,Mississippi,28033,DeSoto County,"https://en.wikipedia.org/wiki/Southaven,_Mississippi",2026-11-05
+Thousand Palms,California,06065,Riverside County,"https://en.wikipedia.org/wiki/Thousand_Palms,_California",2026-11-05
+Uniondale,New York,36059,Nassau County,"https://en.wikipedia.org/wiki/Uniondale,_New_York",2026-11-05
+West Valley City,Utah,49035,Salt Lake County,"https://en.wikipedia.org/wiki/West_Valley_City,_Utah",2026-11-05
+Paradise,Nevada,32003,Clark County,"https://en.wikipedia.org/wiki/Paradise,_Nevada",2026-11-05
+Chapel Hill,North Carolina,37135,Orange County,"https://en.wikipedia.org/wiki/Chapel_Hill,_North_Carolina",2026-11-05
+Villanova,Pennsylvania,42045,Delaware County,"https://en.wikipedia.org/wiki/Villanova,_Pennsylvania",2026-11-05
+Chestnut Hill,Massachusetts,25017,Middlesex County,"https://en.wikipedia.org/wiki/Chestnut_Hill,_Massachusetts",2026-11-05
+Queens,New York,36081,Queens County,https://en.wikipedia.org/wiki/Queens,2026-11-05
+Coral Gables,Florida,12086,Miami-Dade County,"https://en.wikipedia.org/wiki/Coral_Gables,_Florida",2026-11-05
+Tempe,Arizona,04013,Maricopa County,"https://en.wikipedia.org/wiki/Tempe,_Arizona",2026-11-05
+Evanston,Illinois,17031,Cook County,"https://en.wikipedia.org/wiki/Evanston,_Illinois",2026-11-05
+Stony Brook,New York,36103,Suffolk County,"https://en.wikipedia.org/wiki/Stony_Brook,_New_York",2026-11-05
+Hempstead,New York,36059,Nassau County,"https://en.wikipedia.org/wiki/Hempstead,_New_York",2026-11-05
+Fairfax,Virginia,51059,Fairfax County,"https://en.wikipedia.org/wiki/Fairfax_County,_Virginia",2026-11-05
+Kennesaw,Georgia,13067,Cobb County,"https://en.wikipedia.org/wiki/Kennesaw,_Georgia",2026-11-05
+Towson,Maryland,24005,Baltimore County,"https://en.wikipedia.org/wiki/Towson,_Maryland",2026-11-05
+Catonsville,Maryland,24005,Baltimore County,"https://en.wikipedia.org/wiki/Catonsville,_Maryland",2026-11-05
+Moon Township,Pennsylvania,42003,Allegheny County,"https://en.wikipedia.org/wiki/Moon_Township,_Pennsylvania",2026-11-05
+Brookville,New York,36059,Nassau County,"https://en.wikipedia.org/wiki/Brookville,_New_York",2026-11-05
+Emmitsburg,Maryland,24021,Frederick County,"https://en.wikipedia.org/wiki/Emmitsburg,_Maryland",2026-11-05
+Teaneck,New Jersey,34003,Bergen County,"https://en.wikipedia.org/wiki/Teaneck,_New_Jersey",2026-11-05
+Riverdale,New York,36005,Bronx County,"https://en.wikipedia.org/wiki/Riverdale,_Bronx",2026-11-05
+Piscataway,New Jersey,34023,Middlesex County,"https://en.wikipedia.org/wiki/Piscataway,_New_Jersey",2026-11-05
+New Rochelle,New York,36119,Westchester County,"https://en.wikipedia.org/wiki/New_Rochelle,_New_York",2026-11-05
+Lawrenceville,New Jersey,34021,Mercer County,"https://en.wikipedia.org/wiki/Lawrenceville,_New_Jersey",2026-11-05
+West Long Branch,New Jersey,34025,Monmouth County,"https://en.wikipedia.org/wiki/West_Long_Branch,_New_Jersey",2026-11-05
+South Orange,New Jersey,34013,Essex County,"https://en.wikipedia.org/wiki/South_Orange,_New_Jersey",2026-11-05
+Jersey City,New Jersey,34017,Hudson County,"https://en.wikipedia.org/wiki/Jersey_City,_New_Jersey",2026-11-05
+Princess Anne,Maryland,24039,Somerset County,"https://en.wikipedia.org/wiki/Princess_Anne,_Maryland",2026-11-05
+Smithfield,Rhode Island,44007,Providence County,"https://en.wikipedia.org/wiki/Smithfield,_Rhode_Island",2026-11-05
+Kingston,Rhode Island,44009,Washington County,"https://en.wikipedia.org/wiki/Kingston,_Rhode_Island",2026-11-05
+Durham,New Hampshire,33017,Strafford County,"https://en.wikipedia.org/wiki/Durham,_New_Hampshire",2026-11-05
+Storrs,Connecticut,09110,Capitol Planning Region,"https://en.wikipedia.org/wiki/Storrs,_Connecticut",2026-11-05
+Murfreesboro,Tennessee,47149,Rutherford County,"https://en.wikipedia.org/wiki/Murfreesboro,_Tennessee",2026-11-05
+Highland Heights,Kentucky,21037,Campbell County,"https://en.wikipedia.org/wiki/Highland_Heights,_Kentucky",2026-11-05
+Edwardsville,Illinois,17119,Madison County,"https://en.wikipedia.org/wiki/Edwardsville,_Illinois",2026-11-05
+Rochester,Michigan,26125,Oakland County,"https://en.wikipedia.org/wiki/Rochester,_Michigan",2026-11-05
+Ypsilanti,Michigan,26161,Washtenaw County,"https://en.wikipedia.org/wiki/Ypsilanti,_Michigan",2026-11-05
+Fairfield,Connecticut,09120,Greater Bridgeport Planning Region,"https://en.wikipedia.org/wiki/Fairfield,_Connecticut",2026-11-05
+Hamden,Connecticut,09170,South Central Connecticut Planning Region,"https://en.wikipedia.org/wiki/Hamden,_Connecticut",2026-11-05
+Durham,North Carolina,37063,Durham County,"https://en.wikipedia.org/wiki/Durham,_North_Carolina",2026-11-05
+Malibu,California,06037,Los Angeles County,"https://en.wikipedia.org/wiki/Malibu,_California",2026-11-05
+Moraga,California,06013,Contra Costa County,"https://en.wikipedia.org/wiki/Moraga,_California",2026-11-05
+Riverside,California,06065,Riverside County,"https://en.wikipedia.org/wiki/Riverside,_California",2026-11-05
+Lake Buena Vista,Florida,12095,Orange County,"https://en.wikipedia.org/wiki/Lake_Buena_Vista,_Florida",2026-11-05
+Ewing,New Jersey,34021,Mercer County,"https://en.wikipedia.org/wiki/Ewing_Township,_New_Jersey",2026-11-05
+Loretto,Pennsylvania,42021,Cambria County,"https://en.wikipedia.org/wiki/Loretto,_Pennsylvania",2026-11-05
+Itta Bena,Mississippi,28083,Leflore County,"https://en.wikipedia.org/wiki/Itta_Bena,_Mississippi",2026-11-05
+Daytona Beach,Florida,12127,Volusia County,"https://en.wikipedia.org/wiki/Daytona_Beach,_Florida",2026-11-05

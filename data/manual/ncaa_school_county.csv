@@ -1,0 +1,170 @@
+school,campus_city,county_fips,source_url,access_date,note
+American,"Washington, DC",11001,https://en.wikipedia.org/wiki/American_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+George Washington,"Washington, DC",11001,https://en.wikipedia.org/wiki/George_Washington_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Georgetown,"Washington, DC",11001,https://en.wikipedia.org/wiki/Georgetown_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Howard,"Washington, DC",11001,https://en.wikipedia.org/wiki/Howard_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+George Mason,"Fairfax, VA",51059,https://en.wikipedia.org/wiki/George_Mason_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Maryland,"College Park, MD",24033,"https://en.wikipedia.org/wiki/University_of_Maryland,_College_Park",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Mount St. Mary's,"Emmitsburg, MD",24021,https://en.wikipedia.org/wiki/Mount_St._Mary%27s_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Navy,"Annapolis, MD",24003,https://en.wikipedia.org/wiki/United_States_Naval_Academy,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Coppin St.,"Baltimore, MD",24510,https://en.wikipedia.org/wiki/Coppin_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Loyola Maryland,"Baltimore, MD",24510,https://en.wikipedia.org/wiki/Loyola_University_Maryland,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Morgan St.,"Baltimore, MD",24510,https://en.wikipedia.org/wiki/Morgan_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Towson,"Towson, MD",24005,https://en.wikipedia.org/wiki/Towson_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UMBC,"Catonsville, MD",24005,"https://en.wikipedia.org/wiki/University_of_Maryland,_Baltimore_County",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Arizona St.,"Tempe, AZ",04013,https://en.wikipedia.org/wiki/Arizona_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Grand Canyon,"Phoenix, AZ",04013,https://en.wikipedia.org/wiki/Grand_Canyon_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Arizona,"Tucson, AZ",04019,https://en.wikipedia.org/wiki/University_of_Arizona,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Boston College,"Chestnut Hill, MA",25017,https://en.wikipedia.org/wiki/Boston_College,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Boston U.,"Boston, MA",25025,https://en.wikipedia.org/wiki/Boston_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Northeastern,"Boston, MA",25025,https://en.wikipedia.org/wiki/Northeastern_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Harvard,"Cambridge, MA",25017,https://en.wikipedia.org/wiki/Harvard_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UMass Lowell,"Lowell, MA",25017,https://en.wikipedia.org/wiki/University_of_Massachusetts_Lowell,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Merrimack,"North Andover, MA",25009,https://en.wikipedia.org/wiki/Merrimack_College,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Providence,"Providence, RI",44007,https://en.wikipedia.org/wiki/Providence_College,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Brown,"Providence, RI",44007,https://en.wikipedia.org/wiki/Brown_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Bryant,"Smithfield, RI",44007,https://en.wikipedia.org/wiki/Bryant_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Rhode Island,"Kingston, RI",44009,https://en.wikipedia.org/wiki/University_of_Rhode_Island,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Stonehill,"Easton, MA",25005,https://en.wikipedia.org/wiki/Stonehill_College,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Buffalo,"Buffalo, NY",36029,https://en.wikipedia.org/wiki/University_at_Buffalo,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Canisius,"Buffalo, NY",36029,https://en.wikipedia.org/wiki/Canisius_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Niagara,"Lewiston, NY",36063,https://en.wikipedia.org/wiki/Niagara_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Butler,"Indianapolis, IN",18097,https://en.wikipedia.org/wiki/Butler_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+IU Indy,"Indianapolis, IN",18097,https://en.wikipedia.org/wiki/Indiana_University_Indianapolis,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+CSUN,"Los Angeles, CA",06037,"https://en.wikipedia.org/wiki/California_State_University,_Northridge",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+LMU (CA),"Los Angeles, CA",06037,https://en.wikipedia.org/wiki/Loyola_Marymount_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Long Beach St.,"Long Beach, CA",06037,"https://en.wikipedia.org/wiki/California_State_University,_Long_Beach",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Pepperdine,"Malibu, CA",06037,https://en.wikipedia.org/wiki/Pepperdine_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UCLA,"Los Angeles, CA",06037,"https://en.wikipedia.org/wiki/University_of_California,_Los_Angeles",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Southern California,"Los Angeles, CA",06037,https://en.wikipedia.org/wiki/University_of_Southern_California,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Cal St. Fullerton,"Fullerton, CA",06059,"https://en.wikipedia.org/wiki/California_State_University,_Fullerton",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UC Irvine,"Irvine, CA",06059,"https://en.wikipedia.org/wiki/University_of_California,_Irvine",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+California Baptist,"Riverside, CA",06065,https://en.wikipedia.org/wiki/California_Baptist_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UC Riverside,"Riverside, CA",06065,"https://en.wikipedia.org/wiki/University_of_California,_Riverside",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+California,"Berkeley, CA",06001,"https://en.wikipedia.org/wiki/University_of_California,_Berkeley",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+San Francisco,"San Francisco, CA",06075,https://en.wikipedia.org/wiki/University_of_San_Francisco,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Saint Mary's (CA),"Moraga, CA",06013,https://en.wikipedia.org/wiki/Saint_Mary%27s_College_of_California,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+San Jose St.,"San Jose, CA",06085,https://en.wikipedia.org/wiki/San_Jos%C3%A9_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Santa Clara,"Santa Clara, CA",06085,https://en.wikipedia.org/wiki/Santa_Clara_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Stanford,"Stanford, CA",06085,https://en.wikipedia.org/wiki/Stanford_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+San Diego,"San Diego, CA",06073,https://en.wikipedia.org/wiki/University_of_San_Diego,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+San Diego St.,"San Diego, CA",06073,https://en.wikipedia.org/wiki/San_Diego_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UC San Diego,"San Diego, CA",06073,"https://en.wikipedia.org/wiki/University_of_California,_San_Diego",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Sacramento St.,"Sacramento, CA",06067,"https://en.wikipedia.org/wiki/California_State_University,_Sacramento",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UC Davis,"Davis, CA",06113,"https://en.wikipedia.org/wiki/University_of_California,_Davis",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Fresno St.,"Fresno, CA",06019,"https://en.wikipedia.org/wiki/California_State_University,_Fresno",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Charlotte,"Charlotte, NC",37119,https://en.wikipedia.org/wiki/University_of_North_Carolina_at_Charlotte,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Queens (NC),"Charlotte, NC",37119,https://en.wikipedia.org/wiki/Queens_University_of_Charlotte,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Davidson,"Davidson, NC",37119,https://en.wikipedia.org/wiki/Davidson_College,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Winthrop,"Rock Hill, SC",45091,https://en.wikipedia.org/wiki/Winthrop_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+NC State,"Raleigh, NC",37183,https://en.wikipedia.org/wiki/North_Carolina_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Chicago St.,"Chicago, IL",17031,https://en.wikipedia.org/wiki/Chicago_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+DePaul,"Chicago, IL",17031,https://en.wikipedia.org/wiki/DePaul_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Loyola Chicago,"Chicago, IL",17031,https://en.wikipedia.org/wiki/Loyola_University_Chicago,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UIC,"Chicago, IL",17031,https://en.wikipedia.org/wiki/University_of_Illinois_Chicago,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Northwestern,"Evanston, IL",17031,https://en.wikipedia.org/wiki/Northwestern_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+NIU,"DeKalb, IL",17037,https://en.wikipedia.org/wiki/Northern_Illinois_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Valparaiso,"Valparaiso, IN",18127,https://en.wikipedia.org/wiki/Valparaiso_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Cincinnati,"Cincinnati, OH",39061,https://en.wikipedia.org/wiki/University_of_Cincinnati,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Xavier,"Cincinnati, OH",39061,https://en.wikipedia.org/wiki/Xavier_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Northern Ky.,"Highland Heights, KY",21037,https://en.wikipedia.org/wiki/Northern_Kentucky_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Cleveland St.,"Cleveland, OH",39035,https://en.wikipedia.org/wiki/Cleveland_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Ohio St.,"Columbus, OH",39049,https://en.wikipedia.org/wiki/Ohio_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Columbia,"New York, NY",36061,https://en.wikipedia.org/wiki/Columbia_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Fordham,"Bronx, NY",36005,https://en.wikipedia.org/wiki/Fordham_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Manhattan,"Bronx, NY",36005,https://en.wikipedia.org/wiki/Manhattan_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+St. John's (NY),"Queens, NY",36081,https://en.wikipedia.org/wiki/St._John%27s_University_(New_York_City),2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Wagner,"Staten Island, NY",36085,https://en.wikipedia.org/wiki/Wagner_College,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Hofstra,"Hempstead, NY",36059,https://en.wikipedia.org/wiki/Hofstra_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+LIU,"Brookville, NY",36059,https://en.wikipedia.org/wiki/Long_Island_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Stony Brook,"Stony Brook, NY",36103,https://en.wikipedia.org/wiki/Stony_Brook_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Iona,"New Rochelle, NY",36119,https://en.wikipedia.org/wiki/Iona_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+NJIT,"Newark, NJ",34013,https://en.wikipedia.org/wiki/New_Jersey_Institute_of_Technology,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Seton Hall,"South Orange, NJ",34013,https://en.wikipedia.org/wiki/Seton_Hall_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Saint Peter's,"Jersey City, NJ",34017,https://en.wikipedia.org/wiki/Saint_Peter%27s_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+FDU,"Teaneck, NJ",34003,https://en.wikipedia.org/wiki/Fairleigh_Dickinson_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Rutgers,"Piscataway, NJ",34023,https://en.wikipedia.org/wiki/Rutgers_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Monmouth,"West Long Branch, NJ",34025,https://en.wikipedia.org/wiki/Monmouth_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Creighton,"Omaha, NE",31055,https://en.wikipedia.org/wiki/Creighton_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Omaha,"Omaha, NE",31055,https://en.wikipedia.org/wiki/University_of_Nebraska_Omaha,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Denver,"Denver, CO",08031,https://en.wikipedia.org/wiki/University_of_Denver,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Detroit Mercy,"Detroit, MI",26163,https://en.wikipedia.org/wiki/University_of_Detroit_Mercy,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Oakland,"Rochester, MI",26125,https://en.wikipedia.org/wiki/Oakland_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Drexel,"Philadelphia, PA",42101,https://en.wikipedia.org/wiki/Drexel_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+La Salle,"Philadelphia, PA",42101,https://en.wikipedia.org/wiki/La_Salle_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Penn,"Philadelphia, PA",42101,https://en.wikipedia.org/wiki/University_of_Pennsylvania,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Saint Joseph's,"Philadelphia, PA",42101,https://en.wikipedia.org/wiki/Saint_Joseph%27s_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Temple,"Philadelphia, PA",42101,https://en.wikipedia.org/wiki/Temple_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Villanova,"Villanova, PA",42045,https://en.wikipedia.org/wiki/Villanova_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Delaware,"Newark, DE",10003,https://en.wikipedia.org/wiki/University_of_Delaware,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Duquesne,"Pittsburgh, PA",42003,https://en.wikipedia.org/wiki/Duquesne_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Pittsburgh,"Pittsburgh, PA",42003,https://en.wikipedia.org/wiki/University_of_Pittsburgh,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Robert Morris,"Moon Township, PA",42003,https://en.wikipedia.org/wiki/Robert_Morris_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+FIU,"Miami, FL",12086,https://en.wikipedia.org/wiki/Florida_International_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Miami (FL),"Coral Gables, FL",12086,https://en.wikipedia.org/wiki/University_of_Miami,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Fla. Atlantic,"Boca Raton, FL",12099,https://en.wikipedia.org/wiki/Florida_Atlantic_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UCF,"Orlando, FL",12095,https://en.wikipedia.org/wiki/University_of_Central_Florida,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Jacksonville,"Jacksonville, FL",12031,https://en.wikipedia.org/wiki/Jacksonville_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+North Florida,"Jacksonville, FL",12031,https://en.wikipedia.org/wiki/University_of_North_Florida,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+South Fla.,"Tampa, FL",12057,https://en.wikipedia.org/wiki/University_of_South_Florida,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Georgia St.,"Atlanta, GA",13121,https://en.wikipedia.org/wiki/Georgia_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Georgia Tech,"Atlanta, GA",13121,https://en.wikipedia.org/wiki/Georgia_Tech,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Kennesaw St.,"Kennesaw, GA",13067,https://en.wikipedia.org/wiki/Kennesaw_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Houston,"Houston, TX",48201,https://en.wikipedia.org/wiki/University_of_Houston,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Houston Christian,"Houston, TX",48201,https://en.wikipedia.org/wiki/Houston_Christian_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Rice,"Houston, TX",48201,https://en.wikipedia.org/wiki/Rice_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Texas Southern,"Houston, TX",48201,https://en.wikipedia.org/wiki/Texas_Southern_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Prairie View,"Prairie View, TX",48473,https://en.wikipedia.org/wiki/Prairie_View_A%26M_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+SMU,"Dallas, TX",48113,https://en.wikipedia.org/wiki/Southern_Methodist_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+TCU,"Fort Worth, TX",48439,https://en.wikipedia.org/wiki/Texas_Christian_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UT Arlington,"Arlington, TX",48439,https://en.wikipedia.org/wiki/University_of_Texas_at_Arlington,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+North Texas,"Denton, TX",48121,https://en.wikipedia.org/wiki/University_of_North_Texas,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Texas,"Austin, TX",48453,https://en.wikipedia.org/wiki/University_of_Texas_at_Austin,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Texas St.,"San Marcos, TX",48209,https://en.wikipedia.org/wiki/Texas_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UTSA,"San Antonio, TX",48029,https://en.wikipedia.org/wiki/University_of_Texas_at_San_Antonio,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UIW,"San Antonio, TX",48029,https://en.wikipedia.org/wiki/University_of_the_Incarnate_Word,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UTEP,"El Paso, TX",48141,https://en.wikipedia.org/wiki/University_of_Texas_at_El_Paso,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Kansas City,"Kansas City, MO",29095,https://en.wikipedia.org/wiki/University_of_Missouri%E2%80%93Kansas_City,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Louisville,"Louisville, KY",21111,https://en.wikipedia.org/wiki/University_of_Louisville,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Bellarmine,"Louisville, KY",21111,https://en.wikipedia.org/wiki/Bellarmine_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Marquette,"Milwaukee, WI",55079,https://en.wikipedia.org/wiki/Marquette_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Milwaukee,"Milwaukee, WI",55079,https://en.wikipedia.org/wiki/University_of_Wisconsin%E2%80%93Milwaukee,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Memphis,"Memphis, TN",47157,https://en.wikipedia.org/wiki/University_of_Memphis,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Minnesota,"Minneapolis, MN",27053,https://en.wikipedia.org/wiki/University_of_Minnesota,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+St. Thomas (MN),"Saint Paul, MN",27123,https://en.wikipedia.org/wiki/University_of_St._Thomas_(Minnesota),2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Belmont,"Nashville, TN",47037,https://en.wikipedia.org/wiki/Belmont_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Lipscomb,"Nashville, TN",47037,https://en.wikipedia.org/wiki/Lipscomb_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Tennessee St.,"Nashville, TN",47037,https://en.wikipedia.org/wiki/Tennessee_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Vanderbilt,"Nashville, TN",47037,https://en.wikipedia.org/wiki/Vanderbilt_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Middle Tenn.,"Murfreesboro, TN",47149,https://en.wikipedia.org/wiki/Middle_Tennessee_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Tennessee,"Knoxville, TN",47093,https://en.wikipedia.org/wiki/University_of_Tennessee,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+New Orleans,"New Orleans, LA",22071,https://en.wikipedia.org/wiki/University_of_New_Orleans,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Tulane,"New Orleans, LA",22071,https://en.wikipedia.org/wiki/Tulane_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+LSU,"Baton Rouge, LA",22033,https://en.wikipedia.org/wiki/Louisiana_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Norfolk St.,"Norfolk, VA",51710,https://en.wikipedia.org/wiki/Norfolk_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Old Dominion,"Norfolk, VA",51710,https://en.wikipedia.org/wiki/Old_Dominion_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Hampton,"Hampton, VA",51650,https://en.wikipedia.org/wiki/Hampton_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+William & Mary,"Williamsburg, VA",51830,https://en.wikipedia.org/wiki/College_of_William_%26_Mary,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Richmond,"Richmond, VA",51760,https://en.wikipedia.org/wiki/University_of_Richmond,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+VCU,"Richmond, VA",51760,https://en.wikipedia.org/wiki/Virginia_Commonwealth_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Oklahoma,"Norman, OK",40027,https://en.wikipedia.org/wiki/University_of_Oklahoma,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Tulsa,"Tulsa, OK",40143,https://en.wikipedia.org/wiki/University_of_Tulsa,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Oral Roberts,"Tulsa, OK",40143,https://en.wikipedia.org/wiki/Oral_Roberts_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Portland,"Portland, OR",41051,https://en.wikipedia.org/wiki/University_of_Portland,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Portland St.,"Portland, OR",41051,https://en.wikipedia.org/wiki/Portland_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Saint Louis,"St. Louis, MO",29510,https://en.wikipedia.org/wiki/Saint_Louis_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+SIUE,"Edwardsville, IL",17119,https://en.wikipedia.org/wiki/Southern_Illinois_University_Edwardsville,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Lindenwood,"St. Charles, MO",29183,https://en.wikipedia.org/wiki/Lindenwood_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Seattle U,"Seattle, WA",53033,https://en.wikipedia.org/wiki/Seattle_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Washington,"Seattle, WA",53033,https://en.wikipedia.org/wiki/University_of_Washington,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UNLV,"Las Vegas, NV",32003,"https://en.wikipedia.org/wiki/University_of_Nevada,_Las_Vegas",2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Utah,"Salt Lake City, UT",49035,https://en.wikipedia.org/wiki/University_of_Utah,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UAB,"Birmingham, AL",01073,https://en.wikipedia.org/wiki/University_of_Alabama_at_Birmingham,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Samford,"Birmingham, AL",01073,https://en.wikipedia.org/wiki/Samford_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+UConn,"Storrs, CT",09110,https://en.wikipedia.org/wiki/University_of_Connecticut,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Central Conn. St.,"New Britain, CT",09110,https://en.wikipedia.org/wiki/Central_Connecticut_State_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Fairfield,"Fairfield, CT",09120,https://en.wikipedia.org/wiki/Fairfield_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Sacred Heart,"Fairfield, CT",09120,https://en.wikipedia.org/wiki/Sacred_Heart_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Hawaii,"Honolulu, HI",15003,https://en.wikipedia.org/wiki/University_of_Hawaii_at_Manoa,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+Furman,"Greenville, SC",45045,https://en.wikipedia.org/wiki/Furman_University,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page
+New Mexico,"Albuquerque, NM",35001,https://en.wikipedia.org/wiki/University_of_New_Mexico,2026-11-05,School name as printed in NCAA PDF; county of main campus per source page

@@ -1,0 +1,70 @@
+arena,city,state,capacity_basketball,tenants,opened,cbsa_code,nba_tenant,nhl_tenant,source_url,access_date
+First Horizon Coliseum,Greensboro,North Carolina,22000,UNC Greensboro Spartans (NCAA) Greensboro Gargoyles (ECHL),1959,24660,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+United Center,Chicago,Illinois,20917,Chicago Blackhawks (NHL) Chicago Bulls (NBA),1994,16980,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+KFC Yum! Center,Louisville,Kentucky,22090,Louisville Cardinals (NCAA),2010,31140,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Rupp Arena,Lexington,Kentucky,21500,Kentucky Wildcats (NCAA),1976,30460,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Amerant Bank Arena,Sunrise,Florida,20737,Florida Panthers (NHL),1998,33100,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Xfinity Mobile Arena,Philadelphia,Pennsylvania,20478,Philadelphia 76ers (NBA) Philadelphia Flyers (NHL) Philadelphia Wings (NLL),1996,37980,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Benchmark International Arena,Tampa,Florida,20500,Tampa Bay Lightning (NHL),1996,45300,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Tacoma Dome,Tacoma,Washington,20722,nan,1983,42660,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Capital One Arena,Washington,District of Columbia,20356,Washington Capitals (NHL) Washington Wizards (NBA) Georgetown Hoyas (NCAA),1997,47900,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Little Caesars Arena,Detroit,Michigan,20332,Detroit Red Wings (NHL) Detroit Pistons (NBA),2017,19820,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Enterprise Center,St. Louis,Missouri,20000,St. Louis Blues (NHL),1994,41180,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Lenovo Center,Raleigh,North Carolina,19500,Carolina Hurricanes (NHL) NC State Wolfpack (NCAA),1999,39580,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Madison Square Garden,New York City,New York,19812,New York Knicks (NBA) New York Rangers (NHL) St. John's Red Storm (NCAA),1968,35620,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Kaseya Center,Miami,Florida,19600,Miami Heat (NBA),1999,33100,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Ball Arena,Denver,Colorado,19526,Colorado Avalanche (NHL) Denver Nuggets (NBA) Colorado Mammoth (NLL),1999,19740,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Rocket Arena,Cleveland,Ohio,19432,Cleveland Cavaliers (NBA) Cleveland Monsters (AHL),1994,17410,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Moda Center,Portland,Oregon,19400,Portland Trail Blazers (NBA) Portland Winterhawks (WHL),1995,38900,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Nationwide Arena,Columbus,Ohio,19500,Columbus Blue Jackets (NHL),2000,18140,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Oakland Arena,Oakland,California,19596,nan,1966,41860,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+American Airlines Center,Dallas,Texas,19200,Dallas Mavericks (NBA) Dallas Stars (NHL),2001,19100,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+TD Garden,Boston,Massachusetts,19156,Boston Bruins (NHL) Boston Celtics (NBA),1995,14460,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Target Center,Minneapolis,Minnesota,19500,Minnesota Timberwolves (NBA) Minnesota Lynx (WNBA),1990,33460,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+KeyBank Center,Buffalo,New York,19200,Buffalo Sabres (NHL) Buffalo Bandits (NLL),1996,15380,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+PPG Paints Arena,Pittsburgh,Pennsylvania,19100,Pittsburgh Penguins (NHL),2010,38300,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Crypto.com Arena,Los Angeles,California,19100,Los Angeles Kings (NHL) Los Angeles Lakers (NBA) Los Angeles Sparks (WNBA),1999,31080,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Spectrum Center,Charlotte,North Carolina,19077,Charlotte Hornets (NBA),2005,16740,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Kia Center,Orlando,Florida,19073,Orlando Magic (NBA) Orlando Solar Bears (ECHL),2010,36740,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Grand Casino Arena,St. Paul,Minnesota,18800,Minnesota Wild (NHL) Minnesota Frost (PWHL),2000,33460,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+T-Mobile Arena,Paradise,Nevada,18800,Vegas Golden Knights (NHL),2016,29820,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+T-Mobile Center,Kansas City,Missouri,18972,nan,2007,28140,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Delta Center,Salt Lake City,Utah,18306,Utah Jazz (NBA) Utah Mammoth (NHL),1991,41620,True,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Chase Center,San Francisco,California,18064,Golden State Warriors (NBA) Golden State Valkyries (WNBA),2019,41860,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+SAP Center at San Jose,San Jose,California,18543,San Jose Sharks (NHL),1993,41940,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Bridgestone Arena,Nashville,Tennessee,18500,Nashville Predators (NHL),1996,34980,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+BOK Center,Tulsa,Oklahoma,17839,Tulsa Oilers (ECHL),2008,46140,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Freedom Hall,Louisville,Kentucky,18865,Bellarmine Knights (NCAA),1956,31140,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Prudential Center,Newark,New Jersey,18711,New Jersey Devils (NHL) New York Sirens (PWHL) Seton Hall Pirates (NCAA),2007,35620,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+UBS Arena,Elmont,New York,17975,New York Islanders (NHL),2021,35620,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Frost Bank Center,San Antonio,Texas,18581,San Antonio Spurs (NBA),2002,41700,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Climate Pledge Arena,Seattle,Washington,18500,Seattle Kraken (NHL) Seattle Storm (WNBA) Seattle Torrent (PWHL) Seattle Redhawks (NCAA),1962,42660,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Desert Diamond Arena,Glendale,Arizona,18300,Arizona Rattlers (IFL),2003,38060,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Paycom Center,Oklahoma City,Oklahoma,18203,Oklahoma City Thunder (NBA) Oklahoma City Blue (NBA G League),2002,36420,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Toyota Center,Houston,Texas,18055,Houston Rockets (NBA),2003,26420,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Golden 1 Center,Sacramento,California,17608,Sacramento Kings (NBA),2016,40900,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Barclays Center,Brooklyn,New York,17732,Brooklyn Nets (NBA) New York Liberty (WNBA),2012,35620,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+CHI Health Center Omaha,Omaha,Nebraska,18320,Creighton Bluejays (NCAA),2003,36540,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Honda Center,Anaheim,California,18336,Anaheim Ducks (NHL),1993,31080,False,True,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Smoothie King Center,New Orleans,Louisiana,18600,New Orleans Pelicans (NBA),1999,35380,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Fiserv Forum,Milwaukee,Wisconsin,17942,Milwaukee Bucks (NBA)  Marquette Golden Eagles (NCAA),2018,33340,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Intuit Dome,Inglewood,California,17972,Los Angeles Clippers (NBA),2024,31080,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Gainbridge Fieldhouse,Indianapolis,Indiana,17274,Indiana Pacers (NBA)  Indiana Fever (WNBA),1999,26900,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Allstate Arena,Rosemont,Illinois,17500,Chicago Wolves (AHL),1979,16980,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Simmons Bank Arena,North Little Rock,Arkansas,18000,nan,1999,30780,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+State Farm Arena,Atlanta,Georgia,17744,Atlanta Hawks (NBA),1999,12060,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Legacy Arena,Birmingham,Alabama,17654,Birmingham Squadron (NBA G League),1976,13820,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Mortgage Matchup Center,Phoenix,Arizona,17017,Phoenix Suns (NBA) Phoenix Mercury (WNBA),1992,38060,True,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Kia Forum,Inglewood,California,17505,nan,1967,31080,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Heritage Bank Center,Cincinnati,Ohio,17000,Cincinnati Cyclones (ECHL),1975,17140,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+JMA Wireless Dome,Syracuse,New York,35642,Syracuse Orange,1980,45060,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Dean Smith Center,Chapel Hill,North Carolina,21750,North Carolina Tar Heels,1986,20500,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Thompson–Boling Arena,Knoxville,Tennessee,21678,Tennessee Volunteers,1987,28940,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Value City Arena,Columbus,Ohio,19700,Ohio State Buckeyes,1998,18140,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Thomas & Mack Center,Paradise,Nevada,18500,UNLV Runnin' Rebels,1983,29820,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Bud Walton Arena,Fayetteville,Arkansas,19368,Arkansas Razorbacks,1993,22220,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Colonial Life Arena,Columbia,South Carolina,18000,South Carolina Gamecocks,2002,17900,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Marriott Center,Provo,Utah,17978,BYU Cougars,1971,39340,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Xfinity Center,College Park,Maryland,17950,Maryland Terrapins,2002,47900,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Kohl Center,Madison,Wisconsin,17230,Wisconsin Badgers,1998,31540,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
+Simon Skjodt Assembly Hall,Bloomington,Indiana,17222,Indiana Hoosiers,1971,14020,False,False,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States,2026-11-05
