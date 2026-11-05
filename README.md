@@ -261,14 +261,14 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 
 | short_name | price_basis | price_to_revenue_base | price_to_revenue_range | league_avg_value_to_revenue | premium_vs_league_avg_multiple |
 |---|---|---|---|---|---|
-| Seattle | base fee $8.5B (midpoint of reported $7-10B range) | 17.6 | 16.9x-18.2x | 14.6 | +21% |
-| San Diego | base fee $8.5B (midpoint of reported $7-10B range) | 20.6 | 19.8x-21.4x | 14.6 | +41% |
-| Austin | base fee $8.5B (midpoint of reported $7-10B range) | 22.1 | 20.5x-23.7x | 14.6 | +52% |
-| Raleigh | base fee $8.5B (midpoint of reported $7-10B range) | 22.3 | 20.5x-24.0x | 14.6 | +53% |
-| Cincinnati | base fee $8.5B (midpoint of reported $7-10B range) | 22.7 | 20.8x-24.6x | 14.6 | +56% |
-| Nashville | base fee $8.5B (midpoint of reported $7-10B range) | 23.0 | 21.0x-25.0x | 14.6 | +58% |
-| Las Vegas | ESPN-reported ~$10B (Las Vegas) | 26.7 | 24.5x-29.0x | 14.6 | +83% |
-| Omaha | base fee $8.5B (midpoint of reported $7-10B range) | 27.1 | 22.9x-31.1x | 14.6 | +86% |
+| Seattle | ESPN-reported ~$6B valuation estimate | 12.4 | 11.9x-12.9x | 14.6 | -15% |
+| San Diego | base fee: midpoint of reported $7-10B range | 20.6 | 19.8x-21.4x | 14.6 | +41% |
+| Austin | base fee: midpoint of reported $7-10B range | 22.1 | 20.5x-23.7x | 14.6 | +52% |
+| Raleigh | base fee: midpoint of reported $7-10B range | 22.3 | 20.5x-24.0x | 14.6 | +53% |
+| Cincinnati | base fee: midpoint of reported $7-10B range | 22.7 | 20.8x-24.6x | 14.6 | +56% |
+| Nashville | base fee: midpoint of reported $7-10B range | 23.0 | 21.0x-25.0x | 14.6 | +58% |
+| Las Vegas | ESPN-reported ~$10B | 26.7 | 24.5x-29.0x | 14.6 | +83% |
+| Omaha | base fee: midpoint of reported $7-10B range | 27.1 | 22.9x-31.1x | 14.6 | +86% |
 
 ## Market & competitive research
 
@@ -289,7 +289,7 @@ Range of fee share minus NPV by pool definition and owner share (all growth, dis
 - **Distance is a rough proxy for cannibalization.** Ease of entry uses straight-line miles from one point per market, not drive times or TV overlap. Existing teams' fans in a market (e.g. Suns or Lakers fans in Las Vegas) are not measured.
 - **Transplant share is inflated where a market crosses state lines** (people born in the neighboring state count as transplants), and it is not scored.
 - **Monte Carlo varies only the pillar weights**, not the factor choice or the data.
-- **Bidder multiples** use the base fee ($8.5B) for every market except Las Vegas (reported ~$10B), and ignore arena costs (except the Las Vegas column) and timing.
+- **Bidder multiples** use ESPN-reported prices for Las Vegas (~$10B) and Seattle (~$6B valuation estimate) and the $8.5B base fee elsewhere. They ignore arena costs (except the Las Vegas column) and timing.
 - **Missing data:** Google Trends (folder empty) and NTTO overseas visitors (dashboard only) are not in the scorecard. Mexico City and Vancouver are not scored. Virginia Beach GDP is missing.
 - **NCAA mapping:** schools are assigned to markets by main-campus county. Only D-I schools in the study markets are mapped.
 - **Business case:** each stream is scaled with an elasticity calibrated on one pair of teams. Dilution assumes expansion teams add no new shared revenue (the media deal is fixed through 2035-36), and years beyond the deal assume renewal.

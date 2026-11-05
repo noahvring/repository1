@@ -127,11 +127,11 @@ def bidder_multiples(m, ref, S, ids):
         name = m.at[cid, "short_name"]
         local = {s: local_revenue(m.loc[[cid]], ref, S[s])["total"].iloc[0] for s in SCEN}
         lo_l, hi_l = min(local.values()), max(local.values())
-        is_lv = name == "Las Vegas"
-        price = b["las_vegas_reported_price_usd"] if is_lv else b["expansion_fee_per_team_usd"]
+        is_lv, is_sea = name == "Las Vegas", name == "Seattle"
+        price = b["las_vegas_reported_price_usd"] if is_lv else b["seattle_reported_valuation_usd"] if is_sea else b["expansion_fee_per_team_usd"]
         rev_base = local["base"] + central_share
         rows.append({"market_id": cid, "short_name": name,
-                     "price_usd": price, "price_basis": "ESPN-reported ~$10B (Las Vegas)" if is_lv else "base fee $8.5B (midpoint of reported $7-10B range)",
+                     "price_usd": price, "price_basis": "ESPN-reported ~$10B" if is_lv else "ESPN-reported ~$6B valuation estimate" if is_sea else "base fee: midpoint of reported $7-10B range",
                      "est_revenue_base_usd": rev_base, "est_revenue_low_usd": lo_l + central_share, "est_revenue_high_usd": hi_l + central_share,
                      "central_revenue_share_usd": central_share,
                      "price_to_revenue_base": price / rev_base,

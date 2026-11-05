@@ -9,7 +9,7 @@
 1. **Seattle / Las Vegas:** rank #1 / #5 among 39 non-NBA markets. Chance of a top-10 rank across 10,000 random weightings: 100% / 100%.
 2. **Prime targets** (above the NBA median on both attractiveness and ease of entry): 3, namely Raleigh, Omaha, Las Vegas.
 3. **Owner economics:** fee share $566.7M per existing team vs a 20-year NPV of dilution of $156.6M (3% growth, 8% discount). Shared revenue would need to grow 14% a year before dilution outweighs the fee.
-4. **Bidder view:** Las Vegas at the reported ~$10B is 26.7x estimated revenue, vs a league-average value/revenue of 14.6x.
+4. **Bidder view:** Las Vegas at the reported ~$10B is 26.7x estimated revenue, and Seattle at the reported ~$6B valuation is 12.4x, vs a league-average value/revenue of 14.6x.
 
 ![Matrix](../figures/00_matrix_attractiveness_vs_ease.png)
 

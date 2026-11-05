@@ -98,6 +98,32 @@ def main():
     source(fig, "SIMPLIFIED PROXY: one round trip per conference opponent, straight-line miles; ignores real schedules and back-to-backs. Arenas: Wikipedia NBA team table; SEA/LV: Census Gazetteer. outputs/realignment_travel.csv. " + REPO_NAME)
     fig.tight_layout(rect=(0, 0.05, 1, 0.95)); fig.savefig(FIGURES / "10_realignment_travel.png", dpi=150); plt.close(fig)
 
+    # 11 Seattle vs Las Vegas head-to-head on standardized metrics (z-score among non-NBA markets;
+    # bidder multiple standardized among the top-8 business-case markets). Higher = better for the
+    # market, except transplant share, shown as a risk (higher = more divided-loyalty risk).
+    cand = r[~r["nba_metro"]].set_index("short_name").copy()
+    fbx = pd.read_csv(OUTPUTS / "fan_behavior.csv").set_index("short_name")
+    mcx = pd.read_csv(OUTPUTS / "monte_carlo.csv").set_index("short_name")
+    bidx = pd.read_csv(OUTPUTS / "bidder_multiples.csv").set_index("short_name")
+    kx = pd.read_csv(OUTPUTS / "kpi_dashboard.csv").set_index("short_name")
+    z = lambda sr: (sr - sr.mean()) / sr.std(ddof=0)
+    metrics = {
+        "A Size & wealth": z(cand["A_size_wealth"]), "B Basketball demand": z(cand["B_basketball_demand"]),
+        "C Corporate": z(cand["C_corporate"]), "Attractiveness (total)": z(cand["total_score"]),
+        "Ease of entry": z(cand["ease_of_entry"]), "Miles to nearest NBA (log)": z(np.log(cand["miles_to_nearest_nba"])),
+        "P(top 10)": z(mcx["p_top10"]), "Est. local revenue (base)": z(kx["est_local_revenue_base"]),
+        "Price / revenue (lower = better)": -z(bidx["price_to_revenue_base"]),
+        "Transplant share (RISK)": z(fbx["transplant_share"]),
+    }
+    hh = pd.DataFrame({k: v.reindex(["Seattle", "Las Vegas"]) for k, v in metrics.items()}).T.iloc[::-1]
+    fig, ax = plt.subplots(figsize=(9, 6.5)); y = np.arange(len(hh))
+    ax.barh(y + 0.2, hh["Seattle"], 0.4, color=BLUE, label="Seattle"); ax.barh(y - 0.2, hh["Las Vegas"], 0.4, color=ORANGE, label="Las Vegas")
+    ax.set_yticks(y, hh.index); ax.axvline(0, color=DARK, lw=0.8); ax.legend(frameon=False)
+    ax.set_xlabel("Standardized value (z-score vs non-NBA markets; bidder multiple vs top-8 markets)")
+    ax.set_title("Seattle vs Las Vegas: head-to-head")
+    source(fig, "Sources: outputs/rankings.csv, monte_carlo.csv, kpi_dashboard.csv, bidder_multiples.csv, fan_behavior.csv. " + SRC)
+    fig.tight_layout(rect=(0, 0.05, 1, 1)); fig.savefig(FIGURES / "11_seattle_vs_las_vegas.png", dpi=150); plt.close(fig)
+
     # 1 headline
     fig, ax = plt.subplots(figsize=(9, 6.5)); headline(ax, r); source(fig); fig.tight_layout(rect=(0, 0.04, 1, 1))
     fig.savefig(FIGURES / "01_headline_top15.png", dpi=150); plt.close(fig)
