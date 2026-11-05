@@ -6,19 +6,21 @@
 - Phase 2: scorecard outputs (`rankings`, `pillar_scores`, `nba_benchmark`, `validity` and `sensitivity` CSVs).
 - Phase 3: assumptions table (sourced from Sportico where possible), local revenue scenarios, owner NPV grid (`owner_npv.csv`, `owner_breakeven_growth.csv`), tornado, `kpi_dashboard.csv`, `focus_markets.csv`.
 - Phase 4: `research/` (trends, comparables, focus markets, competitive landscape, insights).
-- Phase 5: 11 figures in `figures/`, including the attractiveness vs ease-of-entry matrix (headline), Monte Carlo robustness, owner NPV heatmap, focus markets, and `linkedin_summary.png`.
+- v4: realignment travel proxy, bidder landscape, Seattle vs Las Vegas head-to-head (`memo/HEAD_TO_HEAD.md`), honeymoon curve from Wikipedia game logs.
+- Phase 5: 14 figures in `figures/`, including the attractiveness vs ease-of-entry matrix (headline), Monte Carlo robustness, owner NPV heatmap, focus markets, and `linkedin_summary.png`.
 - v3: ease of entry (distance to nearest NBA market), Monte Carlo weights, fan-behavior lens, bidder multiples, `memo/EXEC_SUMMARY.md`, `memo/stakeholders.md`.
 - Phase 6: README, `memo/MEMO.md` (headings only), `outputs/KEY_NUMBERS.md`, this report, and `run_all.py`.
 
 ## Tests
 
 ```
-not run
+.....................                                                    [100%]
+21 passed in 0.95s
 ```
 
 ## Runtime
 
-Last `run_all.py` run took 0 seconds (raw downloads cached in `data/raw/`).
+Last `run_all.py` run took 13 seconds (raw downloads cached in `data/raw/`).
 
 ## Deviations & skipped sources
 
@@ -60,10 +62,20 @@ All access attempts on 2026-11-05.
 | Transplant share | ACS 2020-24 table B05002 (place of birth): 1 − born in state of residence ÷ total. **Descriptive only, not scored** (its sign is ambiguous). In markets that cross state lines (e.g. Cincinnati, Kansas City), people born in the neighbouring part of the same market count as transplants, which inflates the share. | Requested behavioural lens. |
 | Honeymoon curve | **Skipped; no figure.** ESPN NHL attendance URLs redirect to the NHL home page (no table), so the Golden Knights and Kraken could not be sourced. ESPN shows "--" for the Raptors and Grizzlies 1995-96 to 2000-01. Only 2 teams were sourceable (Bobcats: 7 of 8 seasons; Thunder: 4 of 8), below the 3-team minimum. The partial sourced data is kept in `data/manual/expansion_attendance.csv`. ESPN labels past seasons by current franchise name (Bobcats = "Hornets"). | Rule: fewer than 3 teams → skip and log. Wikipedia season pages or Hockey-Reference could be tried next. |
 
+## v4 changes (2026-11-05)
+
+| Item | What changed | Why |
+|---|---|---|
+| Realignment travel | `src/realignment.py`: straight-line round trips to every conference opponent. Arena coordinates come from the Wikipedia NBA team table. Seattle and Las Vegas use their Census Gazetteer market points (no arena yet). **Simplified proxy**: ignores the real schedule, inter-conference games, chained road trips and back-to-backs. | Requested operations lens. |
+| Bidder landscape | `research/bidder_landscape.csv` from ESPN (2026-10-02), verified on the page; the Mexico City row comes from a search result (frontofficesports.com blocked). | Requested. |
+| Seattle bidder multiple | Uses ESPN's reported ~$6B Seattle valuation estimate instead of the $8.5B base fee. | A market-specific price is reported. |
+| Honeymoon curve | **Now included** from Wikipedia season game logs: Golden Knights (7 of 8 seasons; 2020-21 excluded with only 14 home games parsed, pandemic limits), Kraken (5), Raptors (8). Vancouver Grizzlies pages had no parseable home attendance, so they are excluded. Measured as average home attendance **indexed to season 1**, not % of capacity, because capacities changed (Raptors in the SkyDome). Data: `data/manual/expansion_attendance_wiki.csv`. | ≥3 teams sourced. |
+
 
 ## What Noah must write
 
 - The memo sections in `memo/MEMO.md`, the headline and recommendation in `memo/EXEC_SUMMARY.md`, the stakeholder grid in `memo/stakeholders.md`, and the Recommendation section of the README.
+- The "So what" in `memo/HEAD_TO_HEAD.md`, and the memo sections "Realignment: who moves East?", "Bidder landscape" and "Novelty effect".
 - The "What this suggests" sections in `research/comparables.md` and `research/focus_markets.md`.
 - The `implication` and `confidence` columns in `research/insights.csv`.
 - A review of every row labeled "ASSUMPTION – Noah to review" in `data/manual/assumptions.csv`.

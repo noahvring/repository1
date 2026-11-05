@@ -102,6 +102,18 @@ def key_numbers(D):
     for _, row in bid.iterrows():
         items.append((f"Price / est. revenue: {row.short_name}", f"{row.price_to_revenue_base:.1f}x ({row.price_to_revenue_range})", f"{row.price_basis}; revenue = local estimate + 1/32 of central revenue",
                       f"{row.premium_vs_league_avg_multiple:+.0%} vs league-average multiple", f"outputs/bidder_multiples.csv (short_name={row.short_name})"))
+    rt = pd.read_csv(OUTPUTS / "realignment_travel.csv")
+    cur = rt[rt.option == "Current 30 teams"].iloc[0]
+    items.append(("Avg conference travel per team, current 30 teams", f"{cur.avg_miles_per_team:,.0f} miles", "Proxy: one round trip to each conference opponent, straight-line", "simplified proxy", "outputs/realignment_travel.csv (Current 30 teams)"))
+    for _, row in rt[rt.moved_team != ""].iterrows():
+        items.append((f"Realignment: {row.moved_team} move East", f"league avg {row.avg_miles_per_team:,.0f} mi/team; mover {row.moved_team_miles:,.0f} mi (vs {row.moved_team_miles_if_stayed_west:,.0f} if it stayed West)",
+                      "32 teams, Seattle and Las Vegas in the West", "simplified proxy", f"outputs/realignment_travel.csv ({row.option})"))
+    hm = pd.read_csv(MANUAL / "expansion_attendance_wiki.csv")
+    for team, g in hm.groupby("team"):
+        items.append((f"Honeymoon: {team}", f"min index {g.index_vs_season1.min():.0f}, last season index {g.sort_values('season_number').index_vs_season1.iloc[-1]:.0f} (season 1 = 100; {len(g)} seasons)",
+                      "Average home attendance relative to the first season", "Wikipedia game logs", f"data/manual/expansion_attendance_wiki.csv (team={team})"))
+    bl = pd.read_csv(RESEARCH / "bidder_landscape.csv")
+    items.append(("Reported bidding groups", "; ".join(f"{mk}: {n}" for mk, n in bl.groupby("market").size().items()), "Groups named or reported per market (incl. unidentified)", "reported", "research/bidder_landscape.csv"))
     top = D["t"].iloc[0]
     items.append(("Most influential revenue assumption", f"{top.assumption} (swing {money(top.swing)})", "Moves combined top-8 base local revenue the most", "tornado", "outputs/tornado.csv (row 1)"))
     t = pd.DataFrame(items, columns=["Number", "Value", "Plain-English meaning", "Scenario / CI", "Source file and row"])
@@ -165,6 +177,10 @@ def readme(D):
     cvp = D["cvp"].iloc[0]
     bid = D["bid"][["short_name", "price_basis", "price_to_revenue_base", "price_to_revenue_range", "league_avg_value_to_revenue", "premium_vs_league_avg_multiple"]].copy()
     bid["premium_vs_league_avg_multiple"] = bid["premium_vs_league_avg_multiple"].map(lambda x: f"{x:+.0%}")
+    rt = pd.read_csv(OUTPUTS / "realignment_travel.csv")
+    rtt = rt[["option", "teams_east", "teams_west", "avg_miles_per_team", "east_avg_per_team", "west_avg_per_team", "moved_team", "moved_team_miles", "moved_team_miles_if_stayed_west"]].copy()
+    for c in ["avg_miles_per_team", "east_avg_per_team", "west_avg_per_team", "moved_team_miles", "moved_team_miles_if_stayed_west"]:
+        rtt[c] = rtt[c].map(lambda x: "" if pd.isna(x) else f"{x:,.0f}")
     srcs = pd.DataFrame([
         ("Population, households, income, age 18-44", "Census ACS 5-year summary file (www2.census.gov)", "2020-2024"),
         ("Population growth", "Census Population Estimates, Vintage 2025", "2020-2025"),
@@ -178,7 +194,9 @@ def readme(D):
         ("Mexico City, Vancouver, Toronto facts", "Wikipedia (population, arena, history, coordinates)", f"accessed {ACCESS_DATE}"),
         ("Market locations", "Census Gazetteer 2024 (CBSA internal points)", "2024"),
         ("Place of birth (transplant share)", "Census ACS 5-year table B05002", "2020-2024"),
-        ("Expansion-team attendance (partial)", "ESPN NBA attendance pages", "2005-2016"),
+        ("Expansion-team attendance (honeymoon)", "Wikipedia season articles (game logs); ESPN NBA attendance (partial)", "1995-2026"),
+        ("NBA arena coordinates, conferences", "Wikipedia NBA current-teams table", f"accessed {ACCESS_DATE}"),
+        ("Bidder landscape", "ESPN (2026-10-02)", "2026"),
         ("Franchise value, team revenue; Las Vegas price", "Sportico; ESPN (2026-10-02)", "2025-26"),
         ("Google Trends; NTTO overseas visitors", "Skipped (see DEVIATIONS.md)", "-"),
     ], columns=["Factor", "Source", "Year"])
@@ -235,6 +253,8 @@ Markets are placed on two separate axes, **attractiveness** and **ease of entry*
 
 {md(top15)}
 
+![Top 15](figures/01_headline_top15.png)
+
 **How the top 10 changed from v1.** v1 ranked CBSAs and scored G League presence. The middle column shows the switch to CSAs with G League still scored. The final-rank column is the current v3 model, which also moves competition and arena onto the ease-of-entry axis (`outputs/top10_change.csv`). Omaha was below 1M people as a CBSA, so it was not in the v1 study set.
 
 {md(ch)}
@@ -257,9 +277,25 @@ These are behavioral indicators. They are reported, not scored (`outputs/fan_beh
 
 - **Transplant share** is the share of residents born outside their current state. Transplants often keep loyalty to the teams they grew up with, so this is a divided-loyalty risk; its sign is ambiguous.
 - **College vs pro:** across the 27 NBA markets, the correlation between college attendance per capita and the attractiveness score without college is r = {cvp.pearson_r_college_att_vs_score_without_college:.2f} (p = {cvp.p_value:.2f}). With college attendance removed, {int(cvp.top10_overlap_equal_vs_no_college)} of the top 10 stay. Dropped: {cvp.dropped_from_top10_without_college}. Added: {cvp.added_to_top10_without_college}.
-- **Honeymoon curve:** skipped. Only two expansion or relocated teams could be sourced (see DEVIATIONS.md). The partial data is in `data/manual/expansion_attendance.csv`.
+- **Honeymoon curve:** average home attendance indexed to the first season, from Wikipedia season game logs (`data/manual/expansion_attendance_wiki.csv`). Three teams: Golden Knights, Kraken and Raptors. The Raptors changed arenas mid-1998-99 (SkyDome to Air Canada Centre), so their curve mixes novelty and venue effects. Flat lines can mean capacity-bound sellouts.
+
+![Honeymoon](figures/12_honeymoon_curve.png)
 
 {md(fbt, 1)}
+
+## Operations: realignment
+
+Adding Seattle and Las Vegas to the West means one Western team must move East for 16-16 conferences. The proxy assumes each team makes one round trip to every conference opponent, in straight-line miles. It ignores real schedules, inter-conference games, chained road trips and back-to-backs (`outputs/realignment_travel.csv`).
+
+{md(rtt)}
+
+![Realignment](figures/10_realignment_travel.png)
+
+## Seattle vs Las Vegas
+
+See the full side-by-side in [`memo/HEAD_TO_HEAD.md`](memo/HEAD_TO_HEAD.md) and the reported bidding groups in [`research/bidder_landscape.csv`](research/bidder_landscape.csv).
+
+![Head-to-head](figures/11_seattle_vs_las_vegas.png)
 
 ## Focus markets
 
@@ -402,7 +438,7 @@ def head_to_head(D):
     ar["market_id"] = ar["cbsa_code"].map(cmap)
     def arenas(n):
         a = ar[(ar.market_id == m.at[n, "market_id"]) & (~ar.nba_tenant)].sort_values("capacity_basketball", ascending=False)
-        return ("Y: " if r.at[n, "arena_ready"] == 1 else "N: ") + "; ".join(f"{x.arena} ({x.capacity_basketball:,}; {x.tenants})" for x in a.itertuples())
+        return ("Y: " if r.at[n, "arena_ready"] == 1 else "N: ") + "; ".join(f"{x.arena} ({x.capacity_basketball:,}; {x.tenants if isinstance(x.tenants, str) else 'no major tenant listed'})" for x in a.itertuples())
     add("Arenas 17,000+ seats without NBA tenant (capacity; tenants)", arenas, "data/manual/arenas.csv")
     add("Transplant share (divided-loyalty risk)", lambda n: f"{fb.at[n, 'transplant_share']:.0%} ({fb.at[n, 'transplant_share_vs_nba_median']:+.0%} vs NBA median)", "outputs/fan_behavior.csv")
     add("Est. local revenue min / base / max", lambda n: f"{money(k.at[n, 'est_local_revenue_low'])} / {money(k.at[n, 'est_local_revenue_base'])} / {money(k.at[n, 'est_local_revenue_high'])}", "outputs/kpi_dashboard.csv")
@@ -427,7 +463,8 @@ def final_report(D, runtime_s, test_output):
 - Phase 2: scorecard outputs (`rankings`, `pillar_scores`, `nba_benchmark`, `validity` and `sensitivity` CSVs).
 - Phase 3: assumptions table (sourced from Sportico where possible), local revenue scenarios, owner NPV grid (`owner_npv.csv`, `owner_breakeven_growth.csv`), tornado, `kpi_dashboard.csv`, `focus_markets.csv`.
 - Phase 4: `research/` (trends, comparables, focus markets, competitive landscape, insights).
-- Phase 5: 11 figures in `figures/`, including the attractiveness vs ease-of-entry matrix (headline), Monte Carlo robustness, owner NPV heatmap, focus markets, and `linkedin_summary.png`.
+- v4: realignment travel proxy, bidder landscape, Seattle vs Las Vegas head-to-head (`memo/HEAD_TO_HEAD.md`), honeymoon curve from Wikipedia game logs.
+- Phase 5: 14 figures in `figures/`, including the attractiveness vs ease-of-entry matrix (headline), Monte Carlo robustness, owner NPV heatmap, focus markets, and `linkedin_summary.png`.
 - v3: ease of entry (distance to nearest NBA market), Monte Carlo weights, fan-behavior lens, bidder multiples, `memo/EXEC_SUMMARY.md`, `memo/stakeholders.md`.
 - Phase 6: README, `memo/MEMO.md` (headings only), `outputs/KEY_NUMBERS.md`, this report, and `run_all.py`.
 
@@ -448,6 +485,7 @@ Last `run_all.py` run took {runtime_s:.0f} seconds (raw downloads cached in `dat
 ## What Noah must write
 
 - The memo sections in `memo/MEMO.md`, the headline and recommendation in `memo/EXEC_SUMMARY.md`, the stakeholder grid in `memo/stakeholders.md`, and the Recommendation section of the README.
+- The "So what" in `memo/HEAD_TO_HEAD.md`, and the memo sections "Realignment: who moves East?", "Bidder landscape" and "Novelty effect".
 - The "What this suggests" sections in `research/comparables.md` and `research/focus_markets.md`.
 - The `implication` and `confidence` columns in `research/insights.csv`.
 - A review of every row labeled "ASSUMPTION – Noah to review" in `data/manual/assumptions.csv`.

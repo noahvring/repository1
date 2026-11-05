@@ -17,7 +17,7 @@
 | Miles to nearest NBA market | 134 | 231 | outputs/rankings.csv |
 | NBA markets within 200 miles | 1 | 0 | outputs/rankings.csv |
 | Big-league rivals (NFL+MLB+NHL) | 3 | 2 | data/processed/metros.csv |
-| Arenas 17,000+ seats without NBA tenant (capacity; tenants) | Y: Tacoma Dome (20,722; nan); Climate Pledge Arena (18,500; Seattle Kraken (NHL) Seattle Storm (WNBA) Seattle Torrent (PWHL) Seattle Redhawks (NCAA)) | Y: T-Mobile Arena (18,800; Vegas Golden Knights (NHL)); Thomas & Mack Center (18,500; UNLV Runnin' Rebels) | data/manual/arenas.csv |
+| Arenas 17,000+ seats without NBA tenant (capacity; tenants) | Y: Tacoma Dome (20,722; no major tenant listed); Climate Pledge Arena (18,500; Seattle Kraken (NHL) Seattle Storm (WNBA) Seattle Torrent (PWHL) Seattle Redhawks (NCAA)) | Y: T-Mobile Arena (18,800; Vegas Golden Knights (NHL)); Thomas & Mack Center (18,500; UNLV Runnin' Rebels) | data/manual/arenas.csv |
 | Transplant share (divided-loyalty risk) | 56% (+11% vs NBA median) | 74% (+30% vs NBA median) | outputs/fan_behavior.csv |
 | Est. local revenue min / base / max | $290.2M / $307.7M / $326.7M | $169.6M / $198.9M / $233.5M | outputs/kpi_dashboard.csv |
 | Price used (basis) | $6.00B: ESPN-reported ~$6B valuation estimate | $10.00B: ESPN-reported ~$10B | outputs/bidder_multiples.csv |

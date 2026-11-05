@@ -16,6 +16,7 @@ if __name__ == "__main__":
     for step in [download, build_manual, honeymoon, honeymoon_wiki, build_metros, model, business_case, realignment, research, figures]:
         print(f"\n=== {step.__name__} ===")
         step.main()
+    report.main(runtime_s=time.time() - t0, test_output="")   # write docs first so doc tests see them
     tests = subprocess.run([sys.executable, "-m", "pytest", "-q", "tests"], capture_output=True, text=True)
     print(tests.stdout[-1500:])
     report.main(runtime_s=time.time() - t0, test_output=tests.stdout)

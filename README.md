@@ -43,7 +43,9 @@ Markets are placed on two separate axes, **attractiveness** and **ease of entry*
 | Mexico City, Vancouver, Toronto facts | Wikipedia (population, arena, history, coordinates) | accessed 2026-11-05 |
 | Market locations | Census Gazetteer 2024 (CBSA internal points) | 2024 |
 | Place of birth (transplant share) | Census ACS 5-year table B05002 | 2020-2024 |
-| Expansion-team attendance (partial) | ESPN NBA attendance pages | 2005-2016 |
+| Expansion-team attendance (honeymoon) | Wikipedia season articles (game logs); ESPN NBA attendance (partial) | 1995-2026 |
+| NBA arena coordinates, conferences | Wikipedia NBA current-teams table | accessed 2026-11-05 |
+| Bidder landscape | ESPN (2026-10-02) | 2026 |
 | Franchise value, team revenue; Las Vegas price | Sportico; ESPN (2026-10-02) | 2025-26 |
 | Google Trends; NTTO overseas visitors | Skipped (see DEVIATIONS.md) | - |
 
@@ -119,6 +121,8 @@ Markets are placed on two separate axes, **attractiveness** and **ease of entry*
 | 14 | Tampa | Tampa-St. Petersburg-Clearwater, FL | -0.15 | -0.00 | -0.67 | 0.21 | -0.51 | Deprioritize | False | C_corporate |
 | 15 | St. Louis | St. Louis-St. Charles-Farmington, MO-IL | -0.16 | -0.29 | -0.42 | 0.24 | 0.32 | Easy but small | False | C_corporate |
 
+![Top 15](figures/01_headline_top15.png)
+
 **How the top 10 changed from v1.** v1 ranked CBSAs and scored G League presence. The middle column shows the switch to CSAs with G League still scored. The final-rank column is the current v3 model, which also moves competition and arena onto the ease-of-entry axis (`outputs/top10_change.csv`). Omaha was below 1M people as a CBSA, so it was not in the v1 study set.
 
 | short_name | market_title | rank_final_csa_no_gleague | top_pillar | rank_v1_cbsa_with_gleague | rank_csa_with_gleague |
@@ -176,7 +180,9 @@ These are behavioral indicators. They are reported, not scored (`outputs/fan_beh
 
 - **Transplant share** is the share of residents born outside their current state. Transplants often keep loyalty to the teams they grew up with, so this is a divided-loyalty risk; its sign is ambiguous.
 - **College vs pro:** across the 27 NBA markets, the correlation between college attendance per capita and the attractiveness score without college is r = -0.20 (p = 0.31). With college attendance removed, 9 of the top 10 stay. Dropped: Richmond. Added: Columbus.
-- **Honeymoon curve:** skipped. Only two expansion or relocated teams could be sourced (see DEVIATIONS.md). The partial data is in `data/manual/expansion_attendance.csv`.
+- **Honeymoon curve:** average home attendance indexed to the first season, from Wikipedia season game logs (`data/manual/expansion_attendance_wiki.csv`). Three teams: Golden Knights, Kraken and Raptors. The Raptors changed arenas mid-1998-99 (SkyDome to Air Canada Centre), so their curve mixes novelty and venue effects. Flat lines can mean capacity-bound sellouts.
+
+![Honeymoon](figures/12_honeymoon_curve.png)
 
 | short_name | transplant_share | transplant_share_vs_nba_median | ncaa_att_per_1k | rank_equal | rank_no_college |
 |---|---|---|---|---|---|
@@ -192,6 +198,26 @@ These are behavioral indicators. They are reported, not scored (`outputs/fan_beh
 | Richmond | 41% | -3% | 159.9 | 10.0 | 14.0 |
 | Louisville | 37% | -8% | 188.1 | 11.0 | 18.0 |
 | Columbus | 29% | -16% | 72.4 | 12.0 | 9.0 |
+
+## Operations: realignment
+
+Adding Seattle and Las Vegas to the West means one Western team must move East for 16-16 conferences. The proxy assumes each team makes one round trip to every conference opponent, in straight-line miles. It ignores real schedules, inter-conference games, chained road trips and back-to-backs (`outputs/realignment_travel.csv`).
+
+| option | teams_east | teams_west | avg_miles_per_team | east_avg_per_team | west_avg_per_team | moved_team | moved_team_miles | moved_team_miles_if_stayed_west |
+|---|---|---|---|---|---|---|---|---|
+| Current 30 teams | 15 | 15 | 21,680 | 16,147 | 27,214 |  |  |  |
+| 32 teams: Grizzlies move East | 16 | 16 | 23,219 | 17,786 | 28,651 | Memphis Grizzlies | 21,189 | 36,475 |
+| 32 teams: Timberwolves move East | 16 | 16 | 23,438 | 18,330 | 28,546 | Minnesota Timberwolves | 25,543 | 37,318 |
+| 32 teams: Pelicans move East | 16 | 16 | 23,376 | 18,505 | 28,246 | New Orleans Pelicans | 26,939 | 39,715 |
+| 32 teams: Thunder move East | 16 | 16 | 24,379 | 19,041 | 29,717 | Oklahoma City Thunder | 31,227 | 27,948 |
+
+![Realignment](figures/10_realignment_travel.png)
+
+## Seattle vs Las Vegas
+
+See the full side-by-side in [`memo/HEAD_TO_HEAD.md`](memo/HEAD_TO_HEAD.md) and the reported bidding groups in [`research/bidder_landscape.csv`](research/bidder_landscape.csv).
+
+![Head-to-head](figures/11_seattle_vs_las_vegas.png)
 
 ## Focus markets
 

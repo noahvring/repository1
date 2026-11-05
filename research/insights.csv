@@ -1,6 +1,8 @@
 theme,supporting_evidence,implication,confidence
 Las Vegas vs Seattle: league focus vs scorecard,"research/trends.csv (ESPN 2026-10-02 rows); outputs/focus_markets.csv (Seattle, Las Vegas)",,
 "markets outside U.S. data (Mexico City, Vancouver)",data/manual/international_markets.csv; research/focus_markets.md,,
+bidder competition: Las Vegas vs Seattle,research/bidder_landscape.csv; outputs/bidder_multiples.csv,,
+realignment travel: who moves East,outputs/realignment_travel.csv,,
 arena readiness,"outputs/kpi_dashboard.csv (arena_ready, largest_arena_no_nba_tenant); data/manual/arenas.csv",,
 corporate base,"outputs/pillar_scores.csv (C_corporate); data/processed/metros.csv (large_establishments_500plus, large_est_per_100k)",,
 fan interest without a team,outputs/pillar_scores.csv (B_basketball_demand); data/processed/ncaa_school_metro.csv,,
