@@ -15,12 +15,12 @@
 
 ```
 .......................                                                  [100%]
-23 passed in 1.26s
+23 passed in 1.31s
 ```
 
 ## Runtime
 
-Last `run_all.py` run took 14 seconds (raw downloads cached in `data/raw/`).
+Last `run_all.py` run took 16 seconds (raw downloads cached in `data/raw/`).
 
 ## Deviations & skipped sources
 

@@ -1,7 +1,7 @@
-"""Phase 6: write README.md, outputs/KEY_NUMBERS.md and outputs/FINAL_REPORT.md from outputs/.
-No number in these files is typed by hand: every one is read from a CSV here."""
+"""Write README, KEY_NUMBERS, FINAL_REPORT and the memo templates. Every number is read from outputs/."""
 import pandas as pd
 from config import OUTPUTS, PROCESSED, ROOT, MANUAL, ACCESS_DATE, RESEARCH
+import business_case as bc
 
 
 def md(df, floatfmt=2):
@@ -35,8 +35,15 @@ def load():
 
 
 def npv_base(D):
+    """Owner NPV grid for the base case: base fee, all central revenue, gross."""
     n = D["npv"]
     return n[(n.pool_definition == "all_central_revenue") & (n.owner_share == "gross") & (n.fee_scenario == "base")]
+
+
+def npv_cell(D):
+    """Headline NPV cell: base case at 3% growth and 8% discount."""
+    nb = npv_base(D)
+    return nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
 
 
 def key_numbers(D):
@@ -46,8 +53,7 @@ def key_numbers(D):
     rank = lambda name: int(r.loc[r.short_name == name, "rank_candidates"].iloc[0])
     over = r[r["overlooked"]]["short_name"].tolist()
     tot = v[v.measure == "total_score"].iloc[0]
-    nb = npv_base(D)
-    cell = nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
+    cell = npv_cell(D)
     worst = n.loc[n["npv_net_of_fee"].idxmin()]
     be = beg[(beg.discount_rate == 0.08) & (beg.fee_scenario == "base")].iloc[0]
     items = [
@@ -146,7 +152,7 @@ def readme(D):
     med = r["median_nba_score"].iloc[0]
     rank = lambda n: int(r.loc[r.short_name == n, "rank_candidates"].iloc[0])
     nb = npv_base(D)
-    cell = nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
+    cell = npv_cell(D)
     be = D["beg"][(D["beg"].discount_rate == 0.08) & (D["beg"].fee_scenario == "base")].iloc[0]
     top15 = r[~r["nba_metro"]].head(15)[["rank_candidates", "short_name", "market_title", "total_score", "A_size_wealth", "B_basketball_demand", "C_corporate", "ease_of_entry", "quadrant", "overlooked", "top_pillar"]].copy()
     top15["rank_candidates"] = top15["rank_candidates"].astype(int)
@@ -170,9 +176,10 @@ def readme(D):
     fo["attractiveness_rank"] = fo["attractiveness_rank"].map(lambda x: "" if pd.isna(x) else f"#{int(x)}")
     fo["population"] = fo["population"].map(lambda x: f"{x/1e6:.1f}M")
     fo.loc[focus["nba_metro"] == True, "attractiveness_rank"] = "(existing NBA market)"
-    mc = D["mc"]; mc_s = mc[mc.short_name == "Seattle"].p_top10.iloc[0]; mc_v = mc[mc.short_name == "Las Vegas"].p_top10.iloc[0]
+    mc = D["mc"].set_index("short_name")
+    mc_s, mc_v = mc.at["Seattle", "p_top10"], mc.at["Las Vegas", "p_top10"]
     prime = r[(~r["nba_metro"]) & (r["quadrant"] == "Prime targets")]["short_name"].tolist()
-    mct = mc.head(15)[["short_name", "p_top5", "p_top10", "median_rank", "rank_p05", "rank_p95"]].copy()
+    mct = D["mc"].head(15)[["short_name", "p_top5", "p_top10", "median_rank", "rank_p05", "rank_p95"]].copy()
     for c in ["p_top5", "p_top10"]:
         mct[c] = mct[c].map(lambda x: f"{x:.0%}")
     quad = r[~r["nba_metro"]].groupby("quadrant")["short_name"].apply(lambda x: ", ".join(x)).reset_index()
@@ -381,16 +388,15 @@ Python ({', '.join(l.split('==')[0] for l in (ROOT / 'requirements.txt').read_te
 
 
 def exec_summary(D):
-    r, mc, fb, k = D["r"], D["mc"], D["fb"].set_index("market_id"), D["k"]
-    nb = npv_base(D); cell = nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
+    r, mc, fb = D["r"], D["mc"], D["fb"].set_index("market_id")
+    cell = npv_cell(D)
     be = D["beg"][(D["beg"].discount_rate == 0.08) & (D["beg"].fee_scenario == "base")].iloc[0]
     m = D["m"].set_index("market_id")
     prime = r[(~r["nba_metro"]) & (r["quadrant"] == "Prime targets")]["short_name"].tolist()
     rr = r.set_index("market_id")
     top = mc.head(5).set_index("market_id")
     # base local revenue for the top-5 (same model as kpi_dashboard)
-    import business_case as bc
-    S, _ = bc.load_assumptions()
+    S = bc.load_assumptions()
     mm = m.join(rr[["A_size_wealth", "B_basketball_demand", "C_corporate"]])
     ref = m[m["nba_metro"]][["population", "median_hh_income", "large_establishments_500plus"]].median()
     rev = bc.local_revenue(mm.loc[top.index], ref, S["base"])["total"]
@@ -427,8 +433,8 @@ def exec_summary(D):
 
 def head_to_head(D):
     """memo/HEAD_TO_HEAD.md: Seattle vs Las Vegas, plus Mexico City (partial data) where comparable."""
-    r = D["r"].set_index("short_name"); mc = D["mc"].set_index("short_name"); fb = D["fb"].set_index("short_name")
-    k = D["k"].set_index("short_name"); bid = D["bid"].set_index("short_name"); m = D["m"].set_index("short_name")
+    r, mc, fb = (D[x].set_index("short_name") for x in ("r", "mc", "fb"))
+    k, bid, m = (D[x].set_index("short_name") for x in ("k", "bid", "m"))
     pm = D["pm"].set_index("short_name")
     intl = pd.read_csv(MANUAL / "international_markets.csv")
     mx = intl[intl.market == "Mexico City"].set_index("item")["value"]
@@ -436,7 +442,7 @@ def head_to_head(D):
     ar = pd.read_csv(MANUAL / "arenas.csv", dtype={"cbsa_code": str})
     cmap = pd.read_csv(PROCESSED / "cbsa_factors.csv", dtype={"cbsa_code": str}).set_index("cbsa_code")["market_id"]
     ar["market_id"] = ar["cbsa_code"].map(cmap)
-    nb = npv_base(D); cell = nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
+    cell = npv_cell(D)
     NA = "not available (partial data)"
     markets = ["Seattle", "Las Vegas", "Mexico City"]
     rows = []

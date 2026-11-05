@@ -1,17 +1,10 @@
-"""Build the sourced team and arena tables from saved Wikipedia pages.
-
-Each league's Wikipedia article has a current-teams table (inspected by hand: the
-column names differ by league, see LEAGUE_TABLES). We read it with pandas.read_html,
-keep team name + location, resolve location -> CBSA, and record the source URL and
-access date on every row. Output is written to data/manual/ and committed.
-"""
+"""Build data/manual/teams.csv and arenas.csv from saved Wikipedia pages (source URL on every row)."""
 import re
 import pandas as pd
 from config import RAW, MANUAL, SOURCES, ACCESS_DATE
 from geo import Resolver
 
-# league -> (source key, list of table indexes, team column, location column)
-# Indexes were found by inspecting pd.read_html() output for each saved page.
+# league -> (source key, table indexes, team column, location column); found by inspecting read_html output
 LEAGUE_TABLES = {
     "NBA": ("wiki_nba", [1], "Team", "Location"),
     "NFL": ("wiki_nfl", [2], "Team[53]", "City"),
@@ -25,7 +18,7 @@ EXPECTED = {"NBA": 30, "NFL": 32, "MLB": 30, "NHL": 32, "MLS": 30}
 
 
 def clean(s):
-    """Drop footnote markers like '[a]' and stray symbols."""
+    """Drop footnote markers like '[a]' and symbols."""
     return re.sub(r"\[.*?\]", "", str(s)).replace("*", "").replace("‡", "").replace("†", "").strip()
 
 
@@ -44,27 +37,21 @@ def build_teams(res):
         for i in idxs:
             t = tables[i]
             tc, lc = find_col(t, tcol), find_col(t, lcol)
-            for _, r in t.iterrows():
-                team, loc = clean(r[tc]), clean(r[lc])
-                if not team or team == "nan" or team == clean(r[t.columns[0]]) and league not in ("G League",) and team.lower().startswith(("eastern", "western")):
+            for team, loc in zip(t[tc].map(clean), t[lc].map(clean)):
+                if team in ("", "nan") or team.lower().startswith(("eastern", "western")):  # conference header rows
                     continue
                 rows.append({"league": league, "team": team, "location": loc,
                              "cbsa_code": res.resolve(loc), "source_url": url, "access_date": ACCESS_DATE})
     df = pd.DataFrame(rows).drop_duplicates(["league", "team"])
     for lg, n in EXPECTED.items():
-        got = (df.league == lg).sum()
-        print(f"{lg}: {got} teams parsed (expected {n})")
+        print(f"{lg}: {(df.league == lg).sum()} teams parsed (expected {n})")
     return df
 
 
 def build_arenas(res):
     url, fname = SOURCES["wiki_arenas"]
-    tables = pd.read_html(RAW / fname)
-    keep = []
-    for t in tables:
-        if {"Arena/venue", "City", "State", "Max.", "Basket."}.issubset(t.columns):
-            keep.append(t)
-    a = pd.concat(keep, ignore_index=True)
+    cols = {"Arena/venue", "City", "State", "Max.", "Basket."}
+    a = pd.concat([t for t in pd.read_html(RAW / fname) if cols.issubset(t.columns)], ignore_index=True)
     a["arena"] = a["Arena/venue"].map(clean)
     for c in ["Max.", "Basket."]:
         a[c] = pd.to_numeric(a[c].astype(str).str.replace(",", "").str.extract(r"(\d+)")[0], errors="coerce")
@@ -83,18 +70,16 @@ def build_arenas(res):
     out["nhl_tenant"] = out["tenants"].str.contains(r"\(NHL\)", regex=True)
     out["source_url"] = url
     out["access_date"] = ACCESS_DATE
-    # arenas missing from the U.S. list (e.g. Puerto Rico), each sourced to its own article
+    # arenas missing from the U.S. list (e.g. Puerto Rico)
     sup = pd.read_csv(MANUAL / "arenas_supplement.csv")
     sup["cbsa_code"] = [res.resolve(f"{c}, {s}") for c, s in zip(sup.city, sup.state)]
-    sup["nba_tenant"] = False
-    sup["nhl_tenant"] = False
+    sup["nba_tenant"] = sup["nhl_tenant"] = False
     return pd.concat([out, sup[out.columns]], ignore_index=True)
 
 
 def main():
     res = Resolver()
-    teams = build_teams(res)
-    arenas = build_arenas(res)
+    teams, arenas = build_teams(res), build_arenas(res)
     teams.to_csv(MANUAL / "teams.csv", index=False)
     arenas.to_csv(MANUAL / "arenas.csv", index=False)
     print(f"teams: {len(teams)} rows; arenas >=17k: {len(arenas)} rows")

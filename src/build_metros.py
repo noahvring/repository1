@@ -1,7 +1,4 @@
-"""Phase 1: build data/processed/metros.csv (one row per CBSA in the study set).
-
-Every column comes from a raw download in data/raw/ or a sourced table in data/manual/.
-"""
+"""Build data/processed/metros.csv: one row per market (CSA, else CBSA) from data/raw/ and data/manual/."""
 import zipfile
 import numpy as np
 import pandas as pd
@@ -18,7 +15,7 @@ def read_acs(table):
 
 
 def check_shells():
-    """Confirm the ACS variable IDs we use mean what we think (rule 2: inspect)."""
+    """Check that the ACS variable IDs mean what we assume."""
     sh = pd.read_csv(RAW / "acs_table_shells.txt", sep="|", dtype=str)
     lab = dict(zip(sh["Unique ID"], sh["Label"]))
     assert lab["B01001_007"] == "18 and 19 years" and lab["B01001_014"] == "40 to 44 years"
@@ -39,20 +36,19 @@ def acs_block():
     male = [f"B01001_E{n:03d}" for n in range(7, 15)]     # male 18-19 ... 40-44
     female = [f"B01001_E{n:03d}" for n in range(31, 39)]  # female 18-19 ... 40-44
     age_18_44 = age[male + female].sum(axis=1).rename("pop_18_44")
-    pob = read_acs("b05002")  # place of birth (labels checked in check_shells)
-    # in Puerto Rico, ACS counts island-born residents under "born in Puerto Rico" (B05002_010),
-    # not "born in state of residence" (which is 0 there), so use that as the local count
+    pob = read_acs("b05002")  # place of birth
+    # in Puerto Rico "born in state" (003) is 0; island-born residents are in 010
     local = pob["B05002_E003"].where(pob["B05002_E003"] > 0, pob["B05002_E010"])
     born = pd.DataFrame({"pob_total": pob["B05002_E001"], "born_in_state": local,
                          "born_other_state": pob["B05002_E004"]})
     out = pd.concat([pop, inc, hh, age_18_44, born], axis=1)
-    out.loc[out["median_hh_income"] < 0, "median_hh_income"] = np.nan  # negative = Census missing code
+    out.loc[out["median_hh_income"] < 0, "median_hh_income"] = np.nan  # negative = missing
     return out
 
 
 def popest_block():
     p = pd.read_csv(RAW / "cbsa-est2025-alldata.csv", dtype={"CBSA": str, "MDIV": str, "STCOU": str}, encoding="latin-1")
-    # Puerto Rico is published in a separate file with the same layout (minus MDIV)
+    # Puerto Rico comes in a separate file
     pr = pd.read_csv(RAW / "prc-cbsa-est2025.csv", dtype={"CBSA": str, "STCOU": str}, encoding="utf-8-sig")
     p = pd.concat([p, pr], ignore_index=True)
     p = p[p["LSAD"].isin(["Metropolitan Statistical Area", "Micropolitan Statistical Area"])].copy()
@@ -67,15 +63,13 @@ def gdp_block(delin):
     g["GeoFIPS"] = g["GeoFIPS"].str.strip().str.strip('"').str.strip()
     g = g[g["LineCode"].str.strip() == "3"]
     g["gdp_2024_thousands"] = pd.to_numeric(g["2024"], errors="coerce")
-    # BEA combines many Virginia independent cities with a neighbouring county, e.g.
-    # "Fairfax, Fairfax City + Falls Church, VA*" (FIPS 519xx). Map each Census VA county
-    # or city to the BEA combination area whose name lists it.
+    # BEA merges some Virginia independent cities with a county (FIPS 519xx, e.g.
+    # "Fairfax, Fairfax City + Falls Church, VA*"): map each Census VA county/city to that area.
     d = delin[["county_fips", "CBSA Code", "County/County Equivalent", "State Name"]].copy()
     d["bea_fips"] = d["county_fips"]
     combos = g[g["GeoFIPS"].str.match(r"519\d\d")]
     for _, row in combos.iterrows():
-        pieces = row["GeoName"].replace(", VA*", "").replace("+", ",").split(",")
-        pieces = [x.strip().lower() for x in pieces]
+        pieces = [x.strip().lower() for x in row["GeoName"].replace(", VA*", "").replace("+", ",").split(",")]
         for i, r in d[d["State Name"] == "Virginia"].iterrows():
             nm = r["County/County Equivalent"].lower()
             base = nm.replace(" county", "").replace(" city", "")
@@ -86,10 +80,10 @@ def gdp_block(delin):
                 if base == pc_base and (is_city == pc_city or (is_city and pc == base and not d["County/County Equivalent"].str.lower().eq(base + " county").any())):
                     d.at[i, "bea_fips"] = row["GeoFIPS"]
     m = d[["bea_fips", "CBSA Code"]].drop_duplicates().merge(g[["GeoFIPS", "gdp_2024_thousands"]], left_on="bea_fips", right_on="GeoFIPS", how="left")
-    # a CBSA gets GDP only if all its counties matched (otherwise the sum would be too low)
+    # GDP only if every county matched, otherwise the sum is too low
     agg = m.groupby("CBSA Code").agg(gdp=("gdp_2024_thousands", "sum"), missing=("gdp_2024_thousands", lambda s: s.isna().sum()))
     agg.loc[agg["missing"] > 0, "gdp"] = np.nan
-    return (agg["gdp"] * 1000).rename("gdp_2024_usd")  # per CBSA; NaN if any county unmatched
+    return (agg["gdp"] * 1000).rename("gdp_2024_usd")
 
 
 def cbp_block():
@@ -102,20 +96,15 @@ def cbp_block():
     return c.set_index("msa")[["large_establishments_500plus", "est"]].rename(columns={"est": "establishments_total"})
 
 
-def county_to_cbsa(delin):
-    return dict(zip(delin["county_fips"], delin["CBSA Code"]))
-
-
 def ncaa_block(delin):
     att = parse_ncaa(RAW / "ncaa_mbb_attend.pdf")
     sc = pd.read_csv(MANUAL / "ncaa_school_county.csv", dtype=str)
-    sc["cbsa_code"] = sc["county_fips"].str.zfill(5).map(county_to_cbsa(delin))
+    sc["cbsa_code"] = sc["county_fips"].str.zfill(5).map(dict(zip(delin["county_fips"], delin["CBSA Code"])))
     m = sc.merge(att, on="school", how="left")
     missing = m[m["attendance"].isna()]["school"].tolist()
     assert not missing, f"school names not found in NCAA PDF: {missing}"
     m.to_csv(PROCESSED / "ncaa_school_metro.csv", index=False)
-    g = m.groupby("cbsa_code").agg(ncaa_d1_home_attendance=("attendance", "sum"), ncaa_d1_schools=("school", "count"))
-    return g
+    return m.groupby("cbsa_code").agg(ncaa_d1_home_attendance=("attendance", "sum"), ncaa_d1_schools=("school", "count"))
 
 
 def teams_block():
@@ -126,16 +115,6 @@ def teams_block():
     return counts
 
 
-def arena_block():
-    a = pd.read_csv(MANUAL / "arenas.csv", dtype={"cbsa_code": str})
-    a = a[a["cbsa_code"].notna()]
-    g = a.groupby("cbsa_code").agg(max_arena_capacity=("capacity_basketball", "max"),
-                                   n_arenas_17k=("arena", "count"))
-    free = a[~a["nba_tenant"]].groupby("cbsa_code")["capacity_basketball"].max().rename("max_capacity_no_nba_tenant")
-    names = a[~a["nba_tenant"]].sort_values("capacity_basketball", ascending=False).groupby("cbsa_code")["arena"].first().rename("largest_arena_no_nba_tenant")
-    return g.join(free, how="left").join(names, how="left")
-
-
 def haversine_miles(lat1, lon1, lat2, lon2):
     """Great-circle distance in miles between points given in degrees."""
     lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
@@ -144,9 +123,7 @@ def haversine_miles(lat1, lon1, lat2, lon2):
 
 
 def add_geography(df):
-    """Locate each market at the Census internal point of its largest CBSA (Gazetteer 2024;
-    no CSA Gazetteer file is published), then measure distance to the nearest *other* NBA market.
-    Toronto (Raptors) is included as an NBA location using sourced coordinates."""
+    """Place each market at its largest CBSA's Gazetteer point; distance to the nearest other NBA market (incl. Toronto)."""
     with zipfile.ZipFile(RAW / "gaz_cbsa.zip") as z:
         g = pd.read_csv(z.open(z.namelist()[0]), sep="\t", dtype={"GEOID": str})
     g.columns = [c.strip() for c in g.columns]
@@ -161,16 +138,15 @@ def add_geography(df):
     for _, r in df.iterrows():
         others = nba[nba.market_id != r.market_id]
         d = haversine_miles(r.lat, r.lon, others.lat.values, others.lon.values)
-        near.append(d.min()); within.append(int((d <= 200).sum()))
-    df["miles_to_nearest_nba"] = near   # for NBA markets: nearest OTHER NBA market
+        near.append(d.min())
+        within.append(int((d <= 200).sum()))
+    df["miles_to_nearest_nba"] = near
     df["nba_markets_within_200mi"] = within
     return df
 
 
 def market_map(delin):
-    """Market = Combined Statistical Area (CSA) when the CBSA belongs to one, else the CBSA itself.
-    CSAs group neighbouring metros that share a media market (e.g. San Jose + San Francisco,
-    Baltimore + Washington), which is how sports markets are usually defined."""
+    """Market = the CSA a CBSA belongs to (e.g. San Jose + San Francisco), else the CBSA itself."""
     d = delin[["CBSA Code", "CBSA Title", "CSA Code", "CSA Title", "Metropolitan/Micropolitan Statistical Area"]].drop_duplicates("CBSA Code").copy()
     has_csa = d["CSA Code"].notna()
     d["market_id"] = np.where(has_csa, "CSA" + d["CSA Code"].fillna(""), "CBSA" + d["CBSA Code"])
@@ -203,21 +179,18 @@ def main():
     df["median_hh_income"] = df["income_x_pop"] / g.apply(lambda x: x.loc[x["median_hh_income"] > 0, "population"].sum())
     df["share_18_44"] = df["pop_18_44"] / df["population"]
     df["pop_growth_2020_2025"] = df["pop_est_2025"] / df["pop_est_2020"] - 1
-    # 'divided loyalty' indicator (descriptive, not scored): residents born outside their current state
-    # (other U.S. states + abroad). Note: in markets that span state lines, people born in the
-    # neighbouring state of the same market also count as transplants.
+    # transplant share (descriptive): born outside the current state, incl. abroad
     df["transplant_share"] = 1 - df["born_in_state"] / df["pob_total"]
     df["born_other_us_state_share"] = df["born_other_state"] / df["pob_total"]
     df["market_title"] = g["market_title"].first()
     df["market_type"] = g["market_type"].first()
-    # name the market after its largest member CBSA (e.g. 'San Francisco' for the Bay Area CSA)
+    # name the market after its largest CBSA
     lead = cb.sort_values("population", ascending=False).groupby("market_id").head(1)
     df["short_name"] = lead.set_index("market_id")["CBSA Title"].str.split(r"[-,/]").str[0].str.strip()
     metro_members = cb[cb["Metropolitan/Micropolitan Statistical Area"].str.startswith("Metropolitan")]
     df["member_metros"] = metro_members.groupby("market_id")["CBSA Title"].apply(lambda s: "; ".join(s))
     df["lead_cbsa_code"] = lead.reset_index().set_index("market_id")["cbsa_code"]
 
-    # arenas: map arena CBSA -> market
     a = pd.read_csv(MANUAL / "arenas.csv", dtype={"cbsa_code": str})
     a = a[a["cbsa_code"].notna()].copy()
     a["market_id"] = a["cbsa_code"].map(mm["market_id"])
@@ -232,22 +205,22 @@ def main():
     for c in count_cols:
         df[c] = df[c].astype(int)
 
-    # 3) study set: market population >= 1M, every NBA market, every market containing a named metro
-    # Puerto Rico has ACS and population estimates but no CBP or BEA data: kept, flagged partial
+    # 3) study set: population >= 1M, every NBA market, every market with a named metro.
+    # Puerto Rico has no CBP or BEA data, so it is flagged partial
     df["partial_data"] = df["market_title"].str.endswith("PR")
     named = df["member_metros"].fillna("").apply(lambda t: any(
         any(m.startswith(n.split(",")[0]) and m.split(", ")[-1].startswith(n.split(", ")[1]) for m in t.split("; ")) for n in NAMED_METROS))
     df = df[(df["population"] >= POP_THRESHOLD) | (df["n_nba"] > 0) | named].copy()
 
     # derived factors
-    df["nba_metro"] = df["n_nba"] > 0   # 'metro' kept as column name; the unit is now the market (CSA/CBSA)
+    df["nba_metro"] = df["n_nba"] > 0  # column name kept from v1; means "NBA market"
     df["big4_other_leagues"] = df["n_nfl"] + df["n_mlb"] + df["n_nhl"]
     df["big4_total"] = df["big4_other_leagues"] + df["n_nba"]
     df["large_est_per_100k"] = df["large_establishments_500plus"] / df["population"] * 1e5
     df["gdp_per_capita"] = df["gdp_2024_usd"] / df["population"]
     df["ncaa_att_per_1k"] = df["ncaa_d1_home_attendance"] / df["population"] * 1000
     df["has_wnba"] = (df["n_wnba"] > 0).astype(int)
-    df["has_g_league"] = (df["n_g_league"] > 0).astype(int)   # descriptive only (NBA-affiliate bias)
+    df["has_g_league"] = (df["n_g_league"] > 0).astype(int)  # descriptive only
     df["arena_capable"] = (df["max_arena_capacity"].fillna(0) >= 17000).astype(int)
     df["arena_ready"] = ((df["max_capacity_no_nba_tenant"].fillna(0) >= 17000) & ~df["nba_metro"]).astype(int)
     df = add_geography(df)

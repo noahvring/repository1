@@ -1,18 +1,14 @@
-"""Honeymoon curve from Wikipedia season articles (game logs with per-game attendance).
-
-For each season we average the attendance of regular-season HOME games and index it to the
-team's first season (= 100). % of capacity is not used: capacities changed (e.g. the Raptors'
-SkyDome configuration), so an index is more honest. A season is kept only if at least 20 home
-games with attendance were parsed. Every row stores its Wikipedia URL.
-"""
+"""Honeymoon curve: average regular-season home attendance per season from Wikipedia game logs,
+indexed to season 1 (= 100). Seasons with < 20 parsed home games are dropped."""
 import re
 import time
+from io import StringIO
 import pandas as pd
 import requests
 from config import RAW, MANUAL, ACCESS_DATE
 
 W = "https://en.wikipedia.org/wiki/"
-# team -> (league, first season start year, number of seasons, page title template, home label)
+# team -> (league, first season start year, seasons, page title template, home-team label in NHL logs)
 TEAMS = {
     "Vegas Golden Knights (NHL, 2017)": ("NHL", 2017, 8, "{a}–{b}_Vegas_Golden_Knights_season", "Vegas"),
     "Seattle Kraken (NHL, 2021)": ("NHL", 2021, 5, "{a}–{b}_Seattle_Kraken_season", "Seattle"),
@@ -28,7 +24,8 @@ def fetch(title):
         r = requests.get(W + title, headers={"User-Agent": "nba-expansion-strategy student research"}, timeout=60)
         if r.status_code != 200:
             return None
-        path.write_bytes(r.content); time.sleep(0.5)
+        path.write_bytes(r.content)
+        time.sleep(0.5)
     return path
 
 
@@ -39,13 +36,12 @@ def num(x):
 
 def home_attendance(path, league, home_label):
     vals = []
-    raw = path.read_text(errors="ignore")
-    raw = re.sub(r'colspan="(\d+),?"', r'colspan="\1"', raw)   # a few pages have malformed colspan="1,"
-    from io import StringIO
+    raw = re.sub(r'colspan="(\d+),?"', r'colspan="\1"', path.read_text(errors="ignore"))  # fix malformed colspan="1,"
     try:
         tables = pd.read_html(StringIO(raw))
-    except Exception as e:
-        print("parse error", path.name, e); return vals
+    except ValueError as e:
+        print("parse error", path.name, e)
+        return vals
     for t in tables:
         if isinstance(t.columns, pd.MultiIndex):
             head = " ".join(map(str, t.columns.get_level_values(0)))
@@ -54,13 +50,14 @@ def home_attendance(path, league, home_label):
             head = ""
         cols = [str(c) for c in t.columns]
         if league == "NHL":
-            # regular-season monthly tables: header names a month, has Home + Attendance columns
+            # regular-season monthly tables only
             if not (any(mo in head for mo in MONTHS) and "Home" in cols and "Attendance" in cols) or "reseason" in head or "layoff" in head:
                 continue
             for _, r in t.iterrows():
                 if str(r["Home"]).strip() == home_label:
                     v = num(r["Attendance"])
-                    if v: vals.append(v)
+                    if v:
+                        vals.append(v)
         else:
             if not ({"Game", "Team", "Location Attendance"} <= set(cols)):
                 continue
@@ -69,7 +66,8 @@ def home_attendance(path, league, home_label):
                 if pd.isna(g) or g > 82 or str(r["Team"]).strip().startswith("@"):
                     continue
                 v = num(r["Location Attendance"])
-                if v: vals.append(v)
+                if v:
+                    vals.append(v)
     return vals
 
 
@@ -78,25 +76,23 @@ def main():
     for team, (league, start, n, tmpl, label) in TEAMS.items():
         for k in range(n):
             a = start + k
-            title = tmpl.format(a=a, b=str(a + 1)[-2:] if a + 1 < 2000 or True else a + 1)
-            if a + 1 == 2000:
-                title = tmpl.format(a=a, b="2000")
+            title = tmpl.format(a=a, b="2000" if a == 1999 else str(a + 1)[-2:])  # Wikipedia writes 1999–2000
             path = fetch(title)
             if path is None:
-                print("missing page", title); continue
+                print("missing page", title)
+                continue
             vals = home_attendance(path, league, label)
             if len(vals) < 20:
-                print(f"skip {title}: only {len(vals)} home games with attendance"); continue
+                print(f"skip {title}: only {len(vals)} home games with attendance")
+                continue
             rows.append({"team": team, "league": league, "season": f"{a}-{str(a + 1)[-2:]}", "season_number": k + 1,
                          "home_games_parsed": len(vals), "avg_home_attendance": round(sum(vals) / len(vals)),
                          "source_url": W + title, "access_date": ACCESS_DATE})
     df = pd.DataFrame(rows)
-    if not df.empty:
-        first = df[df.season_number == 1].set_index("team")["avg_home_attendance"]
-        df["index_vs_season1"] = df.apply(lambda r: 100 * r.avg_home_attendance / first.get(r.team, float("nan")), axis=1)
+    first = df[df.season_number == 1].set_index("team")["avg_home_attendance"]
+    df["index_vs_season1"] = 100 * df["avg_home_attendance"] / df["team"].map(first)
     df.to_csv(MANUAL / "expansion_attendance_wiki.csv", index=False)
-    ok = df.groupby("team").size() if not df.empty else pd.Series(dtype=int)
-    print(df.pivot(index="season_number", columns="team", values="avg_home_attendance").to_string() if not df.empty else "none")
+    print(df.pivot(index="season_number", columns="team", values="avg_home_attendance").to_string())
     return df
 
 

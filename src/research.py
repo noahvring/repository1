@@ -1,9 +1,4 @@
-"""Phase 4 (generated parts): competitive landscape and insight scaffold.
-
-competitive_landscape.csv lists, for each top-8 candidate, the existing pro teams
-(from data/manual/teams.csv), D-I basketball schools (ncaa_school_metro.csv) and
-17,000+ seat arenas with tenants (arenas.csv). Every row keeps its source URL.
-"""
+"""research/competitive_landscape.csv (teams, D-I schools, arenas per key market) and the insights scaffold."""
 import pandas as pd
 from config import MANUAL, OUTPUTS, PROCESSED, RESEARCH
 
@@ -12,11 +7,10 @@ def main():
     k = pd.read_csv(OUTPUTS / "kpi_dashboard.csv")
     focus = pd.read_csv(OUTPUTS / "focus_markets.csv")
     ids = dict(zip(k["market_id"], k["short_name"]))
-    # also cover the scored focus markets (Seattle, Las Vegas, Pittsburgh, Louisville, ...)
+    # plus the scored focus markets
     for mid, nm in zip(focus["market_id"], focus["short_name"]):
         if not str(mid).startswith("INTL"):
             ids.setdefault(mid, nm)
-    # CBSA -> market (CSA or CBSA) lookup written by build_metros.py
     cmap = pd.read_csv(PROCESSED / "cbsa_factors.csv", dtype={"cbsa_code": str}).set_index("cbsa_code")["market_id"]
     teams = pd.read_csv(MANUAL / "teams.csv", dtype=str)
     arenas = pd.read_csv(MANUAL / "arenas.csv", dtype={"cbsa_code": str})

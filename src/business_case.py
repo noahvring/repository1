@@ -1,32 +1,31 @@
-"""Phase 3: scenario business case for the top-8 candidate markets plus owner economics.
+"""Scenario business case for the top-8 candidates, owner economics and bidder multiples.
 
-Local revenue (2025-26 dollars per year) starts from the average NBA team's revenue by stream,
-all reported by Sportico, and scales each stream by how the market compares with the median
-current NBA market:
+Local revenue (2025-26 USD/yr) = average NBA team revenue by stream (Sportico), scaled by how
+the market compares with the median NBA market:
   gate (seating & suites)  = avg x (pop index x income index) ^ e
   sponsorship              = avg x (large-establishment index) ^ e
   local media              = avg x (pop index) ^ e x fan multiplier (Pillar B)
   other (concessions etc.) = avg x (pop index) ^ e
-where e = revenue elasticity (how strongly revenue rises with market size).
+where e = revenue elasticity.
 
-Owner economics: each existing team receives fee x 2 / 30 once, and gives up
-pool x (1/30 - 1/32) every year, where pool = shared league revenue. NPV over 20 years under
-growth x discount scenarios. These are scenarios, not forecasts.
+Owners: each existing team gets fee x 2 / 30 once and loses pool x (1/30 - 1/32) a year
+(pool = shared league revenue); 20-year NPV under growth x discount scenarios.
 """
 import numpy as np
 import pandas as pd
 from config import MANUAL, OUTPUTS, PROCESSED
 
 SCEN = ["low", "base", "high"]
-# metros to track: reported front-runners (Seattle, Las Vegas) and markets often named in coverage
+# reported front-runners plus markets often named in coverage
 FOCUS_US = ["Seattle", "Las Vegas", "Pittsburgh", "Louisville", "Kansas City", "Nashville", "Austin",
             "San Diego", "St. Louis", "Columbus, OH", "Cincinnati", "Raleigh", "Tampa", "Baltimore", "Omaha"]
 STREAMS = ["gate", "sponsorship", "local_media", "other"]
 
 
 def load_assumptions():
+    """Scenario name -> {assumption: value}."""
     a = pd.read_csv(MANUAL / "assumptions.csv").set_index("assumption")
-    return {s: a[s].to_dict() for s in SCEN}, a
+    return {s: a[s].to_dict() for s in SCEN}
 
 
 def averages(A):
@@ -37,10 +36,8 @@ def averages(A):
 
 
 def local_revenue(m, ref, A, elast=None):
-    """elast: optional dict stream -> elasticity (for the tornado); default A['revenue_elasticity']."""
-    e = {s: A["revenue_elasticity"] for s in STREAMS}
-    if elast:
-        e.update(elast)
+    """elast: optional {stream: elasticity} override, used by the tornado."""
+    e = {s: A["revenue_elasticity"] for s in STREAMS} | (elast or {})
     avg = averages(A)
     pop_i = m["population"] / ref["population"]
     inc_i = m["median_hh_income"] / ref["median_hh_income"]
@@ -116,9 +113,8 @@ def breakeven_growth(S):
 
 
 def bidder_multiples(m, ref, S, ids):
-    """Investment lens: price paid / estimated annual revenue, vs the league-average
-    franchise value / revenue multiple (both sourced from Sportico). A new team's revenue =
-    estimated local revenue + an equal 1/32 share of central (league-shared) revenue."""
+    """Price / estimated revenue vs league-average value / revenue (Sportico).
+    Revenue = local estimate + 1/32 of central revenue."""
     b = S["base"]
     central_share = b["central_revenue_share"] * b["team_revenue_2025_26_usd"] / 32
     league_mult = b["avg_franchise_value_usd"] / b["avg_team_revenue_usd"]
@@ -127,11 +123,14 @@ def bidder_multiples(m, ref, S, ids):
         name = m.at[cid, "short_name"]
         local = {s: local_revenue(m.loc[[cid]], ref, S[s])["total"].iloc[0] for s in SCEN}
         lo_l, hi_l = min(local.values()), max(local.values())
-        is_lv, is_sea = name == "Las Vegas", name == "Seattle"
-        price = b["las_vegas_reported_price_usd"] if is_lv else b["seattle_reported_valuation_usd"] if is_sea else b["expansion_fee_per_team_usd"]
+        is_lv = name == "Las Vegas"
+        price, basis = {
+            "Las Vegas": (b["las_vegas_reported_price_usd"], "ESPN-reported ~$10B"),
+            "Seattle": (b["seattle_reported_valuation_usd"], "ESPN-reported ~$6B valuation estimate"),
+        }.get(name, (b["expansion_fee_per_team_usd"], "base fee: midpoint of reported $7-10B range"))
         rev_base = local["base"] + central_share
         rows.append({"market_id": cid, "short_name": name,
-                     "price_usd": price, "price_basis": "ESPN-reported ~$10B" if is_lv else "ESPN-reported ~$6B valuation estimate" if is_sea else "base fee: midpoint of reported $7-10B range",
+                     "price_usd": price, "price_basis": basis,
                      "est_revenue_base_usd": rev_base, "est_revenue_low_usd": lo_l + central_share, "est_revenue_high_usd": hi_l + central_share,
                      "central_revenue_share_usd": central_share,
                      "price_to_revenue_base": price / rev_base,
@@ -143,17 +142,16 @@ def bidder_multiples(m, ref, S, ids):
 
 
 def main():
-    S, table = load_assumptions()
+    S = load_assumptions()
     metros = pd.read_csv(PROCESSED / "metros.csv").set_index("market_id")
     rank = pd.read_csv(OUTPUTS / "rankings.csv").set_index("market_id")
     sens = pd.read_csv(OUTPUTS / "sensitivity.csv").set_index("market_id")
     m = metros.join(rank[["A_size_wealth", "B_basketball_demand", "C_corporate", "ease_of_entry", "quadrant", "total_score", "rank_candidates"]])
-    nba = m[m["nba_metro"]]
-    ref = nba[["population", "median_hh_income", "large_establishments_500plus"]].median()  # median NBA market
+    ref = m.loc[m["nba_metro"], ["population", "median_hh_income", "large_establishments_500plus"]].median()
     ids = pick_top8(m)
 
-    # calibration note for the elasticity assumption (Warriors' vs Grizzlies' market)
-    sf = m[m.short_name == "San Francisco"].iloc[0]; mem = m[m.short_name == "Memphis"].iloc[0]
+    # elasticity calibration: Warriors' vs Grizzlies' market
+    sf, mem = m[m.short_name == "San Francisco"].iloc[0], m[m.short_name == "Memphis"].iloc[0]
     b = S["base"]
     e_cal = np.log(b["team_revenue_max_usd"] / b["team_revenue_min_usd"]) / np.log(sf.population / mem.population)
     pd.DataFrame([{"high_revenue_team_market": sf.market_title, "low_revenue_team_market": mem.market_title,
@@ -169,20 +167,19 @@ def main():
     npv.to_csv(OUTPUTS / "owner_npv.csv", index=False)
     breakeven_growth(S).to_csv(OUTPUTS / "owner_breakeven_growth.csv", index=False)
 
-    # tornado: swing in combined base-case local revenue (top 8) from each assumption's low/high
-    base_total = rev["base"]["total"].sum()
-    torn = []
-    for stream in STREAMS:
-        v = {s: local_revenue(m.loc[ids], ref, S["base"], {stream: S[s]["revenue_elasticity"]})["total"].sum() for s in ["low", "high"]}
-        torn.append({"assumption": f"elasticity_{stream}", "low_value": S["low"]["revenue_elasticity"], "high_value": S["high"]["revenue_elasticity"],
-                     "total_at_low": v["low"], "total_at_high": v["high"]})
-    v = {}
-    for s in ["low", "high"]:
-        A = dict(S["base"]); A["fan_multiplier_slope"] = S[s]["fan_multiplier_slope"]
-        v[s] = local_revenue(m.loc[ids], ref, A)["total"].sum()
+    # tornado: swing in combined top-8 base local revenue from each assumption's low/high value
+    def total_rev(A, elast=None):
+        return local_revenue(m.loc[ids], ref, A, elast)["total"].sum()
+
+    torn = [{"assumption": f"elasticity_{st}", "low_value": S["low"]["revenue_elasticity"], "high_value": S["high"]["revenue_elasticity"],
+             "total_at_low": total_rev(S["base"], {st: S["low"]["revenue_elasticity"]}),
+             "total_at_high": total_rev(S["base"], {st: S["high"]["revenue_elasticity"]})} for st in STREAMS]
     torn.append({"assumption": "fan_multiplier_slope", "low_value": S["low"]["fan_multiplier_slope"], "high_value": S["high"]["fan_multiplier_slope"],
-                 "total_at_low": v["low"], "total_at_high": v["high"]})
-    t = pd.DataFrame(torn); t["base_total"] = base_total; t["swing"] = (t.total_at_high - t.total_at_low).abs()
+                 "total_at_low": total_rev(S["base"] | {"fan_multiplier_slope": S["low"]["fan_multiplier_slope"]}),
+                 "total_at_high": total_rev(S["base"] | {"fan_multiplier_slope": S["high"]["fan_multiplier_slope"]})})
+    t = pd.DataFrame(torn)
+    t["base_total"] = rev["base"]["total"].sum()
+    t["swing"] = (t.total_at_high - t.total_at_low).abs()
     t.sort_values("swing", ascending=False).to_csv(OUTPUTS / "tornado.csv", index=False)
 
     def kpis(idx):
@@ -190,10 +187,9 @@ def main():
                         "ease_of_entry", "quadrant", "miles_to_nearest_nba", "population", "median_hh_income", "pop_growth_2020_2025", "large_est_per_100k",
                         "big4_other_leagues", "arena_ready", "largest_arena_no_nba_tenant", "has_g_league", "nba_metro"]].copy()
         k["top10_frequency"] = sens.reindex(idx)["top10_frequency"]
-        k["fan_interest_index"] = k["B_basketball_demand"]  # Pillar B score (Google Trends unavailable)
+        k["fan_interest_index"] = k["B_basketball_demand"]
         k["arena_ready"] = np.where(k["arena_ready"] == 1, "Y", "N")
-        # elasticity pushes revenue down for markets smaller than the median NBA market and up for
-        # larger ones, so low/high are the min/max across the three scenarios, not the scenario labels
+        # elasticity lowers revenue for small markets and raises it for large ones, so low/high = min/max
         scen = pd.concat({s: local_revenue(m.loc[idx], ref, S[s])["total"] for s in SCEN}, axis=1)
         k["est_local_revenue_low"] = scen.min(axis=1)
         k["est_local_revenue_base"] = scen["base"]
@@ -204,9 +200,7 @@ def main():
     kpis(ids).sort_values("attractiveness_rank").to_csv(OUTPUTS / "kpi_dashboard.csv")
     bidder_multiples(m, ref, S, ids)
 
-    # focus markets: the league's reported front-runners plus markets Noah asked to track.
-    # U.S. markets are scored; Mexico City and Vancouver are outside the U.S. data, so they get
-    # sourced descriptive facts only (data/manual/international_markets.csv).
+    # focus markets: U.S. ones scored; international ones get sourced facts only
     focus_ids = [i for n in FOCUS_US for i in m.index[m["member_metros"].fillna("").str.contains(n, regex=False)][:1]]
     f = kpis(focus_ids)
     f["focus_label"] = [next(n for n in FOCUS_US if n in m.at[i, "member_metros"]) for i in f.index]

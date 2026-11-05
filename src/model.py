@@ -1,31 +1,27 @@
-"""Phase 2: market-attractiveness scorecard.
+"""Market scorecard: attractiveness (pillars A-C) and ease of entry, both as means of factor z-scores.
 
-1. Each factor is standardized to a z-score across the study metros (log first for
-   population, GDP and large-establishment counts, which are heavily skewed).
-2. Competition (teams from other big leagues) enters with a negative sign.
-3. Pillar score = mean of its factor z-scores (equal weights, missing factors skipped).
-4. Total score = weighted mean of the 4 pillar scores (equal weights by default).
-All metros, NBA and non-NBA, are scored the same way so current NBA markets act as a benchmark.
+Skewed counts are logged first. NBA and non-NBA markets are scored the same way, so current
+NBA markets act as the benchmark. Partial-data markets are scored separately at the end.
 """
 import numpy as np
 import pandas as pd
 from scipy import stats
 from config import PROCESSED, OUTPUTS, MANUAL
+from build_metros import haversine_miles
 
-# ATTRACTIVENESS: how valuable is the market? pillar -> list of (column, transform, sign)
+# pillar -> list of (column, transform, sign)
 PILLARS = {
     "A_size_wealth": [("population", "log", 1), ("median_hh_income", None, 1), ("share_18_44", None, 1),
                       ("pop_growth_2020_2025", None, 1), ("gdp_2024_usd", "log", 1)],
-    # G League presence is NOT scored: most G League teams are NBA-owned affiliates near their parent
-    # club, so it would flatter existing NBA markets. It stays in metros.csv as a descriptive column.
+    # G League is not scored: most teams are NBA-owned affiliates near their parent club
     "B_basketball_demand": [("ncaa_att_per_1k", None, 1), ("has_wnba", None, 1)],
     "C_corporate": [("large_establishments_500plus", "log", 1), ("large_est_per_100k", None, 1)],
 }
 PILLAR_NAMES = list(PILLARS)
+NO_COLLEGE = {**PILLARS, "B_basketball_demand": [("has_wnba", None, 1)]}
+WITH_G_LEAGUE = {**PILLARS, "B_basketball_demand": PILLARS["B_basketball_demand"] + [("has_g_league", None, 1)]}
 
-# EASE OF ENTRY: how hard is it to get in? Kept on its own axis (v3) so competition is not
-# double-counted in attractiveness. Distance to the nearest other NBA market proxies for
-# cannibalization of existing teams' fans (farther = easier).
+# separate axis so competition is not double-counted; distance proxies fan cannibalization
 EASE = [("arena_available", None, 1), ("miles_to_nearest_nba", "log", 1), ("big4_other_leagues", None, -1)]
 
 WEIGHTINGS = {  # weights on pillars A, B, C
@@ -55,10 +51,7 @@ def factor_z(df, pillars=None):
 def pillar_scores(df, pillars=None):
     pillars = pillars or PILLARS
     z = factor_z(df, pillars)
-    out = pd.DataFrame(index=df.index)
-    for pillar, factors in pillars.items():
-        cols = [f"z_{c}" for c, _, _ in factors if f"z_{c}" in z.columns]
-        out[pillar] = z[cols].mean(axis=1, skipna=True)
+    out = pd.DataFrame({name: z[[f"z_{c}" for c, _, _ in factors]].mean(axis=1) for name, factors in pillars.items()})
     return out, z
 
 
@@ -67,19 +60,20 @@ def total(p, w):
 
 
 def rank_candidates(df, score):
-    """Rank among non-NBA metros only (1 = most attractive)."""
-    s = score[~df["nba_metro"]]
-    return s.rank(ascending=False, method="min")
+    """Rank among non-NBA markets (1 = most attractive)."""
+    return score[~df["nba_metro"]].rank(ascending=False, method="min")
+
+
+def quadrant(score, ease, a_med, e_med):
+    return np.select([(score >= a_med) & (ease >= e_med), (score >= a_med) & (ease < e_med), (score < a_med) & (ease >= e_med)],
+                     ["Prime targets", "Attractive but hard to enter", "Easy but small"], "Deprioritize")
 
 
 def monte_carlo(df, p):
-    """10,000 random pillar weightings drawn from a Dirichlet(1,1,1): every weighting is equally
-    likely and expected weights are equal (1/3 each). Rank non-NBA markets under each draw."""
-    rng = np.random.default_rng(SEED)
-    W = rng.dirichlet(np.ones(len(PILLAR_NAMES)), size=N_DRAWS)          # draws x pillars
+    """Rank non-NBA markets under 10,000 Dirichlet(1,1,1) pillar weightings (mean weight 1/3 each)."""
+    W = np.random.default_rng(SEED).dirichlet(np.ones(len(PILLAR_NAMES)), size=N_DRAWS)  # draws x pillars
     cand = p.loc[~df["nba_metro"], PILLAR_NAMES]
-    scores = cand.to_numpy() @ W.T                                         # markets x draws
-    ranks = (-scores).argsort(axis=0).argsort(axis=0) + 1                  # 1 = best in each draw
+    ranks = (-(cand.to_numpy() @ W.T)).argsort(axis=0).argsort(axis=0) + 1  # markets x draws, 1 = best
     out = pd.DataFrame(index=cand.index)
     out["short_name"] = df.loc[cand.index, "short_name"]
     out["p_top5"] = (ranks <= 5).mean(axis=1)
@@ -93,24 +87,19 @@ def monte_carlo(df, p):
 
 
 def fan_behavior(df, p, sens):
-    """Behavioural lens (descriptive, NOT scored):
-    - transplant share = residents born outside their current state ('divided loyalty' risk);
-    - college-vs-pro check: among current NBA markets, does college attendance per capita move
-      with the attractiveness score computed WITHOUT college attendance? (association only)
-    - how much the candidate top 10 changes when college attendance is removed."""
-    nc = dict(PILLARS); nc["B_basketball_demand"] = [f for f in PILLARS["B_basketball_demand"] if f[0] != "ncaa_att_per_1k"]
-    p_nc, _ = pillar_scores(df, nc)
-    score_nc = total(p_nc, WEIGHTINGS["equal"])
+    """Descriptive, not scored: transplant share, and whether college attendance tracks the
+    score without college among NBA markets (association only)."""
+    score_nc = total(pillar_scores(df, NO_COLLEGE)[0], WEIGHTINGS["equal"])
     nba = df["nba_metro"]
     r, pval = stats.pearsonr(df.loc[nba, "ncaa_att_per_1k"], score_nc[nba])
-    top_eq = set(sens.index[sens["rank_equal"] <= 10]); top_nc = set(sens.index[sens["rank_no_college"] <= 10])
+    top_eq, top_nc = set(sens.index[sens["rank_equal"] <= 10]), set(sens.index[sens["rank_no_college"] <= 10])
     pd.DataFrame([{"n_nba_markets": int(nba.sum()), "pearson_r_college_att_vs_score_without_college": r, "p_value": pval,
                    "top10_overlap_equal_vs_no_college": len(top_eq & top_nc),
                    "dropped_from_top10_without_college": "; ".join(sorted(df.loc[list(top_eq - top_nc), "short_name"])),
                    "added_to_top10_without_college": "; ".join(sorted(df.loc[list(top_nc - top_eq), "short_name"]))}]
                  ).to_csv(OUTPUTS / "college_vs_pro.csv", index=False)
     fb = df.loc[~nba, ["short_name", "transplant_share", "born_other_us_state_share", "ncaa_att_per_1k"]].copy()
-    fb["rank_equal"] = sens["rank_equal"]; fb["rank_no_college"] = sens["rank_no_college"]
+    fb[["rank_equal", "rank_no_college"]] = sens[["rank_equal", "rank_no_college"]]
     fb["rank_change_without_college"] = fb["rank_no_college"] - fb["rank_equal"]
     fb["transplant_share_vs_nba_median"] = fb["transplant_share"] - df.loc[nba, "transplant_share"].median()
     fb.sort_values("rank_equal").to_csv(OUTPUTS / "fan_behavior.csv")
@@ -127,8 +116,7 @@ def welch_ci(a, b):
 
 
 def mexico_city_row(df):
-    """Mexico City on the factors that have a comparable source (data/manual/international_markets.csv)."""
-    from build_metros import haversine_miles
+    """Mexico City on the factors with a comparable source (data/manual/international_markets.csv)."""
     intl = pd.read_csv(MANUAL / "international_markets.csv")
     mx = intl[intl.market == "Mexico City"].set_index("item")["value"]
     lat, lon = float(mx["latitude"]), float(mx["longitude"])
@@ -148,9 +136,8 @@ def mexico_city_row(df):
 
 
 def score_partial(part, ref, r):
-    """Score partial-data markets against the complete U.S. markets' distributions (so U.S. scores
-    are unchanged). Missing factors are skipped: each pillar averages the factors it has, and the
-    total averages the pillars it has (equal weights re-normalised)."""
+    """Score partial-data markets with the U.S. markets' means and SDs (U.S. results unchanged).
+    Pillars average the factors present; the total averages the pillars present."""
     out = part[["short_name", "market_title", "market_type", "nba_metro", "arena_ready", "population"]].copy()
     used = {i: [] for i in part.index}
     for pillar, factors in {**PILLARS, "ease": EASE}.items():
@@ -167,10 +154,7 @@ def score_partial(part, ref, r):
     cand = r[~r["nba_metro"]]
     out["rank_if_included"] = [int((cand["total_score"] > s).sum() + 1) for s in out["total_score"]]
     a_med, e_med = r["median_nba_score"].iloc[0], r["ease_median_nba"].iloc[0]
-    out["quadrant"] = np.select(
-        [(out.total_score >= a_med) & (out.ease_of_entry >= e_med), (out.total_score >= a_med) & (out.ease_of_entry < e_med),
-         (out.total_score < a_med) & (out.ease_of_entry >= e_med)],
-        ["Prime targets", "Attractive but hard to enter", "Easy but small"], "Deprioritize")
+    out["quadrant"] = quadrant(out.total_score, out.ease_of_entry, a_med, e_med)
     out["median_nba_score"], out["ease_median_nba"] = a_med, e_med
     out["partial_data"] = True
     for c in ["miles_to_nearest_nba", "nba_markets_within_200mi", "big4_other_leagues", "arena_available", "transplant_share"]:
@@ -180,56 +164,43 @@ def score_partial(part, ref, r):
 
 def main():
     df_all = pd.read_csv(PROCESSED / "metros.csv").set_index("market_id")
-    # partial-data markets (San Juan, Mexico City) are scored separately at the end so they never
-    # change the U.S. rankings, Monte Carlo or validity checks
-    df = df_all[~df_all["partial_data"]].copy()
-    # arena available: a 17,000+ seat arena without an NBA tenant (candidates) or the existing
-    # NBA arena (current NBA markets), so the benchmark is comparable
+    df = df_all[~df_all["partial_data"]].copy()  # partial-data markets are scored at the end
+    # NBA markets count their own arena, so the benchmark is comparable
     df["arena_available"] = np.where(df["nba_metro"], df["arena_capable"], df["arena_ready"])
     p, z = pillar_scores(df)
     p["total_score"] = total(p, WEIGHTINGS["equal"])
-    ez, _ = pillar_scores(df, {"ease": EASE})
-    p["ease_of_entry"] = ez["ease"]
+    p["ease_of_entry"] = pillar_scores(df, {"ease": EASE})[0]["ease"]
     meta = df[["short_name", "market_title", "market_type", "nba_metro", "arena_ready", "population"]]
 
-    # pillar_scores.csv: factor z-scores and pillar scores for every metro
-    pillar_out = meta.join(z).join(p)
-    pillar_out.to_csv(OUTPUTS / "pillar_scores.csv")
+    meta.join(z).join(p).to_csv(OUTPUTS / "pillar_scores.csv")
 
-    # rankings.csv: overall rank, candidate rank, overlooked flag
     median_nba = p.loc[df["nba_metro"], "total_score"].median()
     r = meta.join(p)
     r["rank_all_metros"] = r["total_score"].rank(ascending=False, method="min").astype(int)
     r["rank_candidates"] = rank_candidates(df, p["total_score"])
     r["median_nba_score"] = median_nba
     r["overlooked"] = (~r["nba_metro"]) & (r["total_score"] >= median_nba)
-    # which pillar contributes most to a metro's total (concentration check)
+    # concentration check: which pillar contributes most
     contrib = p[PILLAR_NAMES] / 3
     r["top_pillar"] = contrib.idxmax(axis=1)
     r["top_pillar_share_of_positive"] = contrib.clip(lower=0).max(axis=1) / contrib.clip(lower=0).sum(axis=1).replace(0, np.nan)
-    nba_mask = df["nba_metro"]
-    a_med, e_med = p.loc[nba_mask, "total_score"].median(), p.loc[nba_mask, "ease_of_entry"].median()
+    e_med = p.loc[df["nba_metro"], "ease_of_entry"].median()
     r["ease_median_nba"] = e_med
-    r["quadrant"] = np.select(
-        [(r.total_score >= a_med) & (r.ease_of_entry >= e_med), (r.total_score >= a_med) & (r.ease_of_entry < e_med),
-         (r.total_score < a_med) & (r.ease_of_entry >= e_med)],
-        ["Prime targets", "Attractive but hard to enter", "Easy but small"], "Deprioritize")
+    r["quadrant"] = quadrant(r.total_score, r.ease_of_entry, median_nba, e_med)
     r = r.join(df[["miles_to_nearest_nba", "nba_markets_within_200mi", "big4_other_leagues", "arena_available"]])
     r = r.sort_values("total_score", ascending=False)
     r["partial_data"] = False
     part = df_all[df_all["partial_data"]].copy()
     part["arena_available"] = part["arena_ready"]
     part = pd.concat([part, mexico_city_row(df)])
-    partial = score_partial(part, df, r)
-    partial.to_csv(OUTPUTS / "partial_markets.csv")
+    score_partial(part, df, r).to_csv(OUTPUTS / "partial_markets.csv")
     r.to_csv(OUTPUTS / "rankings.csv")
 
-    # nba_benchmark.csv: the current NBA metros scored the same way
     bench = r[r["nba_metro"]].copy()
     bench["n_nba_teams"] = df.loc[bench.index, "n_nba"]
     bench.to_csv(OUTPUTS / "nba_benchmark.csv")
 
-    # validity.csv: does the scorecard recognise existing NBA markets?
+    # validity: does the scorecard separate existing NBA markets from the rest?
     rows = []
     for col in PILLAR_NAMES + ["total_score"]:
         a, b = p.loc[df["nba_metro"], col].dropna(), p.loc[~df["nba_metro"], col].dropna()
@@ -239,13 +210,10 @@ def main():
                      "diff_nba_minus_non": d, "ci95_low": lo, "ci95_high": hi, "point_biserial_r": rpb, "p_value": pval})
     pd.DataFrame(rows).to_csv(OUTPUTS / "validity.csv", index=False)
 
-    # sensitivity.csv: candidate rank under each weighting
     sens = meta[~meta["nba_metro"]][["short_name", "arena_ready"]].copy()
     for name, w in WEIGHTINGS.items():
         if w == "no_college":
-            nc = dict(PILLARS); nc["B_basketball_demand"] = [f for f in PILLARS["B_basketball_demand"] if f[0] != "ncaa_att_per_1k"]
-            p2, _ = pillar_scores(df, nc)
-            sens[f"rank_{name}"] = rank_candidates(df, total(p2, WEIGHTINGS["equal"]))
+            sens[f"rank_{name}"] = rank_candidates(df, total(pillar_scores(df, NO_COLLEGE)[0], WEIGHTINGS["equal"]))
         elif w == "arena_required":
             s = p["total_score"].where(df["arena_ready"] == 1)
             sens[f"rank_{name}"] = s[~df["nba_metro"]].rank(ascending=False, method="min")
@@ -261,11 +229,8 @@ def main():
     monte_carlo(df, p)
     fan_behavior(df, p, sens)
 
-    # rank decomposition: how did the top 10 move from v1 (CBSA, G League scored) to now?
-    # step 1 = v1 archived output; step 2 = CSA markets but G League still scored; step 3 = final.
-    with_gl = dict(PILLARS); with_gl["B_basketball_demand"] = PILLARS["B_basketball_demand"] + [("has_g_league", None, 1)]
-    p_gl, _ = pillar_scores(df, pillars=with_gl)
-    rank_gl = rank_candidates(df, total(p_gl, WEIGHTINGS["equal"]))
+    # how the top 10 moved: v1 (CBSA, G League scored) -> CSA with G League -> current
+    rank_gl = rank_candidates(df, total(pillar_scores(df, WITH_G_LEAGUE)[0], WEIGHTINGS["equal"]))
     v1 = pd.read_csv(OUTPUTS / "archive" / "rankings_v1_cbsa.csv")
     v1 = v1[~v1["nba_metro"]].set_index("short_name")["rank_candidates"]
     dec = r[~r["nba_metro"]][["short_name", "market_title", "rank_candidates", "top_pillar"]].copy()
@@ -273,7 +238,7 @@ def main():
     dec["rank_csa_with_gleague"] = rank_gl
     dec = dec.rename(columns={"rank_candidates": "rank_final_csa_no_gleague"})
     keep = dec[(dec["rank_final_csa_no_gleague"] <= 10) | (dec["rank_v1_cbsa_with_gleague"] <= 10)]
-    v1_lost = v1[(v1 <= 10) & ~v1.index.isin(dec["short_name"])]  # v1 top-10 metros absorbed into a bigger market
+    v1_lost = v1[(v1 <= 10) & ~v1.index.isin(dec["short_name"])]  # merged into a bigger market
     lost = pd.DataFrame({"short_name": v1_lost.index, "rank_v1_cbsa_with_gleague": v1_lost.values,
                          "market_title": "merged into a larger CSA (see metros.csv member_metros)"})
     pd.concat([keep, lost]).sort_values(["rank_final_csa_no_gleague", "rank_v1_cbsa_with_gleague"]).to_csv(OUTPUTS / "top10_change.csv", index=False)

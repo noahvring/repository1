@@ -1,8 +1,4 @@
-"""Download every raw source into data/raw/ (skips files that already exist).
-
-ACS summary files are national files covering every geography (100+ MB), so we
-stream them and keep only the header plus metro rows (GEO_ID starting '310M').
-"""
+"""Download raw sources into data/raw/ (cached). ACS files are streamed, keeping only metro rows ('310M')."""
 import requests
 from config import RAW, SOURCES
 

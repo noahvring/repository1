@@ -1,10 +1,7 @@
 """Map 'City, State' strings to Census CBSA codes.
 
-Step 1: Census list of principal cities (list2_2023) -> CBSA.
-Step 2: data/manual/place_overrides.csv for suburbs / boroughs that are not principal
-        cities: each row gives the place's county FIPS (sourced), and the county is
-        looked up in the Census delineation file (list1_2023) to get its CBSA.
-Canadian cities map to an ID like 'CAN-Toronto' (outside the U.S. data scope).
+Principal cities come from Census list2; other places (suburbs, boroughs) from
+data/manual/place_overrides.csv via their county FIPS. Canadian cities map to 'CAN-<city>'.
 """
 import pandas as pd
 from config import RAW, MANUAL
@@ -26,8 +23,7 @@ def load_principal_cities(delin):
     states = delin[["FIPS State Code", "State Name"]].drop_duplicates()
     states["FIPS State Code"] = states["FIPS State Code"].str.zfill(2)
     p["FIPS State Code"] = p["FIPS State Code"].str.zfill(2)
-    p = p.merge(states, on="FIPS State Code", how="left")
-    return p
+    return p.merge(states, on="FIPS State Code", how="left")
 
 
 class Resolver:
@@ -51,8 +47,6 @@ class Resolver:
             return None
         city, state = [x.strip() for x in place.rsplit(",", 1)]
         state = STATE_ABBR.get(state, state)
-        if city in ("Washington",) and state == "District of Columbia":
-            city = "Washington"
         if state in CANADA:
             return "CAN-" + city
         key = (city.lower(), state)

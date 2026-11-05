@@ -1,4 +1,4 @@
-"""Phase 5: all figures, one consistent matplotlib style. Every figure carries a source line."""
+"""All figures in one matplotlib style; each carries a source line."""
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -122,7 +122,8 @@ def main():
         "Transplant share (RISK)": z(fbx["transplant_share"]),
     }
     hh = pd.DataFrame({k: v.reindex(["Seattle", "Las Vegas"]) for k, v in metrics.items()}).T.iloc[::-1]
-    fig, ax = plt.subplots(figsize=(9, 6.5)); y = np.arange(len(hh))
+    fig, ax = plt.subplots(figsize=(9, 6.5))
+    y = np.arange(len(hh))
     ax.barh(y + 0.2, hh["Seattle"], 0.4, color=BLUE, label="Seattle"); ax.barh(y - 0.2, hh["Las Vegas"], 0.4, color=ORANGE, label="Las Vegas")
     ax.set_yticks(y, hh.index); ax.axvline(0, color=DARK, lw=0.8); ax.legend(frameon=False)
     ax.set_xlabel("Standardized value (z-score vs non-NBA markets; bidder multiple vs top-8 markets)")
@@ -148,7 +149,7 @@ def main():
 
     # 2 pillar breakdown (grouped bars)
     fig, ax = plt.subplots(figsize=(10, 5.5))
-    x = np.arange(len(k)); w = 0.2
+    x = np.arange(len(k))
     for i, (col, lab) in enumerate(PILLAR_LABELS.items()):
         ax.bar(x + (i - 1) * 0.26, k[col], 0.26, label=lab, color=PILLAR_COLORS[i])
     ax.axhline(0, color=DARK, lw=0.8); ax.set_xticks(x, k["short_name"], rotation=20)
