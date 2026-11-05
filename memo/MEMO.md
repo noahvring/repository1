@@ -28,6 +28,10 @@
 
 ## Fan behavior & market risk
 
+## Realignment: who moves East?
+
+## Bidder landscape
+
 ## Competitive landscape
 
 ## Risks

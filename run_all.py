@@ -9,11 +9,11 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
-import download, build_manual, honeymoon, build_metros, model, business_case, research, figures, report  # noqa: E402
+import download, build_manual, honeymoon, build_metros, realignment, model, business_case, research, figures, report  # noqa: E402
 
 if __name__ == "__main__":
     t0 = time.time()
-    for step in [download, build_manual, honeymoon, build_metros, model, business_case, research, figures]:
+    for step in [download, build_manual, honeymoon, build_metros, model, business_case, realignment, research, figures]:
         print(f"\n=== {step.__name__} ===")
         step.main()
     tests = subprocess.run([sys.executable, "-m", "pytest", "-q", "tests"], capture_output=True, text=True)

@@ -1,0 +1,31 @@
+team,conference,lat,lon,location_source
+Boston Celtics,East,42.366303,-71.062228,https://en.wikipedia.org/wiki/National_Basketball_Association
+Brooklyn Nets,East,40.68265,-73.974689,https://en.wikipedia.org/wiki/National_Basketball_Association
+New York Knicks,East,40.750556,-73.993611,https://en.wikipedia.org/wiki/National_Basketball_Association
+Philadelphia 76ers,East,39.901111,-75.171944,https://en.wikipedia.org/wiki/National_Basketball_Association
+Toronto Raptors,East,43.643333,-79.379167,https://en.wikipedia.org/wiki/National_Basketball_Association
+Chicago Bulls,East,41.880556,-87.674167,https://en.wikipedia.org/wiki/National_Basketball_Association
+Cleveland Cavaliers,East,41.496389,-81.688056,https://en.wikipedia.org/wiki/National_Basketball_Association
+Detroit Pistons,East,42.341111,-83.055,https://en.wikipedia.org/wiki/National_Basketball_Association
+Indiana Pacers,East,39.763889,-86.155556,https://en.wikipedia.org/wiki/National_Basketball_Association
+Milwaukee Bucks,East,43.043611,-87.916944,https://en.wikipedia.org/wiki/National_Basketball_Association
+Atlanta Hawks,East,33.757222,-84.396389,https://en.wikipedia.org/wiki/National_Basketball_Association
+Charlotte Hornets,East,35.225,-80.839167,https://en.wikipedia.org/wiki/National_Basketball_Association
+Miami Heat,East,25.781389,-80.188056,https://en.wikipedia.org/wiki/National_Basketball_Association
+Orlando Magic,East,28.539167,-81.383611,https://en.wikipedia.org/wiki/National_Basketball_Association
+Washington Wizards,East,38.898056,-77.020833,https://en.wikipedia.org/wiki/National_Basketball_Association
+Denver Nuggets,West,39.748611,-105.0075,https://en.wikipedia.org/wiki/National_Basketball_Association
+Minnesota Timberwolves,West,44.979444,-93.276111,https://en.wikipedia.org/wiki/National_Basketball_Association
+Oklahoma City Thunder,West,35.463333,-97.515,https://en.wikipedia.org/wiki/National_Basketball_Association
+Portland Trail Blazers,West,45.531667,-122.666667,https://en.wikipedia.org/wiki/National_Basketball_Association
+Utah Jazz,West,40.768333,-111.901111,https://en.wikipedia.org/wiki/National_Basketball_Association
+Golden State Warriors,West,37.768056,-122.3875,https://en.wikipedia.org/wiki/National_Basketball_Association
+Los Angeles Clippers,West,33.9451,-118.3431,https://en.wikipedia.org/wiki/National_Basketball_Association
+Los Angeles Lakers,West,34.043056,-118.267222,https://en.wikipedia.org/wiki/National_Basketball_Association
+Phoenix Suns,West,33.445833,-112.071389,https://en.wikipedia.org/wiki/National_Basketball_Association
+Sacramento Kings,West,38.649167,-121.518056,https://en.wikipedia.org/wiki/National_Basketball_Association
+Dallas Mavericks,West,32.790556,-96.810278,https://en.wikipedia.org/wiki/National_Basketball_Association
+Houston Rockets,West,29.750833,-95.362222,https://en.wikipedia.org/wiki/National_Basketball_Association
+Memphis Grizzlies,West,35.138333,-90.050556,https://en.wikipedia.org/wiki/National_Basketball_Association
+New Orleans Pelicans,West,29.948889,-90.081944,https://en.wikipedia.org/wiki/National_Basketball_Association
+San Antonio Spurs,West,29.426944,-98.4375,https://en.wikipedia.org/wiki/National_Basketball_Association

@@ -35,3 +35,10 @@ def test_assumptions_labeled_with_rationale():
     assert ok.all()
     placeholders = a[a["source_url"].str.contains("ASSUMPTION")]
     assert placeholders["note"].str.contains("Rationale|requested by Noah|grid", case=False).all()
+
+
+def test_realignment_travel():
+    rt = pd.read_csv(OUTPUTS / "realignment_travel.csv")
+    assert len(rt) == 5
+    assert (rt.loc[rt.option != "Current 30 teams", ["teams_east", "teams_west"]] == 16).all().all()
+    assert ((rt["east_miles"] + rt["west_miles"] - rt["total_miles"]).abs() < 1).all()
