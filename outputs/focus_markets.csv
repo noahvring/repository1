@@ -17,3 +17,4 @@ CSA420,Omaha,"Omaha-Fremont, NE-IA",4.0,0.447153011572949,-0.3387659599158527,1.
 INTL-Mexico City,Mexico City,,,,,,,,,,21436911.0,,,,,,capacity 22300 (see international_markets.csv),1,,,,,,,,Mexico City,N (outside U.S. data)
 INTL-Vancouver,Vancouver,,,,,,,,,,2642825.0,,,,,,capacity 19700 (see international_markets.csv),0,,,,,,,,Vancouver,N (outside U.S. data)
 INTL-Toronto,Toronto,,,,,,,,,,,,,,,,capacity None (see international_markets.csv),0,,,,,,,,Toronto,N (outside U.S. data)
+INTL-San Juan,San Juan,,,,,,,,,,,,,,,,capacity 19500 (see international_markets.csv),0,,,,,,,,San Juan,N (outside U.S. data)

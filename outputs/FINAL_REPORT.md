@@ -2,7 +2,7 @@
 
 ## What was built
 
-- Phase 1: `data/processed/metros.csv` with 66 markets (CSA, else CBSA), sourced manual tables in `data/manual/`, and a coverage report in `outputs/coverage.csv`.
+- Phase 1: `data/processed/metros.csv` with 67 markets (CSA, else CBSA; San Juan flagged partial data), sourced manual tables in `data/manual/`, and a coverage report in `outputs/coverage.csv`.
 - Phase 2: scorecard outputs (`rankings`, `pillar_scores`, `nba_benchmark`, `validity` and `sensitivity` CSVs).
 - Phase 3: assumptions table (sourced from Sportico where possible), local revenue scenarios, owner NPV grid (`owner_npv.csv`, `owner_breakeven_growth.csv`), tornado, `kpi_dashboard.csv`, `focus_markets.csv`.
 - Phase 4: `research/` (trends, comparables, focus markets, competitive landscape, insights).
@@ -14,13 +14,13 @@
 ## Tests
 
 ```
-......................                                                   [100%]
-22 passed in 1.05s
+.......................                                                  [100%]
+23 passed in 1.26s
 ```
 
 ## Runtime
 
-Last `run_all.py` run took 13 seconds (raw downloads cached in `data/raw/`).
+Last `run_all.py` run took 14 seconds (raw downloads cached in `data/raw/`).
 
 ## Deviations & skipped sources
 
@@ -70,6 +70,16 @@ All access attempts on 2026-11-05.
 | Bidder landscape | `research/bidder_landscape.csv` from ESPN (2026-10-02), verified on the page; the Mexico City row comes from a search result (frontofficesports.com blocked). | Requested. |
 | Seattle bidder multiple | Uses ESPN's reported ~$6B Seattle valuation estimate instead of the $8.5B base fee. | A market-specific price is reported. |
 | Honeymoon curve | **Now included** from Wikipedia season game logs: Golden Knights (7 of 8 seasons; 2020-21 excluded with only 14 home games parsed, pandemic limits), Kraken (5), Raptors (8). Vancouver Grizzlies pages had no parseable home attendance, so they are excluded. Measured as average home attendance **indexed to season 1**, not % of capacity, because capacities changed (Raptors in the SkyDome). Data: `data/manual/expansion_attendance_wiki.csv`. | ≥3 teams sourced. |
+
+## v5 changes (2026-11-05): San Juan and Mexico City
+
+| Item | What changed | Why / caveat |
+|---|---|---|
+| San Juan, PR | Back in `metros.csv` as the San Juan-Bayamón CSA, flagged `partial_data`. Sources: ACS 2020-24 (population, income, age, place of birth), Census PR population estimates (`prc-cbsa-est2025.csv`), Census Gazetteer location, and the Coliseo de Puerto Rico (19,500 seats, Wikipedia) in `data/manual/arenas_supplement.csv`. **No CBP or BEA data exists for Puerto Rico**, so Pillar C and GDP are missing. Transplant share counts Puerto Rico-born residents (ACS B05002_010) as local, because B05002_003 is 0 in PR. | Requested. |
+| Partial scoring method | San Juan and Mexico City are standardized against the **complete U.S. markets' means and SDs**, so U.S. scores, ranks, Monte Carlo and validity are unchanged (verified identical). Each pillar averages its available factors and the total averages the available pillars. "Would rank" = position if inserted into the non-NBA ranking. Output: `outputs/partial_markets.csv`. | Keeps the U.S. analysis comparable. |
+| Mexico City factors | Population 21.4M (2020, Wikipedia/INEGI census). GDP **US$401.3B nominal, 2024** (Wikipedia infobox: MXN 8.13 trillion, implied ~20.26 MXN/USD). **PPP not used**: the World Bank and OECD APIs are blocked by the proxy and no sourced PPP metro figure was found. Nominal USD is also the basis of BEA's U.S. GDP. WNBA presence 0; NFL/MLB/NHL teams 0 (Liga MX soccer not counted); Arena CDMX 22,300 seats (arena available); distance to the nearest NBA market from Wikipedia coordinates. Not comparable or not sourced: income, age share, growth, NCAA, corporate base, transplant share. | Partial: A uses 2 of 5 factors, B 1 of 2, C none. Its high score comes from size alone. |
+| NBA games in Mexico City | From the Arena CDMX Wikipedia article: Jan 2017 (2), Dec 2018 (1), 2019-20 (2 scheduled). Not verified against NBA records; the "NBA Mexico City Game(s)" articles do not exist. | Descriptive only. |
+| World Bank, OECD | `api.worldbank.org` and `sdmx.oecd.org` blocked (connection refused). | Allowlist them to add PPP figures. |
 
 
 ## What Noah must write

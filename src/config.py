@@ -23,6 +23,7 @@ SOURCES = {
     "acs_b19013": (ACS_BASE + "acsdt5y2024-b19013.dat", "acs_b19013.dat"),  # median household income
     "acs_shells": ("https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/documentation/ACS20245YR_Table_Shells.txt", "acs_table_shells.txt"),
     "popest": ("https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/metro/totals/cbsa-est2025-alldata.csv", "cbsa-est2025-alldata.csv"),
+    "popest_pr": ("https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/metro/totals/prc-cbsa-est2025.csv", "prc-cbsa-est2025.csv"),
     "delineation": ("https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list1_2023.xlsx", "cbsa_delineation_2023.xlsx"),
     "principal_cities": ("https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list2_2023.xlsx", "cbsa_principal_cities_2023.xlsx"),
     "gazetteer_cbsa": ("https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_cbsa_national.zip", "gaz_cbsa.zip"),

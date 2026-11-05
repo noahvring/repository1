@@ -43,6 +43,12 @@ def matrix(ax, r, small=False):
     for _, d in c[c["short_name"].isin(top)].iterrows():
         ax.annotate(d["short_name"], (d["ease_of_entry"], d["total_score"]), fontsize=7 if small else 8, xytext=(4, 3), textcoords="offset points",
                     weight="bold" if d["short_name"] in ("Seattle", "Las Vegas") else "normal")
+    # partial-data markets (San Juan, Mexico City): hollow diamonds, scored on available factors only
+    pm = pd.read_csv(OUTPUTS / "partial_markets.csv")
+    ax.scatter(pm["ease_of_entry"], pm["total_score"], marker="D", s=70, facecolor="none", edgecolor="#7c3aed", lw=1.8, zorder=3)
+    for _, d in pm.iterrows():
+        ax.annotate(f"{d['short_name']} (partial data)", (d["ease_of_entry"], d["total_score"]), fontsize=7 if small else 8,
+                    xytext=(5, -10), textcoords="offset points", color="#7c3aed", style="italic")
     x0, x1 = ax.get_xlim(); y0, y1 = ax.get_ylim()
     kw = dict(fontsize=9 if small else 11, weight="bold", color="#374151", alpha=0.9)
     ax.text(x1, y1, "Prime targets", ha="right", va="top", **kw); ax.text(x0, y1, "Attractive but hard to enter", ha="left", va="top", **kw)
@@ -65,8 +71,8 @@ def main():
     # 0 headline matrix
     fig, ax = plt.subplots(figsize=(10, 7.5)); matrix(ax, r)
     ax.set_title("Where should the NBA expand? Attractiveness vs ease of entry")
-    fig.text(0.01, 0.035, "Bubble size = population. Dashed lines = median current NBA market. Orange = Seattle, Las Vegas. Grey = current NBA markets.", fontsize=8)
-    source(fig); fig.tight_layout(rect=(0, 0.06, 1, 1)); fig.savefig(FIGURES / "00_matrix_attractiveness_vs_ease.png", dpi=150); plt.close(fig)
+    fig.text(0.01, 0.035, "Bubble size = population. Dashed lines = median current NBA market. Orange = Seattle, Las Vegas. Grey = current NBA markets. Purple diamonds = partial data\n(fewer factors; not in rankings or Monte Carlo).", fontsize=8)
+    source(fig); fig.tight_layout(rect=(0, 0.08, 1, 1)); fig.savefig(FIGURES / "00_matrix_attractiveness_vs_ease.png", dpi=150); plt.close(fig)
 
     # 0b Monte Carlo robustness: P(top 10) with median rank and 90% interval
     mc = pd.read_csv(OUTPUTS / "monte_carlo.csv").head(15).iloc[::-1]
@@ -171,6 +177,8 @@ def main():
     for mask, col, lab in [(m["nba_metro"], GRAY, "Current NBA market"), (m["market_id"].isin(top_ids), BLUE, "Top-8 candidate"),
                            (~m["nba_metro"] & ~m["market_id"].isin(top_ids), "#d1d5db", "Other market")]:
         d = m[mask]; ax.scatter(d["population"] / 1e6, d["median_hh_income"] / 1e3, c=col, label=lab, s=40, edgecolor="white")
+    for _, d in m[m["partial_data"]].iterrows():
+        ax.annotate(f"{d['short_name']} (partial data)", (d["population"] / 1e6, d["median_hh_income"] / 1e3), fontsize=7, xytext=(3, -9), textcoords="offset points", color="#7c3aed", style="italic")
     for _, d in m[m["market_id"].isin(top_ids) | (m["population"] > 6e6)].iterrows():
         ax.annotate(d["short_name"], (d["population"] / 1e6, d["median_hh_income"] / 1e3), fontsize=7, xytext=(3, 3), textcoords="offset points")
     ax.set_xscale("log"); ax.set_xlabel("Population, millions (log scale)"); ax.set_ylabel("Median household income ($000)")
@@ -250,7 +258,7 @@ def main():
         x0 = 0.05 + i * 0.31
         fig.text(x0, 0.215, n, fontsize=22, weight="bold", color=ORANGE if i == 0 else BLUE)
         fig.text(x0, 0.13, lab, fontsize=8.5)
-    fig.text(0.05, 0.03, f"{len(m)} U.S. markets (Census combined statistical areas). Bubble = population; dashed = median NBA market. Scenarios, not forecasts.\n" + SRC, fontsize=6.5, color="#4b5563", wrap=True)
+    fig.text(0.05, 0.03, f"{(~m['partial_data']).sum()} U.S. markets (Census combined statistical areas). Bubble = population; dashed = median NBA market. Diamonds = partial data. Scenarios, not forecasts.\n" + SRC, fontsize=6.5, color="#4b5563", wrap=True)
     fig.savefig(FIGURES / "linkedin_summary.png", dpi=150); plt.close(fig)
     print("figures written")
 

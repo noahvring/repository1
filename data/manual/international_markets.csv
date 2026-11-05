@@ -8,3 +8,9 @@ Vancouver,Canada,largest_arena_capacity,19700,seats (basketball),https://en.wiki
 Vancouver,Canada,nba_history,"Vancouver Grizzlies 1995-2001, relocated to Memphis after 2000-01",text,https://en.wikipedia.org/wiki/Vancouver_Grizzlies,,2026-11-05
 Toronto,Canada,latitude,43.6525,degrees,https://en.wikipedia.org/wiki/Toronto,Used only to measure distance from U.S. markets to the Raptors,2026-11-05
 Toronto,Canada,longitude,-79.38167,degrees,https://en.wikipedia.org/wiki/Toronto,Used only to measure distance from U.S. markets to the Raptors,2026-11-05
+Mexico City,Mexico,latitude,19.433,degrees,https://en.wikipedia.org/wiki/Mexico_City,Used for distance to nearest NBA market,2026-11-05
+Mexico City,Mexico,longitude,-99.133,degrees,https://en.wikipedia.org/wiki/Mexico_City,Used for distance to nearest NBA market,2026-11-05
+Mexico City,Mexico,metro_gdp_usd_nominal_2024,401280000000.0,"USD (nominal, 2024)",https://en.wikipedia.org/wiki/Greater_Mexico_City,Infobox: metro GDP MXN 8.13 trillion = US$401.28 billion (nominal 2024; implied ~20.26 MXN/USD). PPP figure not sourceable (World Bank/OECD blocked); nominal is also the basis of U.S. BEA GDP,2026-11-05
+Mexico City,Mexico,big_league_teams_nfl_mlb_nhl,0,teams,https://en.wikipedia.org/wiki/Major_League_Baseball,"No NFL, MLB or NHL team in Mexico City per the league team tables in data/manual/teams.csv (Liga MX soccer clubs not counted)",2026-11-05
+Mexico City,Mexico,nba_regular_season_games,"Arena CDMX hosted NBA games in Jan 2017 (2: Suns vs Mavericks and Spurs), Dec 2018 (Magic vs Bulls) and 2019-20 (2 scheduled)",text,https://en.wikipedia.org/wiki/Arena_CDMX,As listed on the Arena CDMX article; count not verified against NBA records,2026-11-05
+San Juan,Puerto Rico,largest_arena_capacity,19500,seats,https://en.wikipedia.org/wiki/Coliseo_de_Puerto_Rico,"Coliseo de Puerto Rico José Miguel Agrelot (opened 2004); not in the U.S. indoor-arena list, added from its own article",2026-11-05

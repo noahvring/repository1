@@ -83,7 +83,12 @@ def build_arenas(res):
     out["nhl_tenant"] = out["tenants"].str.contains(r"\(NHL\)", regex=True)
     out["source_url"] = url
     out["access_date"] = ACCESS_DATE
-    return out.reset_index(drop=True)
+    # arenas missing from the U.S. list (e.g. Puerto Rico), each sourced to its own article
+    sup = pd.read_csv(MANUAL / "arenas_supplement.csv")
+    sup["cbsa_code"] = [res.resolve(f"{c}, {s}") for c, s in zip(sup.city, sup.state)]
+    sup["nba_tenant"] = False
+    sup["nhl_tenant"] = False
+    return pd.concat([out, sup[out.columns]], ignore_index=True)
 
 
 def main():

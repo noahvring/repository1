@@ -26,6 +26,7 @@ def check_shells():
     assert lab["B19013_001"].lower().startswith("median household income")
     assert lab["B05002_003"] == "Born in state of residence"
     assert lab["B05002_004"].startswith("Born in other state")
+    assert lab["B05002_010"] == "Puerto Rico"
     return lab
 
 
@@ -39,7 +40,10 @@ def acs_block():
     female = [f"B01001_E{n:03d}" for n in range(31, 39)]  # female 18-19 ... 40-44
     age_18_44 = age[male + female].sum(axis=1).rename("pop_18_44")
     pob = read_acs("b05002")  # place of birth (labels checked in check_shells)
-    born = pd.DataFrame({"pob_total": pob["B05002_E001"], "born_in_state": pob["B05002_E003"],
+    # in Puerto Rico, ACS counts island-born residents under "born in Puerto Rico" (B05002_010),
+    # not "born in state of residence" (which is 0 there), so use that as the local count
+    local = pob["B05002_E003"].where(pob["B05002_E003"] > 0, pob["B05002_E010"])
+    born = pd.DataFrame({"pob_total": pob["B05002_E001"], "born_in_state": local,
                          "born_other_state": pob["B05002_E004"]})
     out = pd.concat([pop, inc, hh, age_18_44, born], axis=1)
     out.loc[out["median_hh_income"] < 0, "median_hh_income"] = np.nan  # negative = Census missing code
@@ -48,6 +52,9 @@ def acs_block():
 
 def popest_block():
     p = pd.read_csv(RAW / "cbsa-est2025-alldata.csv", dtype={"CBSA": str, "MDIV": str, "STCOU": str}, encoding="latin-1")
+    # Puerto Rico is published in a separate file with the same layout (minus MDIV)
+    pr = pd.read_csv(RAW / "prc-cbsa-est2025.csv", dtype={"CBSA": str, "STCOU": str}, encoding="utf-8-sig")
+    p = pd.concat([p, pr], ignore_index=True)
     p = p[p["LSAD"].isin(["Metropolitan Statistical Area", "Micropolitan Statistical Area"])].copy()
     return p.set_index("CBSA")[["POPESTIMATE2020", "POPESTIMATE2025"]].rename(columns={"POPESTIMATE2020": "pop_est_2020", "POPESTIMATE2025": "pop_est_2025"})
 
@@ -226,7 +233,8 @@ def main():
         df[c] = df[c].astype(int)
 
     # 3) study set: market population >= 1M, every NBA market, every market containing a named metro
-    df = df[~df["market_title"].str.endswith("PR")]  # Puerto Rico: not in BEA/CBP metro files; out of scope
+    # Puerto Rico has ACS and population estimates but no CBP or BEA data: kept, flagged partial
+    df["partial_data"] = df["market_title"].str.endswith("PR")
     named = df["member_metros"].fillna("").apply(lambda t: any(
         any(m.startswith(n.split(",")[0]) and m.split(", ")[-1].startswith(n.split(", ")[1]) for m in t.split("; ")) for n in NAMED_METROS))
     df = df[(df["population"] >= POP_THRESHOLD) | (df["n_nba"] > 0) | named].copy()

@@ -28,6 +28,7 @@ def load():
                 npv=pd.read_csv(OUTPUTS / "owner_npv.csv"), beg=pd.read_csv(OUTPUTS / "owner_breakeven_growth.csv"),
                 focus=pd.read_csv(OUTPUTS / "focus_markets.csv"), chg=pd.read_csv(OUTPUTS / "top10_change.csv"),
                 cal=pd.read_csv(OUTPUTS / "business_case_calibration.csv"), cov=pd.read_csv(OUTPUTS / "coverage.csv"),
+                pm=pd.read_csv(OUTPUTS / "partial_markets.csv"),
                 mc=pd.read_csv(OUTPUTS / "monte_carlo.csv"), fb=pd.read_csv(OUTPUTS / "fan_behavior.csv"),
                 cvp=pd.read_csv(OUTPUTS / "college_vs_pro.csv"), bid=pd.read_csv(OUTPUTS / "bidder_multiples.csv"),
                 t=pd.read_csv(OUTPUTS / "tornado.csv"))
@@ -50,7 +51,7 @@ def key_numbers(D):
     worst = n.loc[n["npv_net_of_fee"].idxmin()]
     be = beg[(beg.discount_rate == 0.08) & (beg.fee_scenario == "base")].iloc[0]
     items = [
-        ("Markets scored", f"{len(D['m'])}", "U.S. markets = Census combined statistical areas (CSA), or the metro (CBSA) if not in a CSA; 1M+ people, plus every NBA market and markets named in coverage", "-", "data/processed/metros.csv (row count)"),
+        ("Markets scored", f"{int((~D['m']['partial_data']).sum())} (+ San Juan and Mexico City as partial-data rows)", "U.S. markets = Census combined statistical areas (CSA), or the metro (CBSA) if not in a CSA; 1M+ people, plus every NBA market and markets named in coverage", "-", "data/processed/metros.csv (row count)"),
         ("Current U.S. NBA markets in benchmark", f"{int(r['nba_metro'].sum())}", "29 U.S. teams in 27 markets (LA and NY have two); Toronto excluded", "-", "outputs/nba_benchmark.csv"),
         ("Median current-NBA-market score", f"{med:.2f}", "Score of the middle current NBA market; the 'overlooked' bar", "equal weights", "outputs/rankings.csv (median_nba_score)"),
         ("Seattle rank among non-NBA markets", f"#{rank('Seattle')}", "Position in the equal-weight ranking", "equal weights", "outputs/rankings.csv (short_name=Seattle)"),
@@ -102,6 +103,9 @@ def key_numbers(D):
     for _, row in bid.iterrows():
         items.append((f"Price / est. revenue: {row.short_name}", f"{row.price_to_revenue_base:.1f}x ({row.price_to_revenue_range})", f"{row.price_basis}; revenue = local estimate + 1/32 of central revenue",
                       f"{row.premium_vs_league_avg_multiple:+.0%} vs league-average multiple", f"outputs/bidder_multiples.csv (short_name={row.short_name})"))
+    for _, row in D["pm"].iterrows():
+        items.append((f"Partial-data market: {row.short_name}", f"score {row.total_score:.2f} (would rank #{int(row.rank_if_included)} if included); ease {row.ease_of_entry:.2f}; quadrant {row.quadrant}; {row.miles_to_nearest_nba:,.0f} miles to nearest NBA market",
+                      "Scored only on factors with a comparable source; not in rankings or Monte Carlo", f"factors used: {row.factors_used}", f"outputs/partial_markets.csv (short_name={row.short_name})"))
     rt = pd.read_csv(OUTPUTS / "realignment_travel.csv")
     cur = rt[rt.option == "Current 30 teams"].iloc[0]
     items.append(("Avg conference travel per team, current 30 teams", f"{cur.avg_miles_per_team:,.0f} miles", "Proxy: one round trip to each conference opponent, straight-line", "simplified proxy", "outputs/realignment_travel.csv (Current 30 teams)"))
@@ -177,6 +181,9 @@ def readme(D):
     cvp = D["cvp"].iloc[0]
     bid = D["bid"][["short_name", "price_basis", "price_to_revenue_base", "price_to_revenue_range", "league_avg_value_to_revenue", "premium_vs_league_avg_multiple"]].copy()
     bid["premium_vs_league_avg_multiple"] = bid["premium_vs_league_avg_multiple"].map(lambda x: f"{x:+.0%}")
+    pmt = D["pm"][["short_name", "market_type", "total_score", "A_size_wealth", "B_basketball_demand", "C_corporate", "ease_of_entry", "quadrant", "rank_if_included", "miles_to_nearest_nba", "factors_used"]].copy()
+    pmt["C_corporate"] = pmt["C_corporate"].map(lambda x: "no data" if pd.isna(x) else f"{x:.2f}")
+    pmt["short_name"] = pmt["short_name"] + " (partial data)"
     rt = pd.read_csv(OUTPUTS / "realignment_travel.csv")
     rtt = rt[["option", "teams_east", "teams_west", "avg_miles_per_team", "east_avg_per_team", "west_avg_per_team", "moved_team", "moved_team_miles", "moved_team_miles_if_stayed_west"]].copy()
     for c in ["avg_miles_per_team", "east_avg_per_team", "west_avg_per_team", "moved_team_miles", "moved_team_miles_if_stayed_west"]:
@@ -205,7 +212,7 @@ def readme(D):
 ## At a glance
 
 - **Question:** Which North American markets are most attractive for an NBA team, which are overlooked, and does expansion pay off for existing owners?
-- **Data scope:** {len(D['m'])} U.S. markets. A market is a Census combined statistical area (CSA), so San Jose sits inside the Bay Area and Baltimore inside Washington-Baltimore. Public data only. Mexico City and Vancouver are profiled but not scored.
+- **Data scope:** {int((~D['m']['partial_data']).sum())} U.S. markets, plus San Juan and Mexico City as partial-data rows. A market is a Census combined statistical area (CSA), so San Jose sits inside the Bay Area and Baltimore inside Washington-Baltimore. Public data only. Mexico City and San Juan get partial scores; Vancouver is profiled only.
 - **Key numbers:**
   - Seattle ranks **#{rank('Seattle')}** and Las Vegas **#{rank('Las Vegas')}** among {int((~r['nba_metro']).sum())} non-NBA markets.
   - **{int(r['overlooked'].sum())}** non-NBA markets score at or above the median current NBA market ({med:.2f}): {', '.join(r[r['overlooked']]['short_name'])}.
@@ -217,7 +224,7 @@ def readme(D):
 
 ## Approach
 
-Markets are placed on two separate axes, **attractiveness** and **ease of entry**, and the matrix splits them at the median current NBA market. Attractiveness has three pillars (A-C below). Every factor is converted to a z-score across the {len(D['m'])} markets; population, GDP and large-establishment counts are logged first. Factors are averaged with equal weights inside each pillar, and the three pillars are averaged with equal weights into the attractiveness score. Current NBA markets are scored the same way and serve as the benchmark. CBSA data are aggregated to markets: counts and populations are summed, income is population-weighted, and the 18-44 share is recomputed from counts.
+Markets are placed on two separate axes, **attractiveness** and **ease of entry**, and the matrix splits them at the median current NBA market. Attractiveness has three pillars (A-C below). Every factor is converted to a z-score across the {int((~D['m']['partial_data']).sum())} complete U.S. markets; population, GDP and large-establishment counts are logged first. Factors are averaged with equal weights inside each pillar, and the three pillars are averaged with equal weights into the attractiveness score. Current NBA markets are scored the same way and serve as the benchmark. CBSA data are aggregated to markets: counts and populations are summed, income is population-weighted, and the 18-44 share is recomputed from counts.
 
 1. **A. Market size and wealth:** population, median household income, share of residents aged 18-44, population growth 2020-25, and GDP.
 2. **B. Basketball demand:** NCAA D-I men's home attendance per 1,000 residents, and WNBA presence. G League presence is shown but not scored, because G League teams are mostly NBA-owned affiliates.
@@ -270,6 +277,12 @@ Markets are placed on two separate axes, **attractiveness** and **ease of entry*
 ![Sensitivity](figures/03_sensitivity_heatmap.png)
 ![Pillars](figures/02_pillar_breakdown_top8.png)
 ![Scatter](figures/04_population_vs_income.png)
+
+## International options: Mexico City & San Juan (partial data)
+
+These markets are scored **only on the factors that have a comparable source**, standardized against the U.S. markets. Each pillar averages the factors it has, and the total averages the pillars it has. They sit outside the U.S. rankings and the Monte Carlo; "would rank" shows where the score would fall (`outputs/partial_markets.csv`). Sources and conversions are in `data/manual/international_markets.csv` and DEVIATIONS.md.
+
+{md(pmt)}
 
 ## Fan behavior & market risk
 
@@ -413,41 +426,61 @@ def exec_summary(D):
 
 
 def head_to_head(D):
-    """memo/HEAD_TO_HEAD.md: Seattle vs Las Vegas, every metric auto-filled from outputs/."""
+    """memo/HEAD_TO_HEAD.md: Seattle vs Las Vegas, plus Mexico City (partial data) where comparable."""
     r = D["r"].set_index("short_name"); mc = D["mc"].set_index("short_name"); fb = D["fb"].set_index("short_name")
     k = D["k"].set_index("short_name"); bid = D["bid"].set_index("short_name"); m = D["m"].set_index("short_name")
+    pm = D["pm"].set_index("short_name")
+    intl = pd.read_csv(MANUAL / "international_markets.csv")
+    mx = intl[intl.market == "Mexico City"].set_index("item")["value"]
     bl = pd.read_csv(RESEARCH / "bidder_landscape.csv")
-    nb = npv_base(D); cell = nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
-    rows = []
-    def add(metric, f, src):
-        rows.append({"Metric": metric, "Seattle": f("Seattle"), "Las Vegas": f("Las Vegas"), "Source": src})
-    add("Market (CSA)", lambda n: m.at[n, "market_title"], "data/processed/metros.csv")
-    add("Population", lambda n: f"{m.at[n, 'population']/1e6:.2f}M", "data/processed/metros.csv")
-    add("Attractiveness rank (of non-NBA markets)", lambda n: f"#{int(r.at[n, 'rank_candidates'])}", "outputs/rankings.csv")
-    add("Attractiveness score", lambda n: f"{r.at[n, 'total_score']:.2f}", "outputs/rankings.csv")
-    for c, lab in [("A_size_wealth", "Pillar A: size & wealth"), ("B_basketball_demand", "Pillar B: basketball demand"), ("C_corporate", "Pillar C: corporate")]:
-        add(lab, lambda n, c=c: f"{r.at[n, c]:.2f}", "outputs/rankings.csv")
-    add("P(top 10) / P(top 5)", lambda n: f"{mc.at[n, 'p_top10']:.0%} / {mc.at[n, 'p_top5']:.0%}", "outputs/monte_carlo.csv")
-    add("Median rank (90% interval)", lambda n: f"#{mc.at[n, 'median_rank']:.0f} (#{mc.at[n, 'rank_p05']:.0f}-#{mc.at[n, 'rank_p95']:.0f})", "outputs/monte_carlo.csv")
-    add("Ease of entry / quadrant", lambda n: f"{r.at[n, 'ease_of_entry']:.2f} / {r.at[n, 'quadrant']}", "outputs/rankings.csv")
-    add("Miles to nearest NBA market", lambda n: f"{r.at[n, 'miles_to_nearest_nba']:.0f}", "outputs/rankings.csv")
-    add("NBA markets within 200 miles", lambda n: f"{int(r.at[n, 'nba_markets_within_200mi'])}", "outputs/rankings.csv")
-    add("Big-league rivals (NFL+MLB+NHL)", lambda n: f"{int(r.at[n, 'big4_other_leagues'])}", "data/processed/metros.csv")
     ar = pd.read_csv(MANUAL / "arenas.csv", dtype={"cbsa_code": str})
     cmap = pd.read_csv(PROCESSED / "cbsa_factors.csv", dtype={"cbsa_code": str}).set_index("cbsa_code")["market_id"]
     ar["market_id"] = ar["cbsa_code"].map(cmap)
+    nb = npv_base(D); cell = nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
+    NA = "not available (partial data)"
+    markets = ["Seattle", "Las Vegas", "Mexico City"]
+    rows = []
+
+    def add(metric, f, src, mexico=None):
+        row = {"Metric": metric}
+        for n in markets:
+            if n == "Mexico City":
+                row[n] = mexico if mexico is not None else NA
+            else:
+                row[n] = f(n)
+        row["Source"] = src
+        rows.append(row)
+
     def arenas(n):
         a = ar[(ar.market_id == m.at[n, "market_id"]) & (~ar.nba_tenant)].sort_values("capacity_basketball", ascending=False)
-        return ("Y: " if r.at[n, "arena_ready"] == 1 else "N: ") + "; ".join(f"{x.arena} ({x.capacity_basketball:,}; {x.tenants if isinstance(x.tenants, str) else 'no major tenant listed'})" for x in a.itertuples())
-    add("Arenas 17,000+ seats without NBA tenant (capacity; tenants)", arenas, "data/manual/arenas.csv")
+        return ("Y: " if r.at[n, "arena_ready"] == 1 else "N: ") + "; ".join(
+            f"{x.arena} ({x.capacity_basketball:,}; {x.tenants if isinstance(x.tenants, str) else 'no major tenant listed'})" for x in a.itertuples())
+
+    mxs = pm.loc["Mexico City"]
+    add("Market", lambda n: m.at[n, "market_title"], "data/processed/metros.csv", "Greater Mexico City (Mexico)")
+    add("Population", lambda n: f"{m.at[n, 'population']/1e6:.2f}M", "metros.csv; international_markets.csv", f"{float(mx['metro_population'])/1e6:.2f}M (2020)")
+    add("Attractiveness rank (of non-NBA markets)", lambda n: f"#{int(r.at[n, 'rank_candidates'])}", "outputs/rankings.csv; partial_markets.csv", f"would rank #{int(mxs.rank_if_included)} (partial data)")
+    add("Attractiveness score", lambda n: f"{r.at[n, 'total_score']:.2f}", "outputs/rankings.csv; partial_markets.csv", f"{mxs.total_score:.2f} (partial: A and B subsets only)")
+    for c, lab in [("A_size_wealth", "Pillar A: size & wealth"), ("B_basketball_demand", "Pillar B: basketball demand")]:
+        add(lab, lambda n, c=c: f"{r.at[n, c]:.2f}", "outputs/rankings.csv; partial_markets.csv", f"{mxs[c]:.2f} (partial)")
+    add("Pillar C: corporate", lambda n: f"{r.at[n, 'C_corporate']:.2f}", "outputs/rankings.csv")
+    add("P(top 10) / P(top 5)", lambda n: f"{mc.at[n, 'p_top10']:.0%} / {mc.at[n, 'p_top5']:.0%}", "outputs/monte_carlo.csv", "not in Monte Carlo (partial data)")
+    add("Median rank (90% interval)", lambda n: f"#{mc.at[n, 'median_rank']:.0f} (#{mc.at[n, 'rank_p05']:.0f}-#{mc.at[n, 'rank_p95']:.0f})", "outputs/monte_carlo.csv", "not in Monte Carlo (partial data)")
+    add("Ease of entry / quadrant", lambda n: f"{r.at[n, 'ease_of_entry']:.2f} / {r.at[n, 'quadrant']}", "outputs/rankings.csv; partial_markets.csv", f"{mxs.ease_of_entry:.2f} / {mxs.quadrant}")
+    add("Miles to nearest NBA market", lambda n: f"{r.at[n, 'miles_to_nearest_nba']:.0f}", "outputs/rankings.csv; partial_markets.csv", f"{mxs.miles_to_nearest_nba:.0f}")
+    add("NBA markets within 200 miles", lambda n: f"{int(r.at[n, 'nba_markets_within_200mi'])}", "outputs/rankings.csv; partial_markets.csv", f"{int(mxs.nba_markets_within_200mi)}")
+    add("Big-league rivals (NFL+MLB+NHL)", lambda n: f"{int(r.at[n, 'big4_other_leagues'])}", "data/processed/metros.csv; international_markets.csv", "0 (Liga MX soccer not counted)")
+    add("Arenas 17,000+ seats without NBA tenant (capacity; tenants)", arenas, "data/manual/arenas.csv; international_markets.csv", f"Y: Arena CDMX ({int(float(mx['largest_arena_capacity'])):,}; Mexico City Capitanes, G League)")
+    add("G League team", lambda n: "Y" if m.at[n, "has_g_league"] == 1 else "N", "data/manual/teams.csv; international_markets.csv", "Y: Mexico City Capitanes")
     add("Transplant share (divided-loyalty risk)", lambda n: f"{fb.at[n, 'transplant_share']:.0%} ({fb.at[n, 'transplant_share_vs_nba_median']:+.0%} vs NBA median)", "outputs/fan_behavior.csv")
     add("Est. local revenue min / base / max", lambda n: f"{money(k.at[n, 'est_local_revenue_low'])} / {money(k.at[n, 'est_local_revenue_base'])} / {money(k.at[n, 'est_local_revenue_high'])}", "outputs/kpi_dashboard.csv")
-    add("Price used (basis)", lambda n: f"{money(bid.at[n, 'price_usd'])}: {bid.at[n, 'price_basis']}", "outputs/bidder_multiples.csv")
+    add("Price used (basis)", lambda n: f"{money(bid.at[n, 'price_usd'])}: {bid.at[n, 'price_basis']}", "outputs/bidder_multiples.csv", "not reported")
     add("Price / est. revenue (league avg value/revenue)", lambda n: f"{bid.at[n, 'price_to_revenue_base']:.1f}x ({bid.at[n, 'league_avg_value_to_revenue']:.1f}x)", "outputs/bidder_multiples.csv")
-    add("Reported bidders", lambda n: "; ".join(bl[bl.market == n]["group / lead investors"]), "research/bidder_landscape.csv")
+    add("Reported bidders", lambda n: "; ".join(bl[bl.market == n]["group / lead investors"]), "research/bidder_landscape.csv", "; ".join(bl[bl.market == "Mexico City"]["group / lead investors"]))
     add("Owner NPV: fee share − 20y dilution (league-wide, per existing team)", lambda n: f"{money(cell.npv_net_of_fee)} (both markets together; 3% growth, 8% discount)", "outputs/owner_npv.csv")
     t = pd.DataFrame(rows)
-    txt = ("# Seattle vs Las Vegas: head-to-head\n\n*Generated by `src/report.py` from `outputs/`. Interpretation by Noah.*\n\n" + md(t) +
+    txt = ("# Seattle vs Las Vegas (and Mexico City): head-to-head\n\n*Generated by `src/report.py` from `outputs/`. Interpretation by Noah. "
+           "Mexico City has partial data: it is scored only on comparable factors and is not in the rankings or Monte Carlo.*\n\n" + md(t) +
            "\n\n![Head-to-head](../figures/11_seattle_vs_las_vegas.png)\n\nReported league focus: ESPN (2026-10-02) says the NBA and PJT Partners are more focused on Las Vegas, where bidding is more robust (`research/trends.csv`).\n\n## So what\n")
     (ROOT / "memo" / "HEAD_TO_HEAD.md").write_text(txt)
 
@@ -459,7 +492,7 @@ def final_report(D, runtime_s, test_output):
 
 ## What was built
 
-- Phase 1: `data/processed/metros.csv` with {len(D['m'])} markets (CSA, else CBSA), sourced manual tables in `data/manual/`, and a coverage report in `outputs/coverage.csv`.
+- Phase 1: `data/processed/metros.csv` with {len(D['m'])} markets (CSA, else CBSA; San Juan flagged partial data), sourced manual tables in `data/manual/`, and a coverage report in `outputs/coverage.csv`.
 - Phase 2: scorecard outputs (`rankings`, `pillar_scores`, `nba_benchmark`, `validity` and `sensitivity` CSVs).
 - Phase 3: assumptions table (sourced from Sportico where possible), local revenue scenarios, owner NPV grid (`owner_npv.csv`, `owner_breakeven_growth.csv`), tornado, `kpi_dashboard.csv`, `focus_markets.csv`.
 - Phase 4: `research/` (trends, comparables, focus markets, competitive landscape, insights).

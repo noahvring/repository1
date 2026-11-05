@@ -38,6 +38,7 @@ def test_monte_carlo_probabilities_and_seed():
     assert (mc["rank_p05"] <= mc["median_rank"]).all() and (mc["median_rank"] <= mc["rank_p95"]).all()
     # reproducible: recomputing with the same seed gives identical probabilities
     df = pd.read_csv(model.PROCESSED / "metros.csv").set_index("market_id")
+    df = df[~df["partial_data"]]
     p, _ = model.pillar_scores(df)
     again = model.monte_carlo(df, p).sort_index()
     saved = mc.set_index("market_id").sort_index()
@@ -49,3 +50,12 @@ def test_fan_behavior_outputs():
     assert fb["transplant_share"].between(0, 1).all()
     cp = pd.read_csv(OUTPUTS / "college_vs_pro.csv")
     assert -1 <= cp["pearson_r_college_att_vs_score_without_college"].iloc[0] <= 1
+
+
+def test_partial_markets_kept_out_of_rankings():
+    pm = pd.read_csv(OUTPUTS / "partial_markets.csv")
+    assert set(pm["short_name"]) == {"San Juan", "Mexico City"}
+    assert pm["partial_data"].all() and pm["C_corporate"].isna().all()
+    r = pd.read_csv(OUTPUTS / "rankings.csv")
+    mc = pd.read_csv(OUTPUTS / "monte_carlo.csv")
+    assert not set(pm["short_name"]) & (set(r["short_name"]) | set(mc["short_name"]))

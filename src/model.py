@@ -10,7 +10,7 @@ All metros, NBA and non-NBA, are scored the same way so current NBA markets act 
 import numpy as np
 import pandas as pd
 from scipy import stats
-from config import PROCESSED, OUTPUTS
+from config import PROCESSED, OUTPUTS, MANUAL
 
 # ATTRACTIVENESS: how valuable is the market? pillar -> list of (column, transform, sign)
 PILLARS = {
@@ -126,8 +126,63 @@ def welch_ci(a, b):
     return d, d - t * se, d + t * se
 
 
+def mexico_city_row(df):
+    """Mexico City on the factors that have a comparable source (data/manual/international_markets.csv)."""
+    from build_metros import haversine_miles
+    intl = pd.read_csv(MANUAL / "international_markets.csv")
+    mx = intl[intl.market == "Mexico City"].set_index("item")["value"]
+    lat, lon = float(mx["latitude"]), float(mx["longitude"])
+    nba = df[df["nba_metro"]]
+    tor = intl[intl.market == "Toronto"].set_index("item")["value"].astype(float)
+    d = np.append(haversine_miles(lat, lon, nba["lat"].values, nba["lon"].values),
+                  haversine_miles(lat, lon, tor["latitude"], tor["longitude"]))
+    return pd.DataFrame([{
+        "short_name": "Mexico City", "market_title": "Greater Mexico City (Mexico)", "market_type": "International",
+        "nba_metro": False, "partial_data": True, "population": float(mx["metro_population"]),
+        "gdp_2024_usd": float(mx["metro_gdp_usd_nominal_2024"]), "has_wnba": 0,
+        "big4_other_leagues": int(float(mx["big_league_teams_nfl_mlb_nhl"])),
+        "arena_ready": int(float(mx["largest_arena_capacity"]) >= 17000), "arena_available": int(float(mx["largest_arena_capacity"]) >= 17000),
+        "max_arena_capacity": float(mx["largest_arena_capacity"]), "has_g_league": 1,
+        "lat": lat, "lon": lon, "miles_to_nearest_nba": d.min(), "nba_markets_within_200mi": int((d <= 200).sum()),
+    }], index=pd.Index(["INTL-Mexico City"], name="market_id"))
+
+
+def score_partial(part, ref, r):
+    """Score partial-data markets against the complete U.S. markets' distributions (so U.S. scores
+    are unchanged). Missing factors are skipped: each pillar averages the factors it has, and the
+    total averages the pillars it has (equal weights re-normalised)."""
+    out = part[["short_name", "market_title", "market_type", "nba_metro", "arena_ready", "population"]].copy()
+    used = {i: [] for i in part.index}
+    for pillar, factors in {**PILLARS, "ease": EASE}.items():
+        zs = []
+        for col, tr, sign in factors:
+            xr = np.log(ref[col]) if tr == "log" else ref[col].astype(float)
+            x = np.log(part[col]) if tr == "log" else part[col].astype(float)
+            zs.append(sign * (x - xr.mean()) / xr.std(ddof=0))
+            for i in part.index[x.notna()]:
+                used[i].append(col)
+        out[pillar if pillar != "ease" else "ease_of_entry"] = pd.concat(zs, axis=1).mean(axis=1)
+    out["total_score"] = out[PILLAR_NAMES].mean(axis=1)
+    out["factors_used"] = [", ".join(used[i]) for i in out.index]
+    cand = r[~r["nba_metro"]]
+    out["rank_if_included"] = [int((cand["total_score"] > s).sum() + 1) for s in out["total_score"]]
+    a_med, e_med = r["median_nba_score"].iloc[0], r["ease_median_nba"].iloc[0]
+    out["quadrant"] = np.select(
+        [(out.total_score >= a_med) & (out.ease_of_entry >= e_med), (out.total_score >= a_med) & (out.ease_of_entry < e_med),
+         (out.total_score < a_med) & (out.ease_of_entry >= e_med)],
+        ["Prime targets", "Attractive but hard to enter", "Easy but small"], "Deprioritize")
+    out["median_nba_score"], out["ease_median_nba"] = a_med, e_med
+    out["partial_data"] = True
+    for c in ["miles_to_nearest_nba", "nba_markets_within_200mi", "big4_other_leagues", "arena_available", "transplant_share"]:
+        out[c] = part.get(c)
+    return out
+
+
 def main():
-    df = pd.read_csv(PROCESSED / "metros.csv").set_index("market_id")
+    df_all = pd.read_csv(PROCESSED / "metros.csv").set_index("market_id")
+    # partial-data markets (San Juan, Mexico City) are scored separately at the end so they never
+    # change the U.S. rankings, Monte Carlo or validity checks
+    df = df_all[~df_all["partial_data"]].copy()
     # arena available: a 17,000+ seat arena without an NBA tenant (candidates) or the existing
     # NBA arena (current NBA markets), so the benchmark is comparable
     df["arena_available"] = np.where(df["nba_metro"], df["arena_capable"], df["arena_ready"])
@@ -161,6 +216,12 @@ def main():
         ["Prime targets", "Attractive but hard to enter", "Easy but small"], "Deprioritize")
     r = r.join(df[["miles_to_nearest_nba", "nba_markets_within_200mi", "big4_other_leagues", "arena_available"]])
     r = r.sort_values("total_score", ascending=False)
+    r["partial_data"] = False
+    part = df_all[df_all["partial_data"]].copy()
+    part["arena_available"] = part["arena_ready"]
+    part = pd.concat([part, mexico_city_row(df)])
+    partial = score_partial(part, df, r)
+    partial.to_csv(OUTPUTS / "partial_markets.csv")
     r.to_csv(OUTPUTS / "rankings.csv")
 
     # nba_benchmark.csv: the current NBA metros scored the same way

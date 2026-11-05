@@ -3,7 +3,7 @@
 ## At a glance
 
 - **Question:** Which North American markets are most attractive for an NBA team, which are overlooked, and does expansion pay off for existing owners?
-- **Data scope:** 66 U.S. markets. A market is a Census combined statistical area (CSA), so San Jose sits inside the Bay Area and Baltimore inside Washington-Baltimore. Public data only. Mexico City and Vancouver are profiled but not scored.
+- **Data scope:** 66 U.S. markets, plus San Juan and Mexico City as partial-data rows. A market is a Census combined statistical area (CSA), so San Jose sits inside the Bay Area and Baltimore inside Washington-Baltimore. Public data only. Mexico City and San Juan get partial scores; Vancouver is profiled only.
 - **Key numbers:**
   - Seattle ranks **#1** and Las Vegas **#5** among 39 non-NBA markets.
   - **6** non-NBA markets score at or above the median current NBA market (0.32): Seattle, Austin, Raleigh, Omaha, Las Vegas, Cincinnati.
@@ -15,7 +15,7 @@
 
 ## Approach
 
-Markets are placed on two separate axes, **attractiveness** and **ease of entry**, and the matrix splits them at the median current NBA market. Attractiveness has three pillars (A-C below). Every factor is converted to a z-score across the 66 markets; population, GDP and large-establishment counts are logged first. Factors are averaged with equal weights inside each pillar, and the three pillars are averaged with equal weights into the attractiveness score. Current NBA markets are scored the same way and serve as the benchmark. CBSA data are aggregated to markets: counts and populations are summed, income is population-weighted, and the 18-44 share is recomputed from counts.
+Markets are placed on two separate axes, **attractiveness** and **ease of entry**, and the matrix splits them at the median current NBA market. Attractiveness has three pillars (A-C below). Every factor is converted to a z-score across the 66 complete U.S. markets; population, GDP and large-establishment counts are logged first. Factors are averaged with equal weights inside each pillar, and the three pillars are averaged with equal weights into the attractiveness score. Current NBA markets are scored the same way and serve as the benchmark. CBSA data are aggregated to markets: counts and populations are summed, income is population-weighted, and the 18-44 share is recomputed from counts.
 
 1. **A. Market size and wealth:** population, median household income, share of residents aged 18-44, population growth 2020-25, and GDP.
 2. **B. Basketball demand:** NCAA D-I men's home attendance per 1,000 residents, and WNBA presence. G League presence is shown but not scored, because G League teams are mostly NBA-owned affiliates.
@@ -53,20 +53,20 @@ Markets are placed on two separate axes, **attractiveness** and **ease of entry*
 
 | factor | share_with_data | n_markets |
 |---|---|---|
-| population | 100% | 66 |
-| median_hh_income | 100% | 66 |
-| share_18_44 | 100% | 66 |
-| households | 100% | 66 |
-| pop_growth_2020_2025 | 100% | 66 |
-| gdp_2024_usd | 98% | 66 |
-| ncaa_d1_home_attendance | 100% | 66 |
-| has_wnba | 100% | 66 |
-| has_g_league | 100% | 66 |
-| large_establishments_500plus | 100% | 66 |
-| big4_other_leagues | 100% | 66 |
-| arena_capable | 100% | 66 |
-| google_trends_nba | 0% | 66 |
-| overseas_visitors_ntto | 0% | 66 |
+| population | 100% | 67 |
+| median_hh_income | 100% | 67 |
+| share_18_44 | 100% | 67 |
+| households | 100% | 67 |
+| pop_growth_2020_2025 | 100% | 67 |
+| gdp_2024_usd | 97% | 67 |
+| ncaa_d1_home_attendance | 100% | 67 |
+| has_wnba | 100% | 67 |
+| has_g_league | 100% | 67 |
+| large_establishments_500plus | 99% | 67 |
+| big4_other_leagues | 100% | 67 |
+| arena_capable | 100% | 67 |
+| google_trends_nba | 0% | 67 |
+| overseas_visitors_ntto | 0% | 67 |
 
 ## Results
 
@@ -174,6 +174,15 @@ Markets are placed on two separate axes, **attractiveness** and **ease of entry*
 ![Pillars](figures/02_pillar_breakdown_top8.png)
 ![Scatter](figures/04_population_vs_income.png)
 
+## International options: Mexico City & San Juan (partial data)
+
+These markets are scored **only on the factors that have a comparable source**, standardized against the U.S. markets. Each pillar averages the factors it has, and the total averages the pillars it has. They sit outside the U.S. rankings and the Monte Carlo; "would rank" shows where the score would fall (`outputs/partial_markets.csv`). Sources and conversions are in `data/manual/international_markets.csv` and DEVIATIONS.md.
+
+| short_name | market_type | total_score | A_size_wealth | B_basketball_demand | C_corporate | ease_of_entry | quadrant | rank_if_included | miles_to_nearest_nba | factors_used |
+|---|---|---|---|---|---|---|---|---|---|---|
+| San Juan (partial data) | CSA | -1.19 | -1.57 | -0.80 | no data | 1.54 | Easy but small | 39 | 1,068.62 | population, median_hh_income, share_18_44, pop_growth_2020_2025, ncaa_att_per_1k, has_wnba, arena_available, miles_to_nearest_nba, big4_other_leagues |
+| Mexico City (partial data) | International | 0.61 | 1.74 | -0.52 | no data | 1.30 | Prime targets | 3 | 691.73 | population, gdp_2024_usd, has_wnba, arena_available, miles_to_nearest_nba, big4_other_leagues |
+
 ## Fan behavior & market risk
 
 These are behavioral indicators. They are reported, not scored (`outputs/fan_behavior.csv`, `outputs/college_vs_pro.csv`).
@@ -243,6 +252,7 @@ These are the reported front-runners (Seattle, Las Vegas), Mexico City, and mark
 | Mexico City | N (outside U.S. data) |  |  |  | 21.4M |
 | Vancouver | N (outside U.S. data) |  |  |  | 2.6M |
 | Toronto | N (outside U.S. data) |  |  |  | nanM |
+| San Juan | N (outside U.S. data) |  |  |  | nanM |
 
 ![Focus](figures/08_focus_markets.png)
 

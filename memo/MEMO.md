@@ -10,7 +10,7 @@
 
 ### Seattle vs Las Vegas: the scorecard vs the league's reported focus
 
-### Mexico City and international options
+### International options: Mexico City & San Juan
 
 ### Markets the league may be overlooking
 
