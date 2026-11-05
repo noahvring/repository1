@@ -27,3 +27,11 @@ All access attempts on 2026-11-05.
 | Focus markets | Added `outputs/focus_markets.csv`, `research/focus_markets.md` and `figures/08_focus_markets.png`: Seattle, Las Vegas, Mexico City, Vancouver, Pittsburgh, Louisville and others. Mexico City and Vancouver are **not scored** (no comparable ACS/CBP/BEA data); their sourced facts are in `data/manual/international_markets.csv` (Wikipedia). | Requested. |
 | frontofficesports.com | Proxy refused the connection on the v2 re-check, so the Mexico City "looking seriously" quote could not be verified on the page. | Kept with a "not verified on page" note. |
 | v1 archive | `outputs/archive/rankings_v1_cbsa.csv` (v1 output) feeds `outputs/top10_change.csv`. | To explain how the top 10 changed. |
+
+## v3 changes (2026-11-05)
+
+| Item | What changed | Why |
+|---|---|---|
+| Ease of entry | New axis, separate from attractiveness: arena available (17,000+ seats without an NBA tenant; for current NBA markets, their own arena), log miles to the nearest *other* NBA market (cannibalization proxy), and NFL+MLB+NHL teams (negative). **Competition and arena moved out of the attractiveness score**, which is now pillars A-C with equal weights, so the axes don't double-count. | Requested; fixes markets near existing teams (e.g. Raleigh, 138 miles from Charlotte) being scored on attractiveness alone. |
+| Market location | Census Gazetteer 2024 publishes CBSA internal points but no CSA file, so each market is placed at the internal point of its largest CBSA. Toronto (Raptors) coordinates come from Wikipedia. Distances are straight-line (haversine), not drive time. | No CSA Gazetteer file found at the expected URL. |
+| Sensitivity set | The "ignore competition" weighting no longer applies (competition left the score), so it was replaced by "no college" (Pillar B without NCAA attendance). | Competition is now on the ease axis. |

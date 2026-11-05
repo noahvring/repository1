@@ -124,6 +124,37 @@ def arena_block():
     return g.join(free, how="left").join(names, how="left")
 
 
+def haversine_miles(lat1, lon1, lat2, lon2):
+    """Great-circle distance in miles between points given in degrees."""
+    lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
+    a = np.sin((lat2 - lat1) / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin((lon2 - lon1) / 2) ** 2
+    return 3958.8 * 2 * np.arcsin(np.sqrt(a))
+
+
+def add_geography(df):
+    """Locate each market at the Census internal point of its largest CBSA (Gazetteer 2024;
+    no CSA Gazetteer file is published), then measure distance to the nearest *other* NBA market.
+    Toronto (Raptors) is included as an NBA location using sourced coordinates."""
+    with zipfile.ZipFile(RAW / "gaz_cbsa.zip") as z:
+        g = pd.read_csv(z.open(z.namelist()[0]), sep="\t", dtype={"GEOID": str})
+    g.columns = [c.strip() for c in g.columns]
+    pts = g.set_index("GEOID")[["INTPTLAT", "INTPTLONG"]]
+    df["lat"] = df["lead_cbsa_code"].astype(str).map(pts["INTPTLAT"])
+    df["lon"] = df["lead_cbsa_code"].astype(str).map(pts["INTPTLONG"])
+    intl = pd.read_csv(MANUAL / "international_markets.csv")
+    tor = intl[intl.market == "Toronto"].set_index("item")["value"].astype(float)
+    nba = df[df["nba_metro"]][["market_id", "lat", "lon"]].copy()
+    nba = pd.concat([nba, pd.DataFrame([{"market_id": "CAN-Toronto", "lat": tor["latitude"], "lon": tor["longitude"]}])])
+    near, within = [], []
+    for _, r in df.iterrows():
+        others = nba[nba.market_id != r.market_id]
+        d = haversine_miles(r.lat, r.lon, others.lat.values, others.lon.values)
+        near.append(d.min()); within.append(int((d <= 200).sum()))
+    df["miles_to_nearest_nba"] = near   # for NBA markets: nearest OTHER NBA market
+    df["nba_markets_within_200mi"] = within
+    return df
+
+
 def market_map(delin):
     """Market = Combined Statistical Area (CSA) when the CBSA belongs to one, else the CBSA itself.
     CSAs group neighbouring metros that share a media market (e.g. San Jose + San Francisco,
@@ -201,6 +232,7 @@ def main():
     df["has_g_league"] = (df["n_g_league"] > 0).astype(int)   # descriptive only (NBA-affiliate bias)
     df["arena_capable"] = (df["max_arena_capacity"].fillna(0) >= 17000).astype(int)
     df["arena_ready"] = ((df["max_capacity_no_nba_tenant"].fillna(0) >= 17000) & ~df["nba_metro"]).astype(int)
+    df = add_geography(df)
     df = df.drop(columns=["income_x_pop"]).sort_values("population", ascending=False)
     df.to_csv(PROCESSED / "metros.csv", index=False)
 

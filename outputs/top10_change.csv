@@ -1,13 +1,14 @@
 short_name,market_title,rank_final_csa_no_gleague,top_pillar,rank_v1_cbsa_with_gleague,rank_csa_with_gleague
-Raleigh,"Raleigh-Durham-Cary, NC",1.0,B_basketball_demand,9.0,2.0
-Omaha,"Omaha-Fremont, NE-IA",2.0,B_basketball_demand,,4.0
-Seattle,"Seattle-Tacoma, WA",3.0,A_size_wealth,3.0,3.0
-Austin,"Austin-Round Rock-San Marcos, TX",4.0,A_size_wealth,2.0,1.0
-Las Vegas,"Las Vegas-Henderson, NV",5.0,B_basketball_demand,7.0,6.0
+Seattle,"Seattle-Tacoma, WA",1.0,A_size_wealth,3.0,2.0
+Austin,"Austin-Round Rock-San Marcos, TX",2.0,A_size_wealth,2.0,1.0
+Raleigh,"Raleigh-Durham-Cary, NC",3.0,B_basketball_demand,9.0,3.0
+Omaha,"Omaha-Fremont, NE-IA",4.0,B_basketball_demand,,6.0
+Las Vegas,"Las Vegas-Henderson, NV",5.0,B_basketball_demand,7.0,7.0
 Cincinnati,"Cincinnati-Wilmington, OH-KY-IN",6.0,C_corporate,5.0,5.0
-Nashville,"Nashville-Davidson--Murfreesboro, TN",7.0,C_corporate,4.0,7.0
-Louisville,"Louisville/Jefferson County--Elizabethtown, KY-IN",8.0,D_competition_infra,8.0,9.0
-Columbus,"Columbus-Marion-Zanesville, OH",9.0,D_competition_infra,6.0,11.0
-Kansas City,"Kansas City-Overland Park-Kansas City, MO-KS",10.0,C_corporate,11.0,12.0
-San Diego,"San Diego-Chula Vista-Carlsbad, CA",12.0,A_size_wealth,10.0,8.0
+Nashville,"Nashville-Davidson--Murfreesboro, TN",7.0,C_corporate,4.0,8.0
+San Diego,"San Diego-Chula Vista-Carlsbad, CA",8.0,A_size_wealth,10.0,4.0
+Kansas City,"Kansas City-Overland Park-Kansas City, MO-KS",9.0,C_corporate,11.0,9.0
+Richmond,"Richmond, VA",10.0,B_basketball_demand,14.0,11.0
+Louisville,"Louisville/Jefferson County--Elizabethtown, KY-IN",11.0,B_basketball_demand,8.0,12.0
+Columbus,"Columbus-Marion-Zanesville, OH",12.0,C_corporate,6.0,10.0
 San Jose,merged into a larger CSA (see metros.csv member_metros),,,1.0,

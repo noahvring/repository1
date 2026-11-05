@@ -104,7 +104,7 @@ def readme(D):
     nb = npv_base(D)
     cell = nb[(nb.media_growth == 0.03) & (nb.discount_rate == 0.08)].iloc[0]
     be = D["beg"][(D["beg"].discount_rate == 0.08) & (D["beg"].fee_scenario == "base")].iloc[0]
-    top15 = r[~r["nba_metro"]].head(15)[["rank_candidates", "short_name", "market_title", "total_score", "A_size_wealth", "B_basketball_demand", "C_corporate", "D_competition_infra", "overlooked", "top_pillar"]].copy()
+    top15 = r[~r["nba_metro"]].head(15)[["rank_candidates", "short_name", "market_title", "total_score", "A_size_wealth", "B_basketball_demand", "C_corporate", "ease_of_entry", "quadrant", "overlooked", "top_pillar"]].copy()
     top15["rank_candidates"] = top15["rank_candidates"].astype(int)
     sens = s.head(15)[["short_name"] + [c for c in s.columns if c.startswith("rank_")] + ["top10_frequency"]]
     kp = k[["short_name", "attractiveness_rank", "top10_frequency", "population", "median_hh_income", "competing_teams", "arena_ready",

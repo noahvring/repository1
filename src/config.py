@@ -25,6 +25,8 @@ SOURCES = {
     "popest": ("https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/metro/totals/cbsa-est2025-alldata.csv", "cbsa-est2025-alldata.csv"),
     "delineation": ("https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list1_2023.xlsx", "cbsa_delineation_2023.xlsx"),
     "principal_cities": ("https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list2_2023.xlsx", "cbsa_principal_cities_2023.xlsx"),
+    "gazetteer_cbsa": ("https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_cbsa_national.zip", "gaz_cbsa.zip"),
+    "acs_b05002": (ACS_BASE + "acsdt5y2024-b05002.dat", "acs_b05002.dat"),  # place of birth
     "bea_gdp": ("https://apps.bea.gov/regional/zip/CAGDP1.zip", "bea_CAGDP1.zip"),
     "cbp": ("https://www2.census.gov/programs-surveys/cbp/datasets/2023/cbp23msa.zip", "cbp23msa.zip"),
     "ncaa": ("https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf", "ncaa_mbb_attend.pdf"),

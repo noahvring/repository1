@@ -120,7 +120,7 @@ def main():
     metros = pd.read_csv(PROCESSED / "metros.csv").set_index("market_id")
     rank = pd.read_csv(OUTPUTS / "rankings.csv").set_index("market_id")
     sens = pd.read_csv(OUTPUTS / "sensitivity.csv").set_index("market_id")
-    m = metros.join(rank[["A_size_wealth", "B_basketball_demand", "C_corporate", "D_competition_infra", "total_score", "rank_candidates"]])
+    m = metros.join(rank[["A_size_wealth", "B_basketball_demand", "C_corporate", "ease_of_entry", "quadrant", "total_score", "rank_candidates"]])
     nba = m[m["nba_metro"]]
     ref = nba[["population", "median_hh_income", "large_establishments_500plus"]].median()  # median NBA market
     ids = pick_top8(m)
@@ -160,7 +160,7 @@ def main():
 
     def kpis(idx):
         k = m.loc[idx, ["short_name", "market_title", "rank_candidates", "total_score", "A_size_wealth", "B_basketball_demand", "C_corporate",
-                        "D_competition_infra", "population", "median_hh_income", "pop_growth_2020_2025", "large_est_per_100k",
+                        "ease_of_entry", "quadrant", "miles_to_nearest_nba", "population", "median_hh_income", "pop_growth_2020_2025", "large_est_per_100k",
                         "big4_other_leagues", "arena_ready", "largest_arena_no_nba_tenant", "has_g_league", "nba_metro"]].copy()
         k["top10_frequency"] = sens.reindex(idx)["top10_frequency"]
         k["fan_interest_index"] = k["B_basketball_demand"]  # Pillar B score (Google Trends unavailable)

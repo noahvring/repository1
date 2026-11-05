@@ -7,9 +7,9 @@ import pandas as pd
 from config import OUTPUTS, FIGURES, PROCESSED, REPO_NAME
 
 BLUE, ORANGE, GRAY, DARK = "#2563eb", "#ea580c", "#9ca3af", "#111827"
-PILLAR_COLORS = ["#1d4ed8", "#0d9488", "#7c3aed", "#ca8a04"]
+PILLAR_COLORS = ["#1d4ed8", "#0d9488", "#7c3aed"]
 PILLAR_LABELS = {"A_size_wealth": "A Size & wealth", "B_basketball_demand": "B Basketball demand",
-                 "C_corporate": "C Corporate", "D_competition_infra": "D Competition & arena"}
+                 "C_corporate": "C Corporate"}
 SRC = "Source: Census ACS 2020-24, Census PEP V2025, BEA 2024, Census CBP 2023, NCAA 2025-26, Wikipedia team/arena lists. Analysis: " + REPO_NAME
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10, "axes.spines.top": False, "axes.spines.right": False,
                      "axes.titleweight": "bold", "axes.titlesize": 13, "figure.dpi": 100})
@@ -30,6 +30,27 @@ def headline(ax, r):
     ax.set_title("Top 15 non-NBA markets by attractiveness score")
 
 
+def matrix(ax, r, small=False):
+    """Attractiveness (y) vs ease of entry (x); dividing lines at the current-NBA-market medians."""
+    a_med, e_med = r["median_nba_score"].iloc[0], r["ease_median_nba"].iloc[0]
+    nba, c = r[r["nba_metro"]], r[~r["nba_metro"]]
+    ax.scatter(nba["ease_of_entry"], nba["total_score"], s=18, c="#e5e7eb", edgecolor=GRAY, lw=0.5, label="Current NBA market", zorder=1)
+    size = (c["population"] / 1e6) * (40 if small else 60)
+    cols = [ORANGE if n in ("Seattle", "Las Vegas") else BLUE for n in c["short_name"]]
+    ax.scatter(c["ease_of_entry"], c["total_score"], s=size, c=cols, alpha=0.75, edgecolor="white", lw=0.8, zorder=2)
+    ax.axvline(e_med, color=DARK, lw=0.8, ls="--"); ax.axhline(a_med, color=DARK, lw=0.8, ls="--")
+    top = set(c.sort_values("total_score", ascending=False).head(12)["short_name"]) | {"Seattle", "Las Vegas", "Pittsburgh", "Louisville", "Kansas City", "St. Louis"}
+    for _, d in c[c["short_name"].isin(top)].iterrows():
+        ax.annotate(d["short_name"], (d["ease_of_entry"], d["total_score"]), fontsize=7 if small else 8, xytext=(4, 3), textcoords="offset points",
+                    weight="bold" if d["short_name"] in ("Seattle", "Las Vegas") else "normal")
+    x0, x1 = ax.get_xlim(); y0, y1 = ax.get_ylim()
+    kw = dict(fontsize=9 if small else 11, weight="bold", color="#374151", alpha=0.9)
+    ax.text(x1, y1, "Prime targets", ha="right", va="top", **kw); ax.text(x0, y1, "Attractive but hard to enter", ha="left", va="top", **kw)
+    ax.text(x1, y0, "Easy but small", ha="right", va="bottom", **kw); ax.text(x0, y0, "Deprioritize", ha="left", va="bottom", **kw)
+    ax.set_xlabel("Ease of entry (arena available, distance to nearest NBA market, fewer big-league rivals)")
+    ax.set_ylabel("Attractiveness (size & wealth, basketball demand, corporate base)")
+
+
 def main():
     FIGURES.mkdir(exist_ok=True)
     r = pd.read_csv(OUTPUTS / "rankings.csv", dtype={"market_id": str})
@@ -41,6 +62,12 @@ def main():
     focus = pd.read_csv(OUTPUTS / "focus_markets.csv")
     m = pd.read_csv(PROCESSED / "metros.csv", dtype={"market_id": str})
 
+    # 0 headline matrix
+    fig, ax = plt.subplots(figsize=(10, 7.5)); matrix(ax, r)
+    ax.set_title("Where should the NBA expand? Attractiveness vs ease of entry")
+    fig.text(0.01, 0.035, "Bubble size = population. Dashed lines = median current NBA market. Orange = Seattle, Las Vegas. Grey = current NBA markets.", fontsize=8)
+    source(fig); fig.tight_layout(rect=(0, 0.06, 1, 1)); fig.savefig(FIGURES / "00_matrix_attractiveness_vs_ease.png", dpi=150); plt.close(fig)
+
     # 1 headline
     fig, ax = plt.subplots(figsize=(9, 6.5)); headline(ax, r); source(fig); fig.tight_layout(rect=(0, 0.04, 1, 1))
     fig.savefig(FIGURES / "01_headline_top15.png", dpi=150); plt.close(fig)
@@ -49,7 +76,7 @@ def main():
     fig, ax = plt.subplots(figsize=(10, 5.5))
     x = np.arange(len(k)); w = 0.2
     for i, (col, lab) in enumerate(PILLAR_LABELS.items()):
-        ax.bar(x + (i - 1.5) * w, k[col], w, label=lab, color=PILLAR_COLORS[i])
+        ax.bar(x + (i - 1) * 0.26, k[col], 0.26, label=lab, color=PILLAR_COLORS[i])
     ax.axhline(0, color=DARK, lw=0.8); ax.set_xticks(x, k["short_name"], rotation=20)
     ax.set_ylabel("Pillar score (z)"); ax.set_title("Pillar scores for the top 8 candidate markets"); ax.legend(ncol=4, fontsize=8, frameon=False)
     source(fig); fig.tight_layout(rect=(0, 0.04, 1, 1)); fig.savefig(FIGURES / "02_pillar_breakdown_top8.png", dpi=150); plt.close(fig)

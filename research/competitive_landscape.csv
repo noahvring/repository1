@@ -1,14 +1,4 @@
 market_id,metro,type,league,name,detail,pillar_d_link,source_url
-CSA450,Raleigh,pro team,NHL,Carolina Hurricanes,"Raleigh, North Carolina",competition count,https://en.wikipedia.org/wiki/National_Hockey_League
-CSA450,Raleigh,college (NCAA D-I men's basketball),NCAA D-I,NC State,"2025-26 home attendance 277,802",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CSA450,Raleigh,college (NCAA D-I men's basketball),NCAA D-I,Duke,"2025-26 home attendance 139,710",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CSA450,Raleigh,college (NCAA D-I men's basketball),NCAA D-I,North Carolina,"2025-26 home attendance 350,988",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CSA450,Raleigh,college (NCAA D-I men's basketball),NCAA D-I,N.C. Central,"2025-26 home attendance 18,583",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CSA450,Raleigh,"arena 17,000+",,Lenovo Center,"capacity 19,500; tenants: Carolina Hurricanes (NHL) NC State Wolfpack (NCAA); opened 1999",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
-CSA450,Raleigh,"arena 17,000+",,Dean Smith Center,"capacity 21,750; tenants: North Carolina Tar Heels; opened 1986",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
-CSA420,Omaha,college (NCAA D-I men's basketball),NCAA D-I,Creighton,"2025-26 home attendance 266,176",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CSA420,Omaha,college (NCAA D-I men's basketball),NCAA D-I,Omaha,"2025-26 home attendance 40,212",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CSA420,Omaha,"arena 17,000+",,CHI Health Center Omaha,"capacity 18,320; tenants: Creighton Bluejays (NCAA); opened 2003",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
 CSA500,Seattle,pro team,NFL,Seattle Seahawks,"Seattle, Washington",competition count,https://en.wikipedia.org/wiki/National_Football_League
 CSA500,Seattle,pro team,MLB,Seattle Mariners,"Seattle, Washington",competition count,https://en.wikipedia.org/wiki/Major_League_Baseball
 CSA500,Seattle,pro team,NHL,Seattle Kraken,"Seattle, Washington",competition count,https://en.wikipedia.org/wiki/National_Hockey_League
@@ -22,6 +12,16 @@ CBSA12420,Austin,pro team,MLS,Austin FC,"Austin, Texas",,https://en.wikipedia.or
 CBSA12420,Austin,pro team,G League,Austin Spurs,"Cedar Park, Texas",demand (Pillar B),https://en.wikipedia.org/wiki/NBA_G_League
 CBSA12420,Austin,college (NCAA D-I men's basketball),NCAA D-I,Texas,"2025-26 home attendance 184,193",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CBSA12420,Austin,college (NCAA D-I men's basketball),NCAA D-I,Texas St.,"2025-26 home attendance 30,036",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA450,Raleigh,pro team,NHL,Carolina Hurricanes,"Raleigh, North Carolina",competition count,https://en.wikipedia.org/wiki/National_Hockey_League
+CSA450,Raleigh,college (NCAA D-I men's basketball),NCAA D-I,NC State,"2025-26 home attendance 277,802",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA450,Raleigh,college (NCAA D-I men's basketball),NCAA D-I,Duke,"2025-26 home attendance 139,710",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA450,Raleigh,college (NCAA D-I men's basketball),NCAA D-I,North Carolina,"2025-26 home attendance 350,988",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA450,Raleigh,college (NCAA D-I men's basketball),NCAA D-I,N.C. Central,"2025-26 home attendance 18,583",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA450,Raleigh,"arena 17,000+",,Lenovo Center,"capacity 19,500; tenants: Carolina Hurricanes (NHL) NC State Wolfpack (NCAA); opened 1999",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
+CSA450,Raleigh,"arena 17,000+",,Dean Smith Center,"capacity 21,750; tenants: North Carolina Tar Heels; opened 1986",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
+CSA420,Omaha,college (NCAA D-I men's basketball),NCAA D-I,Creighton,"2025-26 home attendance 266,176",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA420,Omaha,college (NCAA D-I men's basketball),NCAA D-I,Omaha,"2025-26 home attendance 40,212",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA420,Omaha,"arena 17,000+",,CHI Health Center Omaha,"capacity 18,320; tenants: Creighton Bluejays (NCAA); opened 2003",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
 CSA332,Las Vegas,pro team,NFL,Las Vegas Raiders,"Paradise, Nevada",competition count,https://en.wikipedia.org/wiki/National_Football_League
 CSA332,Las Vegas,pro team,NHL,Vegas Golden Knights,"Paradise, Nevada",competition count,https://en.wikipedia.org/wiki/National_Hockey_League
 CSA332,Las Vegas,pro team,WNBA,Las Vegas Aces,"Paradise, Nevada",demand (Pillar B),https://en.wikipedia.org/wiki/Women%27s_National_Basketball_Association
@@ -45,10 +45,12 @@ CSA400,Nashville,college (NCAA D-I men's basketball),NCAA D-I,Tennessee St.,"202
 CSA400,Nashville,college (NCAA D-I men's basketball),NCAA D-I,Vanderbilt,"2025-26 home attendance 148,475",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CSA400,Nashville,college (NCAA D-I men's basketball),NCAA D-I,Middle Tenn.,"2025-26 home attendance 55,235",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CSA400,Nashville,"arena 17,000+",,Bridgestone Arena,"capacity 18,500; tenants: Nashville Predators (NHL); opened 1996",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
-CSA350,Louisville,college (NCAA D-I men's basketball),NCAA D-I,Louisville,"2025-26 home attendance 261,727",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CSA350,Louisville,college (NCAA D-I men's basketball),NCAA D-I,Bellarmine,"2025-26 home attendance 20,289",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CSA350,Louisville,"arena 17,000+",,KFC Yum! Center,"capacity 22,090; tenants: Louisville Cardinals (NCAA); opened 2010",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
-CSA350,Louisville,"arena 17,000+",,Freedom Hall,"capacity 18,865; tenants: Bellarmine Knights (NCAA); opened 1956",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
+CBSA41740,San Diego,pro team,MLB,San Diego Padres,"San Diego, California",competition count,https://en.wikipedia.org/wiki/Major_League_Baseball
+CBSA41740,San Diego,pro team,MLS,San Diego FC,"San Diego, California",,https://en.wikipedia.org/wiki/Major_League_Soccer
+CBSA41740,San Diego,pro team,G League,San Diego Clippers,"Oceanside, California",demand (Pillar B),https://en.wikipedia.org/wiki/NBA_G_League
+CBSA41740,San Diego,college (NCAA D-I men's basketball),NCAA D-I,San Diego,"2025-26 home attendance 21,774",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CBSA41740,San Diego,college (NCAA D-I men's basketball),NCAA D-I,San Diego St.,"2025-26 home attendance 185,066",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CBSA41740,San Diego,college (NCAA D-I men's basketball),NCAA D-I,UC San Diego,"2025-26 home attendance 37,516",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CSA430,Pittsburgh,pro team,NFL,Pittsburgh Steelers,"Pittsburgh, Pennsylvania",competition count,https://en.wikipedia.org/wiki/National_Football_League
 CSA430,Pittsburgh,pro team,MLB,Pittsburgh Pirates,"Pittsburgh, Pennsylvania",competition count,https://en.wikipedia.org/wiki/Major_League_Baseball
 CSA430,Pittsburgh,pro team,NHL,Pittsburgh Penguins,"Pittsburgh, Pennsylvania",competition count,https://en.wikipedia.org/wiki/National_Hockey_League
@@ -56,18 +58,16 @@ CSA430,Pittsburgh,college (NCAA D-I men's basketball),NCAA D-I,Duquesne,"2025-26
 CSA430,Pittsburgh,college (NCAA D-I men's basketball),NCAA D-I,Pittsburgh,"2025-26 home attendance 103,363",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CSA430,Pittsburgh,college (NCAA D-I men's basketball),NCAA D-I,Robert Morris,"2025-26 home attendance 24,467",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CSA430,Pittsburgh,"arena 17,000+",,PPG Paints Arena,"capacity 19,100; tenants: Pittsburgh Penguins (NHL); opened 2010",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
+CSA350,Louisville,college (NCAA D-I men's basketball),NCAA D-I,Louisville,"2025-26 home attendance 261,727",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA350,Louisville,college (NCAA D-I men's basketball),NCAA D-I,Bellarmine,"2025-26 home attendance 20,289",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
+CSA350,Louisville,"arena 17,000+",,KFC Yum! Center,"capacity 22,090; tenants: Louisville Cardinals (NCAA); opened 2010",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
+CSA350,Louisville,"arena 17,000+",,Freedom Hall,"capacity 18,865; tenants: Bellarmine Knights (NCAA); opened 1956",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
 CSA312,Kansas City,pro team,NFL,Kansas City Chiefs,"Kansas City, Missouri",competition count,https://en.wikipedia.org/wiki/National_Football_League
 CSA312,Kansas City,pro team,MLB,Kansas City Royals,"Kansas City, Missouri",competition count,https://en.wikipedia.org/wiki/Major_League_Baseball
 CSA312,Kansas City,pro team,MLS,Sporting Kansas City,"Kansas City, Kansas",,https://en.wikipedia.org/wiki/Major_League_Soccer
 CSA312,Kansas City,college (NCAA D-I men's basketball),NCAA D-I,Kansas City,"2025-26 home attendance 9,827",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CSA312,Kansas City,college (NCAA D-I men's basketball),NCAA D-I,Kansas,"2025-26 home attendance 244,907",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CSA312,Kansas City,"arena 17,000+",,T-Mobile Center,"capacity 18,972; tenants: nan; opened 2007",arena-ready,https://en.wikipedia.org/wiki/List_of_indoor_arenas_in_the_United_States
-CBSA41740,San Diego,pro team,MLB,San Diego Padres,"San Diego, California",competition count,https://en.wikipedia.org/wiki/Major_League_Baseball
-CBSA41740,San Diego,pro team,MLS,San Diego FC,"San Diego, California",,https://en.wikipedia.org/wiki/Major_League_Soccer
-CBSA41740,San Diego,pro team,G League,San Diego Clippers,"Oceanside, California",demand (Pillar B),https://en.wikipedia.org/wiki/NBA_G_League
-CBSA41740,San Diego,college (NCAA D-I men's basketball),NCAA D-I,San Diego,"2025-26 home attendance 21,774",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CBSA41740,San Diego,college (NCAA D-I men's basketball),NCAA D-I,San Diego St.,"2025-26 home attendance 185,066",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
-CBSA41740,San Diego,college (NCAA D-I men's basketball),NCAA D-I,UC San Diego,"2025-26 home attendance 37,516",demand (Pillar B),https://s3.amazonaws.com/fs.ncaa.org/Docs/stats/m_basketball_RB/Attend.pdf
 CSA476,St. Louis,pro team,MLB,St. Louis Cardinals,"St. Louis, Missouri",competition count,https://en.wikipedia.org/wiki/Major_League_Baseball
 CSA476,St. Louis,pro team,NHL,St. Louis Blues,"St. Louis, Missouri",competition count,https://en.wikipedia.org/wiki/National_Hockey_League
 CSA476,St. Louis,pro team,MLS,St. Louis City SC,"St. Louis, Missouri",,https://en.wikipedia.org/wiki/Major_League_Soccer
@@ -117,3 +117,5 @@ INTL-Mexico City,Mexico City,international market fact,,nba_interest,Silver: lea
 INTL-Vancouver,Vancouver,international market fact,,metro_population,2642825 (people (2021)),not scored,https://en.wikipedia.org/wiki/Metro_Vancouver
 INTL-Vancouver,Vancouver,international market fact,,largest_arena_capacity,19700 (seats (basketball)),not scored,https://en.wikipedia.org/wiki/Rogers_Arena
 INTL-Vancouver,Vancouver,international market fact,,nba_history,"Vancouver Grizzlies 1995-2001, relocated to Memphis after 2000-01 (text)",not scored,https://en.wikipedia.org/wiki/Vancouver_Grizzlies
+INTL-Toronto,Toronto,international market fact,,latitude,43.6525 (degrees),not scored,https://en.wikipedia.org/wiki/Toronto
+INTL-Toronto,Toronto,international market fact,,longitude,-79.38167 (degrees),not scored,https://en.wikipedia.org/wiki/Toronto
