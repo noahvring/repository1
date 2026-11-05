@@ -92,6 +92,30 @@ def monte_carlo(df, p):
     return out
 
 
+def fan_behavior(df, p, sens):
+    """Behavioural lens (descriptive, NOT scored):
+    - transplant share = residents born outside their current state ('divided loyalty' risk);
+    - college-vs-pro check: among current NBA markets, does college attendance per capita move
+      with the attractiveness score computed WITHOUT college attendance? (association only)
+    - how much the candidate top 10 changes when college attendance is removed."""
+    nc = dict(PILLARS); nc["B_basketball_demand"] = [f for f in PILLARS["B_basketball_demand"] if f[0] != "ncaa_att_per_1k"]
+    p_nc, _ = pillar_scores(df, nc)
+    score_nc = total(p_nc, WEIGHTINGS["equal"])
+    nba = df["nba_metro"]
+    r, pval = stats.pearsonr(df.loc[nba, "ncaa_att_per_1k"], score_nc[nba])
+    top_eq = set(sens.index[sens["rank_equal"] <= 10]); top_nc = set(sens.index[sens["rank_no_college"] <= 10])
+    pd.DataFrame([{"n_nba_markets": int(nba.sum()), "pearson_r_college_att_vs_score_without_college": r, "p_value": pval,
+                   "top10_overlap_equal_vs_no_college": len(top_eq & top_nc),
+                   "dropped_from_top10_without_college": "; ".join(sorted(df.loc[list(top_eq - top_nc), "short_name"])),
+                   "added_to_top10_without_college": "; ".join(sorted(df.loc[list(top_nc - top_eq), "short_name"]))}]
+                 ).to_csv(OUTPUTS / "college_vs_pro.csv", index=False)
+    fb = df.loc[~nba, ["short_name", "transplant_share", "born_other_us_state_share", "ncaa_att_per_1k"]].copy()
+    fb["rank_equal"] = sens["rank_equal"]; fb["rank_no_college"] = sens["rank_no_college"]
+    fb["rank_change_without_college"] = fb["rank_no_college"] - fb["rank_equal"]
+    fb["transplant_share_vs_nba_median"] = fb["transplant_share"] - df.loc[nba, "transplant_share"].median()
+    fb.sort_values("rank_equal").to_csv(OUTPUTS / "fan_behavior.csv")
+
+
 def welch_ci(a, b):
     """Difference in means (a - b) with a Welch 95% confidence interval."""
     d = a.mean() - b.mean()
@@ -174,6 +198,7 @@ def main():
     sens.to_csv(OUTPUTS / "sensitivity.csv")
 
     monte_carlo(df, p)
+    fan_behavior(df, p, sens)
 
     # rank decomposition: how did the top 10 move from v1 (CBSA, G League scored) to now?
     # step 1 = v1 archived output; step 2 = CSA markets but G League still scored; step 3 = final.

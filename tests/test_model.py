@@ -42,3 +42,10 @@ def test_monte_carlo_probabilities_and_seed():
     again = model.monte_carlo(df, p).sort_index()
     saved = mc.set_index("market_id").sort_index()
     assert (again["p_top10"].values == saved["p_top10"].values).all()
+
+
+def test_fan_behavior_outputs():
+    fb = pd.read_csv(OUTPUTS / "fan_behavior.csv")
+    assert fb["transplant_share"].between(0, 1).all()
+    cp = pd.read_csv(OUTPUTS / "college_vs_pro.csv")
+    assert -1 <= cp["pearson_r_college_att_vs_score_without_college"].iloc[0] <= 1

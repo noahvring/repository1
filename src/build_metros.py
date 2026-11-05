@@ -24,6 +24,8 @@ def check_shells():
     assert lab["B01001_007"] == "18 and 19 years" and lab["B01001_014"] == "40 to 44 years"
     assert lab["B01001_031"] == "18 and 19 years" and lab["B01001_038"] == "40 to 44 years"
     assert lab["B19013_001"].lower().startswith("median household income")
+    assert lab["B05002_003"] == "Born in state of residence"
+    assert lab["B05002_004"].startswith("Born in other state")
     return lab
 
 
@@ -36,7 +38,10 @@ def acs_block():
     male = [f"B01001_E{n:03d}" for n in range(7, 15)]     # male 18-19 ... 40-44
     female = [f"B01001_E{n:03d}" for n in range(31, 39)]  # female 18-19 ... 40-44
     age_18_44 = age[male + female].sum(axis=1).rename("pop_18_44")
-    out = pd.concat([pop, inc, hh, age_18_44], axis=1)
+    pob = read_acs("b05002")  # place of birth (labels checked in check_shells)
+    born = pd.DataFrame({"pob_total": pob["B05002_E001"], "born_in_state": pob["B05002_E003"],
+                         "born_other_state": pob["B05002_E004"]})
+    out = pd.concat([pop, inc, hh, age_18_44, born], axis=1)
     out.loc[out["median_hh_income"] < 0, "median_hh_income"] = np.nan  # negative = Census missing code
     return out
 
@@ -186,11 +191,16 @@ def main():
     # 2) aggregate to market: sum counts and populations; population-weight income
     g = cb.groupby("market_id")
     df = g[["population", "households", "pop_18_44", "pop_est_2020", "pop_est_2025", "large_establishments_500plus",
-            "establishments_total", "income_x_pop"] + count_cols].sum(min_count=1)
+            "establishments_total", "income_x_pop", "pob_total", "born_in_state", "born_other_state"] + count_cols].sum(min_count=1)
     df["gdp_2024_usd"] = g["gdp_2024_usd"].sum(min_count=1).where(g["gdp_2024_usd"].apply(lambda s: s.notna().all()))
     df["median_hh_income"] = df["income_x_pop"] / g.apply(lambda x: x.loc[x["median_hh_income"] > 0, "population"].sum())
     df["share_18_44"] = df["pop_18_44"] / df["population"]
     df["pop_growth_2020_2025"] = df["pop_est_2025"] / df["pop_est_2020"] - 1
+    # 'divided loyalty' indicator (descriptive, not scored): residents born outside their current state
+    # (other U.S. states + abroad). Note: in markets that span state lines, people born in the
+    # neighbouring state of the same market also count as transplants.
+    df["transplant_share"] = 1 - df["born_in_state"] / df["pob_total"]
+    df["born_other_us_state_share"] = df["born_other_state"] / df["pob_total"]
     df["market_title"] = g["market_title"].first()
     df["market_type"] = g["market_type"].first()
     # name the market after its largest member CBSA (e.g. 'San Francisco' for the Bay Area CSA)
