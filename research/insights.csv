@@ -1,0 +1,11 @@
+theme,supporting_evidence,implication,confidence
+arena readiness,"outputs/kpi_dashboard.csv (arena_ready, largest_arena_no_nba_tenant); data/manual/arenas.csv",,
+corporate base,"outputs/pillar_scores.csv (C_corporate); data/processed/metros.csv (large_establishments_500plus, large_est_per_100k)",,
+fan interest without a team,outputs/pillar_scores.csv (B_basketball_demand); data/processed/ncaa_school_metro.csv,,
+dilution vs fee,outputs/dilution_payback.csv (breakeven_years by scenario),,
+market size and growth,"outputs/pillar_scores.csv (A_size_wealth, z_pop_growth_2020_2025)",,
+crowded vs open markets,data/processed/metros.csv (big4_other_leagues); research/competitive_landscape.csv,,
+robustness of rankings,"outputs/sensitivity.csv (top10_frequency, best_rank, worst_rank)",,
+scorecard validity,"outputs/validity.csv (diff_nba_minus_non, ci95_low, ci95_high, point_biserial_r)",,
+revenue assumptions drive the case,outputs/tornado.csv (swing); data/manual/assumptions.csv,,
+expansion fee inflation across leagues,"research/trends.csv (nhl_expansion, mls_expansion, wnba_expansion rows)",,
