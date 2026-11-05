@@ -27,7 +27,7 @@ def test_every_manual_row_has_source_url():
         col = "source_url" if "source_url" in df.columns else "source"
         assert col in df.columns, f"{f.name} has no source column"
         vals = df[col].fillna("")
-        ok = vals.str.startswith("http") | vals.str.contains("ASSUMPTION – Noah to review")
+        ok = vals.str.startswith("http") | vals.str.contains("ASSUMPTION – Noah to review") | vals.eq("NOT SOURCED")
         assert ok.all(), f"{f.name}: rows without source: {df[~ok].index.tolist()}"
 
 

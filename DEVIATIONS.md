@@ -14,3 +14,4 @@ All access attempts on 2026-11-05.
 | `www.nba.com`, `apnews.com`, `www.wnba.com` | Proxy returned 403. | Not used; other sources cited instead. |
 | NCAA attendance | Latest PDF is the 2025–26 season ("through 2025-26"). Schools mapped to metros by main-campus county (`data/manual/ncaa_school_county.csv`). Schools not listed there count as 0 for their metro. | Mapping covers D-I schools in the study metros only. |
 | G League presence | G League teams are NBA affiliates, so presence partly reflects existing NBA teams. | Kept as a factor as specified; flagged in Limitations. |
+| Per-capita local revenue benchmark | No public, sourced benchmark found. | Row kept in assumptions.csv as NOT SOURCED and not used. |
